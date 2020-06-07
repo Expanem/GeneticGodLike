@@ -1,6 +1,6 @@
 CC     = g++
 CFLAGS = -g -std=c++11
-OFILES = main.o species.o world.o tile.o
+OFILES = main.o simulation.o species.o world.o tile.o
 
 projet: $(OFILES)
 	$(CC) $(OFILES) -o $@
@@ -8,10 +8,13 @@ projet: $(OFILES)
 clean:
 	@/bin/rm -f *.o *.x *.c~ *.h~ projet
 
-main.o: main.cc species.h
+main.o: main.cc species.h simulation.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
-world.o: world.cc world.h tile.h const.h
+simulation.o: simulation.cc simulation.h world.h
+	$(CC) $(CFLAGS) -c $< -o $@
+
+world.o: world.cc world.h tile.h const.h species.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
 tile.o: tile.cc tile.h species.h
