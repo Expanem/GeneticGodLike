@@ -8,6 +8,7 @@
 #define SPECIES_H
 
 #include <string>
+#include "tools.h"
 
 typedef struct Thresholds {
     float threshold_urgent_food;
@@ -42,7 +43,7 @@ typedef struct Basics {
 class Specie {
     public:
         Specie(Basics basic_infos, Positions position_info, Thresholds threshold_infos);
-        void newTick();
+        void newTick(int action);
         void consume();
         void eat(float food_quantity);
         void drink(float water_quantity);
@@ -52,6 +53,7 @@ class Specie {
 
         std::string get_name(){return name;};
         char get_icone(){return icone;};
+        Coordinates get_coordinates(){return coord;}; 
     protected:
         std::string name;
         char icone;
@@ -77,6 +79,7 @@ class Specie {
 
         int x_position;
         int y_position;
+        Coordinates coord; // TO DO
 
         int x_objective;
         int y_objective;

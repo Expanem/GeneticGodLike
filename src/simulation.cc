@@ -9,12 +9,16 @@
 
 using namespace std;
 
+static World* my_world;
+
 int initialisation() {
-    World my_world;
-    my_world.show();
+    my_world = new World;
+    my_world->show();
     return 0;
 }
 
-void main_loop() {
-
+void main_loop(int nb_ticks) {
+    for (int i = 0; i < nb_ticks; i++) {
+        my_world->update_population();
+    }
 }

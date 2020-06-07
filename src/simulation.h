@@ -8,6 +8,6 @@
 #define SIMULATION_H
 
 int initialisation();
-void main_loop();
+void main_loop(int nb_ticks);
 
 #endif

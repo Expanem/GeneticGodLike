@@ -4,7 +4,8 @@
 #include "tile.h"
 #include "const.h"
 #include <string>
-#include <species.h>
+#include "species.h"
+#include "tools.h"
     
 using namespace std;
 
@@ -122,4 +123,25 @@ void World::smooth_terrain(unsigned int times, unsigned int res)
             }
         }
     }
+}
+
+void World::update_population() {
+    for (int i = 0; i < population.size(); i++){
+        Coordinates nearest_food = get_nearest_food(i);
+        Coordinates nearest_water = get_nearest_water(i);
+        int distance_nearest_food = distance(population[i]->get_coordinates(), nearest_food);
+        int distance_nearest_water = distance(population[i]->get_coordinates(), nearest_water);
+        int action = population[i]->choose_action(distance_nearest_food, distance_nearest_water);
+        population[i]->newTick(action);
+    }
+}
+
+Coordinates get_nearest_food(int specie_ID) {
+    Coordinates coord;
+    return coord;
+}
+
+Coordinates get_nearest_drink(int specie_ID) {
+    Coordinates coord;
+    return coord;
 }

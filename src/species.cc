@@ -44,7 +44,7 @@ Specie::Specie(Basics basic_infos, Positions position_info, Thresholds threshold
     threshold_chill_water(threshold_infos.threshold_chill_water) {
 }
 
-void Specie::newTick() {
+void Specie::newTick(int action) {
     this->consume();
 }
 
