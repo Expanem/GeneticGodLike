@@ -1,3 +1,6 @@
+#ifndef SPECIES_H
+#define SPECIES_H
+
 /*!
   \file   species.h
   \date   June 2020
@@ -49,3 +52,5 @@ class Fighter_specie: virtual public Specie {
     public:
     private:
 };
+
+#endif
