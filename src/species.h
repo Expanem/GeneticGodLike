@@ -23,6 +23,7 @@ typedef struct Positions {
 
 typedef struct Basics {
     std::string name;
+    char icone;
     double size;
     double weight;
     double strengh;
@@ -52,6 +53,7 @@ class Specie {
         std::string get_name(){return name;};
     protected:
         std::string name;
+        char icone;
         double size;
         double weight;
         double strengh;
