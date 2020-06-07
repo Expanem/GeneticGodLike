@@ -38,4 +38,4 @@ class Specie {
         float threshold_urgent_water;
         float threshold_chill_food;
         float threshold_chill_water;
-}
+};
