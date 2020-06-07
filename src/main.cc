@@ -6,12 +6,11 @@
 
 #include <iostream>
 #include <string>
-#include "world.h"
-#include "species.h"
+#include "simulation.h"
 
 using namespace std;
 
 int main(int argc, char *argv[]) {
-    World my_world;
-    my_world.show();
+    initialisation();
+    main_loop();
 }
