@@ -61,3 +61,11 @@ int Specie::choose_action(float distance_nearest_food, float distance_nearest_wa
             return 3; // Try to mate
     }
 }
+
+Pacifist_specie::Pacifist_specie(Basics basic_infos, Thresholds threshold_infos) {
+
+}
+
+Fighter_specie::Fighter_specie(Basics basic_infos, Thresholds threshold_infos) {
+
+}
