@@ -39,7 +39,7 @@ class Specie {
     public:
         Specie(Basics basic_infos, Coordinates position_info, Thresholds threshold_infos);
         void newTick(int action, Coordinates objective);
-        void consume();
+        void consume(float ratio);
         void eat(float food_quantity);
         void drink(float water_quantity);
         void reproduction();

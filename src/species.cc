@@ -5,6 +5,7 @@
 */
 
 #include "species.h"
+#include "const.h"
 
 using namespace std;
 
@@ -45,7 +46,7 @@ Specie::Specie(Basics basic_infos, Coordinates position_info, Thresholds thresho
 }
 
 void Specie::newTick(int action, Coordinates obj) {
-    this->consume();
+    this->consume(1.0);
     x_objective = obj.x;
     y_objective = obj.y;
     switch (action)
@@ -64,7 +65,7 @@ void Specie::newTick(int action, Coordinates obj) {
     }
 }
 
-void Specie::consume() {
+void Specie::consume(float ratio) {
     this->food_stored -= this->food_consumption;
     this->water_stored -= this->water_consumption;
     if ((this->water_stored <= 0) or (this->food_stored <= 0)){
@@ -97,6 +98,7 @@ void Specie::eat(float food_quantity) {
 void Specie::move_to_objective() { //Keep velocity energy without taking care of direction
     velocity_storage += velocity;
     while ((velocity + velocity_storage) > 1) {
+        this->consume(RATIO_VELOCITY_FOOD_CONSUMPTION);
         velocity_storage -= 1;
         int distance_x = x_objective - x_position;
         int distance_y = y_objective - y_position;
