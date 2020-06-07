@@ -39,3 +39,13 @@ class Specie {
         float threshold_chill_food;
         float threshold_chill_water;
 };
+
+class Pacifist_specie: virtual public Specie {
+    public:
+    private:
+};
+
+class Fighter_specie: virtual public Specie {
+    public:
+    private:
+};
