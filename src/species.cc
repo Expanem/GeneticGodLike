@@ -44,8 +44,24 @@ Specie::Specie(Basics basic_infos, Coordinates position_info, Thresholds thresho
     threshold_chill_water(threshold_infos.threshold_chill_water) {
 }
 
-void Specie::newTick(int action) {
+void Specie::newTick(int action, Coordinates obj) {
     this->consume();
+    x_objective = obj.x;
+    y_objective = obj.y;
+    switch (action)
+    {
+    case 1:
+        move_to_objective();
+        break;
+    case 2:
+        move_to_objective();
+        break;
+    case 3:
+        move_to_objective();
+        break;
+    default:
+        break;
+    }
 }
 
 void Specie::consume() {
