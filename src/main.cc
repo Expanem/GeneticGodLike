@@ -6,9 +6,11 @@
 
 #include <iostream>
 #include <string>
+#include "world.h"
 
 using namespace std;
 
 int main(int argc, char *argv[]) {
-    return 0;
+    World my_world;
+    my_world.show();
 }
