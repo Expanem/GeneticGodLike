@@ -136,12 +136,12 @@ void World::update_population() {
     }
 }
 
-Coordinates get_nearest_food(int specie_ID) {
+Coordinates World::get_nearest_food(int specie_ID) {
     Coordinates coord;
     return coord;
 }
 
-Coordinates get_nearest_drink(int specie_ID) {
+Coordinates World::get_nearest_water(int specie_ID) {
     Coordinates coord;
     return coord;
 }
