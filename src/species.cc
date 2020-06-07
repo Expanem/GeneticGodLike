@@ -8,7 +8,7 @@
 
 using namespace std;
 
-Specie::Specie(Basics basic_infos, Positions position_info, Thresholds threshold_infos)   
+Specie::Specie(Basics basic_infos, Coordinates position_info, Thresholds threshold_infos)   
   : name(basic_infos.name),
     icone(basic_infos.icone),
     size(basic_infos.size),
@@ -31,8 +31,8 @@ Specie::Specie(Basics basic_infos, Positions position_info, Thresholds threshold
     tick_lived(0),
     dead(false),
 
-    x_position(position_info.x_position),
-    y_position(position_info.y_position),
+    x_position(position_info.x),
+    y_position(position_info.y),
     
     x_objective(0),
     y_objective(0),
@@ -120,16 +120,16 @@ int Specie::choose_action(float distance_nearest_food, float distance_nearest_wa
     }
 }
 
-Pacifist_specie::Pacifist_specie(Basics basic_infos, Positions position_info, Thresholds threshold_infos) 
+Pacifist_specie::Pacifist_specie(Basics basic_infos, Coordinates position_info, Thresholds threshold_infos) 
    :  Specie(basic_infos, position_info, threshold_infos) {
 
 }
 
-Fighter_specie::Fighter_specie(Basics basic_infos, Positions position_info, Thresholds threshold_infos)
+Fighter_specie::Fighter_specie(Basics basic_infos, Coordinates position_info, Thresholds threshold_infos)
    :  Specie(basic_infos, position_info, threshold_infos) {
 }
 
 Basics basic_infos_1 = {"Racoon", 'R', 50, 20, 20, 20, 20, 1, 20, 20, 20, 20, 0.5, 10, 2};
 Thresholds threshold_infos_1 = {0.25, 0.25, 0.75, 0.75};
-Positions position_infos_1 = {0,0};
+Coordinates position_infos_1 = {0,0};
 static Fighter_specie *Racoon = new Fighter_specie(basic_infos_1, position_infos_1, threshold_infos_1);

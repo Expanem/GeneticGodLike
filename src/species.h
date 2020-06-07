@@ -17,11 +17,6 @@ typedef struct Thresholds {
     float threshold_chill_water;
 } Threshold;
 
-typedef struct Positions {
-    int x_position;
-    int y_position;
-} Positions;
-
 typedef struct Basics {
     std::string name;
     char icone;
@@ -42,7 +37,7 @@ typedef struct Basics {
 
 class Specie {
     public:
-        Specie(Basics basic_infos, Positions position_info, Thresholds threshold_infos);
+        Specie(Basics basic_infos, Coordinates position_info, Thresholds threshold_infos);
         void newTick(int action);
         void consume();
         void eat(float food_quantity);
@@ -93,14 +88,14 @@ class Specie {
 
 class Pacifist_specie: virtual public Specie {
     public:
-        Pacifist_specie(Basics basic_infos, Positions position_info, Thresholds threshold_infos);
+        Pacifist_specie(Basics basic_infos, Coordinates position_info, Thresholds threshold_infos);
         ~Pacifist_specie();
     private:
 };
 
 class Fighter_specie: virtual public Specie {
     public:
-        Fighter_specie(Basics basic_infos, Positions position_info, Thresholds threshold_infos);
+        Fighter_specie(Basics basic_infos, Coordinates position_info, Thresholds threshold_infos);
         ~Fighter_specie();
     private:
 };
