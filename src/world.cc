@@ -3,6 +3,8 @@
 #include "world.h"
 #include "tile.h"
 #include "const.h"
+#include <string>
+#include <species.h>
     
 using namespace std;
 
@@ -19,22 +21,25 @@ World::~World()
 
 const void World::show()
 {
+    system("clear");
     for (auto latitude : environement)
     {
         for (auto tile : latitude)
         {
+            string x = "  ";
+            if(tile.is_occupied()) x[1] = tile.get_top()->get_icone();
             switch (tile.get_type())
             {
             case aquatic:
-                cout << "\033[36m\u2588\u2588\033[0m";
+                cout << "\033[31;46m"<<x<<"\033[0m";
                 break;
 
             case fertile:
-                cout << "\033[32m\u2588\u2588\033[0m";
+                cout << "\033[31;42m"<<x<<"\033[0m";
                 break;
 
             case barren:
-                cout << "\030\u2592\u2592\033[0m";
+                cout << "\033[31;1;40m"<<x<<"\033[0m";
                 break;
             
             default:

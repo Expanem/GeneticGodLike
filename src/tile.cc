@@ -57,3 +57,32 @@ void Tile::set_height(double new_height)
     else if(new_height > max_height) height = max_height;
     else height = new_height;
 }
+
+void Tile::add_specie(Specie* specie)
+{
+    occupation.push_back(specie);
+    occupied = true;
+}
+
+void Tile::remove_specie(Specie* specie)
+{
+    bool found = false;
+    for (int i = 0; i < occupation.size(); i++)
+    {
+        if(specie == occupation[i])
+        {
+            found = true;
+            occupation[i] = occupation.back();
+            occupation.pop_back();
+
+            if(occupation.empty()) occupied = false;
+        }
+    }
+    if(not found) std::cout<<specie->get_name()<<" could not be found."<<std::endl;
+}
+
+Specie* Tile::get_top()
+{
+    if(occupation.empty()) return nullptr;
+    else return occupation[0];
+}

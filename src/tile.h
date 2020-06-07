@@ -12,6 +12,10 @@ public :
     Tile();
     TYPE get_type(){return type;}
     double get_height(){return height;}
+    Specie* get_top();
+    bool is_occupied(){return occupied;}
+    void add_specie(Specie* specie);
+    void remove_specie(Specie* specie);
     void set_height(double new_height);
     void set_type(int new_type);
     void set_pos(unsigned int x, unsigned int y);
@@ -29,6 +33,7 @@ private :
     unsigned int iron_ore;
     unsigned int charcoal;
     unsigned int oil;
+    bool occupied;
 };
 
 #endif
