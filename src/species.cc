@@ -66,6 +66,28 @@ void Specie::eat(float food_quantity) {
     }
 }
 
+void Specie::move_to_objective() { //Keep velocity energy without taking care of direction
+    velocity_storage += velocity;
+    while ((velocity + velocity_storage) > 1) {
+        velocity_storage -= 1;
+        int distance_x = x_objective - x_position;
+        int distance_y = y_objective - y_position;
+        if (abs(distance_x) > abs(distance_y)) {
+            if (distance_x > 0) {
+                x_position += 1;
+            } else {
+                x_position -= 1;
+            }
+        } else {
+            if (distance_y > 0) {
+                y_position += 1;
+            } else {
+                y_position -= 1;
+            }
+        }
+    }
+}
+
 int Specie::choose_action(float distance_nearest_food, float distance_nearest_water) {
     float food_per = food_stored / food_storage;
     float water_per = water_stored / water_storage;
@@ -88,15 +110,17 @@ int Specie::choose_action(float distance_nearest_food, float distance_nearest_wa
 
 Pacifist_specie::Pacifist_specie(Basics basic_infos, Thresholds threshold_infos) 
    :  Specie(basic_infos, threshold_infos) {
-
+        // miss position
+        // miss velocity storage
 
 }
 
 Fighter_specie::Fighter_specie(Basics basic_infos, Thresholds threshold_infos)
    :  Specie(basic_infos, threshold_infos) {
-
+       // miss posiiton
+       // miss velocity storage
 }
 
-Basics basic_infos_1 = {"Racoon", 50, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 0.001, 0.5, 10, 2};
+Basics basic_infos_1 = {"Racoon", 50, 20, 20, 20, 20, 1, 20, 20, 20, 20, 20, 20, 20, 20, 0.001, 0.5, 10, 2};
 Thresholds threshold_infos_1 = {0.25, 0.25, 0.75, 0.75};
 static Fighter_specie *Racoon = new Fighter_specie(basic_infos_1, threshold_infos_1);

@@ -46,6 +46,7 @@ class Specie {
         void eat(float food_quantity);
         void drink(float water_quantity);
         void reproduction();
+        void move_to_objective();
         int choose_action(float distance_nearest_food, float distance_nearest_water);
     protected:
         std::string name;
@@ -69,6 +70,12 @@ class Specie {
         int diet;
         int tick_lived;
         bool dead;
+
+        int x_position;
+        int y_position;
+        int x_objective;
+        int y_objective;
+        float velocity_storage;
 
         float threshold_urgent_food;
         float threshold_urgent_water;
