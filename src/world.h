@@ -13,12 +13,13 @@ public :
     const void show();
     //void numeric();
     void update_population();
+    void update_tiles();
 private :
     void generate();
     void smooth_terrain(unsigned int times, unsigned int res);
     void smooth_height(unsigned int times);
-    Coordinates get_nearest_food(int specie_ID);
-    Coordinates get_nearest_water(int specie_ID);
+    Coordinates get_nearest_food(Specie* specie);
+    Coordinates get_nearest_water(Specie* specie);
 
     std::vector<std::vector<Tile>> environement;
     std::vector<Specie*> population;

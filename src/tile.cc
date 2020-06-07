@@ -1,6 +1,7 @@
 #include <iostream>
 #include "tile.h"
 #include "const.h"
+#include "vegetation.h"
 
 Tile::Tile()
 {
@@ -26,12 +27,15 @@ void Tile::generate_intra()
     case aquatic:
         height = 0;
         irrigated = 1;
+        sunlight = 1;
         iron_ore = 0;
         charcoal = 0;
         oil = 0;
         break;
     
     case fertile:
+        irrigated = 1;
+        sunlight = 1;
         height = rand()%(int)max_height;
         iron_ore = 0;
         charcoal = rand()%max_capacity;
@@ -39,6 +43,7 @@ void Tile::generate_intra()
         break;
     
     case barren:
+        sunlight = 1;
         height = rand()%(int)max_height;
         irrigated = 0;
         iron_ore = rand()%max_capacity;
@@ -85,4 +90,9 @@ Specie* Tile::get_top()
 {
     if(occupation.empty()) return nullptr;
     else return occupation[0];
+}
+
+void Tile::update()
+{
+    plant.update(irrigated,sunlight);
 }

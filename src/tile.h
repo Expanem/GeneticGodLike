@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include "species.h"
+#include "vegetation.h"
 
 #ifndef TILE_H
 #define TILE_H
@@ -20,9 +21,10 @@ public :
     void set_type(int new_type);
     void set_pos(unsigned int x, unsigned int y);
     void generate_intra();
+    void update();
 private :
     std::vector<Specie*> occupation;
-    //std::vector<Tree*> vegetation;
+    Vegetation plant;
     TYPE type;
     unsigned int posX;
     unsigned int posY;

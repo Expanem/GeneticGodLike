@@ -136,12 +136,97 @@ void World::update_population() {
     }
 }
 
-Coordinates World::get_nearest_food(int specie_ID) {
+Coordinates World::get_nearest_food(Specie* specie) {
     Coordinates coord;
-    return coord;
+    Coordinates ent_pos = specie->get_coordinates();
+    for (unsigned int i = 0; i < world_size/2; i++)
+    {
+        for (int j = -i; j <= i; j++)
+        {
+            int m = coord.x + j ;
+            int n = coord.y + j ;
+            if(m >= world_size) m = world_size-1;
+            if(n >= world_size) n = world_size-1;
+            if(m < 0) m = 0;
+            if(n < 0) n = 0;
+            if(environement[coord.x+i][n].get_type()==fertile)
+            {
+                coord.x = coord.x+i;
+                coord.y = n;
+                return coord;
+            }
+            if(environement[coord.x-i][n].get_type()==fertile)
+            {
+                coord.x = coord.x-i;
+                coord.y = n;
+                return coord;
+            }
+            if(environement[m][coord.y+i].get_type()==fertile)
+            {
+                coord.x = m;
+                coord.y = coord.y + i;
+                return coord;
+            }
+            if(environement[m][coord.y-i].get_type()==fertile)
+            {
+                coord.x = m;
+                coord.y = coord.y -i;
+                return coord;
+            }
+        }
+        return coord;
+    }
 }
 
-Coordinates World::get_nearest_water(int specie_ID) {
+Coordinates World::get_nearest_water(Specie* specie) {
     Coordinates coord;
-    return coord;
+    Coordinates ent_pos = specie->get_coordinates();
+    for (unsigned int i = 0; i < world_size/2; i++)
+    {
+        for (int j = -i; j <= i; j++)
+        {
+            int m = coord.x + j ;
+            int n = coord.y + j ;
+            if(m >= world_size) m = world_size-1;
+            if(n >= world_size) n = world_size-1;
+            if(m < 0) m = 0;
+            if(n < 0) n = 0;
+            if(environement[coord.x+i][n].get_type()==aquatic)
+            {
+                coord.x = coord.x+i;
+                coord.y = n;
+                return coord;
+            }
+            if(environement[coord.x-i][n].get_type()==aquatic)
+            {
+                coord.x = coord.x-i;
+                coord.y = n;
+                return coord;
+            }
+            if(environement[m][coord.y+i].get_type()==aquatic)
+            {
+                coord.x = m;
+                coord.y = coord.y + i;
+                return coord;
+            }
+            if(environement[m][coord.y-i].get_type()==aquatic)
+            {
+                coord.x = m;
+                coord.y = coord.y -i;
+                return coord;
+            }
+        }
+        return coord;
+    }
+}
+
+void World::update_tiles()
+{
+    for (auto latitude : environement)
+    {
+        for (auto tile : latitude)
+        {
+            tile.update();
+        }
+    }
 }
