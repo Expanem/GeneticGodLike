@@ -1,0 +1,24 @@
+Type : godlike, gestion d'insertion adaptative dans un environement evolutif. axé strategie. resources limitées.
+objectifs: score basé sur le nb d'entité, la diversité et la stabilité dans le temps.
+pitch : examen de demi dieu.
+base : sur un plan avec cases avec un environement de base (eau, vegetation, rien) qui sont a differentes hauteures. 
+characteristiques des entités :
+- consomation de base 
+- poids
+- taille
+- force generale
+- velocité 
+- regime
+- temps de developemment
+- esperance de vie 
+- facteur mutation
+- libido
+- energie interne
+- soif 
+- stockage d'eau
+- attaque 
+- defense
+- deviance moyenne (phenotype reproduction)
+
+methode 
+1 classe environement 
