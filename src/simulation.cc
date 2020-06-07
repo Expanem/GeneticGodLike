@@ -9,6 +9,12 @@
 
 using namespace std;
 
+int initialisation() {
+    World my_world;
+    my_world.show();
+    return 0;
+}
+
 void main_loop() {
 
 }

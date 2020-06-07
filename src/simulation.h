@@ -7,6 +7,7 @@
 #ifndef SIMULATION_H
 #define SIMULATION_H
 
+int initialisation();
 void main_loop();
 
 #endif
