@@ -8,7 +8,7 @@
 
 using namespace std;
 
-Specie::Specie(Basics basic_infos, Thresholds threshold_infos)   
+Specie::Specie(Basics basic_infos, Positions position_info, Thresholds threshold_infos)   
   : name(basic_infos.name),
     size(basic_infos.size),
     weight(basic_infos.weight),
@@ -16,20 +16,31 @@ Specie::Specie(Basics basic_infos, Thresholds threshold_infos)
     attack(basic_infos.attack),
     defense(basic_infos.defense),
     velocity(basic_infos.velocity),
-    base_food_consumption(basic_infos.base_food_consumption),
-    base_water_consumption(basic_infos.base_water_consumption),
     food_consumption(basic_infos.food_consumption),
     water_consumption(basic_infos.water_consumption),
     water_storage(basic_infos.water_storage),
     food_storage(basic_infos.food_storage),
-    water_stored(basic_infos.water_stored),
-    food_stored(basic_infos.food_stored),
-    deviation(basic_infos.deviation),
     libido(basic_infos.libido),
     life_span(basic_infos.life_span),
     diet(basic_infos.diet),
+
+    food_stored(0),
+    water_stored(0),
+    deviation(0),
     tick_lived(0),
-    dead(false) {
+    dead(false),
+
+    x_position(position_info.x_position),
+    y_position(position_info.y_position),
+    
+    x_objective(0),
+    y_objective(0),
+    velocity_storage(0),
+    
+    threshold_urgent_food(threshold_infos.threshold_urgent_food),
+    threshold_urgent_water(threshold_infos.threshold_urgent_water),
+    threshold_chill_food(threshold_infos.threshold_chill_food),
+    threshold_chill_water(threshold_infos.threshold_chill_water) {
 }
 
 void Specie::newTick() {
@@ -37,8 +48,8 @@ void Specie::newTick() {
 }
 
 void Specie::consume() {
-    this->food_stored -= this->base_food_consumption;
-    this->water_stored -= this->base_water_consumption;
+    this->food_stored -= this->food_consumption;
+    this->water_stored -= this->water_consumption;
     if ((this->water_stored <= 0) or (this->food_stored <= 0)){
         this->dead = true;
     }
@@ -108,19 +119,20 @@ int Specie::choose_action(float distance_nearest_food, float distance_nearest_wa
     }
 }
 
-Pacifist_specie::Pacifist_specie(Basics basic_infos, Thresholds threshold_infos) 
-   :  Specie(basic_infos, threshold_infos) {
+Pacifist_specie::Pacifist_specie(Basics basic_infos, Positions position_info, Thresholds threshold_infos) 
+   :  Specie(basic_infos, position_info, threshold_infos) {
         // miss position
         // miss velocity storage
 
 }
 
-Fighter_specie::Fighter_specie(Basics basic_infos, Thresholds threshold_infos)
-   :  Specie(basic_infos, threshold_infos) {
+Fighter_specie::Fighter_specie(Basics basic_infos, Positions position_info, Thresholds threshold_infos)
+   :  Specie(basic_infos, position_info, threshold_infos) {
        // miss posiiton
        // miss velocity storage
 }
 
-Basics basic_infos_1 = {"Racoon", 50, 20, 20, 20, 20, 1, 20, 20, 20, 20, 20, 20, 20, 20, 0.001, 0.5, 10, 2};
+Basics basic_infos_1 = {"Racoon", 50, 20, 20, 20, 20, 1, 20, 20, 20, 20, 0.5, 10, 2};
 Thresholds threshold_infos_1 = {0.25, 0.25, 0.75, 0.75};
-static Fighter_specie *Racoon = new Fighter_specie(basic_infos_1, threshold_infos_1);
+Positions position_infos_1 = {0,0};
+static Fighter_specie *Racoon = new Fighter_specie(basic_infos_1, position_infos_1, threshold_infos_1);

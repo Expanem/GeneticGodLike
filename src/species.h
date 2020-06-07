@@ -16,6 +16,11 @@ typedef struct Thresholds {
     float threshold_chill_water;
 } Threshold;
 
+typedef struct Positions {
+    int x_position;
+    int y_position;
+} Positions;
+
 typedef struct Basics {
     std::string name;
     double size;
@@ -24,15 +29,10 @@ typedef struct Basics {
     double attack;
     double defense;
     double velocity;
-    double base_food_consumption;
-    double base_water_consumption;
     double food_consumption;
     double water_consumption;
     double water_storage;
     double food_storage;
-    double water_stored;
-    double food_stored;
-    double deviation;
     double libido;
     double life_span;
     int diet;
@@ -40,7 +40,7 @@ typedef struct Basics {
 
 class Specie {
     public:
-        Specie(Basics basic_infos, Thresholds threshold_infos);
+        Specie(Basics basic_infos, Positions position_info, Thresholds threshold_infos);
         void newTick();
         void consume();
         void eat(float food_quantity);
@@ -56,23 +56,23 @@ class Specie {
         double attack;
         double defense;
         double velocity;
-        double base_food_consumption;
-        double base_water_consumption;
         double food_consumption;
         double water_consumption;
         double water_storage;
         double food_storage;
-        double water_stored;
-        double food_stored;
-        double deviation;
         double libido;
         double life_span;
         int diet;
+
+        double food_stored;
+        double water_stored;
+        double deviation;
         int tick_lived;
         bool dead;
 
         int x_position;
         int y_position;
+
         int x_objective;
         int y_objective;
         float velocity_storage;
@@ -85,14 +85,14 @@ class Specie {
 
 class Pacifist_specie: virtual public Specie {
     public:
-        Pacifist_specie(Basics basic_infos, Thresholds threshold_infos);
+        Pacifist_specie(Basics basic_infos, Positions position_info, Thresholds threshold_infos);
         ~Pacifist_specie();
     private:
 };
 
 class Fighter_specie: virtual public Specie {
     public:
-        Fighter_specie(Basics basic_infos, Thresholds threshold_infos);
+        Fighter_specie(Basics basic_infos, Positions position_info, Thresholds threshold_infos);
         ~Fighter_specie();
     private:
 };
