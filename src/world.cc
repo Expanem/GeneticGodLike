@@ -13,7 +13,7 @@ World::World()
 {
     environement.resize(world_size,vector<Tile>(world_size));
     generate();
-    Basics basic_infos_1 = {"Racoon", 'R', 50, 20, 20, 20, 20, 1, 20, 20, 20, 20, 0.5, 10, 2};
+    Basics basic_infos_1 = {"Racoon", 'R', 50, 20, 20, 20, 1, 1, 20, 20, 20, 200, 0.5, 10, 2};
     Thresholds threshold_infos_1 = {0.25, 0.25, 0.75, 0.75};
     Coordinates position_infos_1 = {25,25};
     population.push_back(new Fighter_specie(basic_infos_1, position_infos_1, threshold_infos_1));
@@ -27,7 +27,7 @@ World::~World()
 
 const void World::show()
 {
-    system("clear");
+    // system("clear");
     for (auto latitude : environement)
     {
         for (auto tile : latitude)
@@ -138,14 +138,23 @@ void World::update_population() {
         int distance_nearest_food = distance(population[i]->get_coordinates(), nearest_food);
         int distance_nearest_water = distance(population[i]->get_coordinates(), nearest_water);
         int action = population[i]->choose_action(distance_nearest_food, distance_nearest_water);
+        Coordinates old;
         switch (action)
         {
-        case 1:
+        case 1: 
+            std::cout << nearest_food.x << nearest_food.y << std::endl;
+            old = population[i]->get_coordinates();
             population[i]->newTick(action,nearest_food);
+            environement[old.x][old.y].remove_specie(population[i]);
+            environement[population[i]->get_coordinates().x][population[i]->get_coordinates().y].add_specie(population[i]);
             break;
 
-        case 0:
+        case 2: 
+            std::cout << nearest_food.x << nearest_food.y << std::endl;
+            old = population[i]->get_coordinates();
             population[i]->newTick(action,nearest_water);
+            environement[old.x][old.y].remove_specie(population[i]);
+            environement[population[i]->get_coordinates().x][population[i]->get_coordinates().y].add_specie(population[i]);
             break;
         
         default:

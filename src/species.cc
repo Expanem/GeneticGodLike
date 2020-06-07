@@ -6,6 +6,7 @@
 
 #include "species.h"
 #include "const.h"
+#include <iostream>
 
 using namespace std;
 
@@ -26,17 +27,15 @@ Specie::Specie(Basics basic_infos, Coordinates position_info, Thresholds thresho
     life_span(basic_infos.life_span),
     diet(basic_infos.diet),
 
-    food_stored(0),
-    water_stored(0),
+    food_stored(20),
+    water_stored(10),
     deviation(0),
     tick_lived(0),
     dead(false),
 
-    x_position(position_info.x),
-    y_position(position_info.y),
-    
-    x_objective(0),
-    y_objective(0),
+    coord(position_info),
+    objective({0,0}),
+
     velocity_storage(0),
     
     threshold_urgent_food(threshold_infos.threshold_urgent_food),
@@ -47,8 +46,8 @@ Specie::Specie(Basics basic_infos, Coordinates position_info, Thresholds thresho
 
 void Specie::newTick(int action, Coordinates obj) {
     this->consume(1.0);
-    x_objective = obj.x;
-    y_objective = obj.y;
+    objective=obj;
+    std::cout << "POS " << coord.x << " " << coord.y << " OBJ " << objective.x << " " << objective.y << std::endl;
     switch (action)
     {
     case 1:
@@ -100,19 +99,19 @@ void Specie::move_to_objective() { //Keep velocity energy without taking care of
     while ((velocity + velocity_storage) > 1) {
         this->consume(RATIO_VELOCITY_FOOD_CONSUMPTION);
         velocity_storage -= 1;
-        int distance_x = x_objective - x_position;
-        int distance_y = y_objective - y_position;
+        int distance_x = objective.x - coord.x;
+        int distance_y = objective.y - coord.y;
         if (abs(distance_x) > abs(distance_y)) {
             if (distance_x > 0) {
-                x_position += 1;
+                coord.x += 1;
             } else {
-                x_position -= 1;
+                coord.x -= 1;
             }
         } else {
             if (distance_y > 0) {
-                y_position += 1;
+                coord.y += 1;
             } else {
-                y_position -= 1;
+                coord.y -= 1;
             }
         }
     }

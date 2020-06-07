@@ -72,12 +72,9 @@ class Specie {
         int tick_lived;
         bool dead;
 
-        int x_position;
-        int y_position;
-        Coordinates coord; // TO DO
-
-        int x_objective;
-        int y_objective;
+        Coordinates coord;
+        Coordinates objective;
+        
         float velocity_storage;
 
         float threshold_urgent_food;
