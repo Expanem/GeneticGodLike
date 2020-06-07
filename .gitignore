@@ -1,0 +1,4 @@
+*.o
+projet
+.vscode/settings.json
+mysciper.txt
