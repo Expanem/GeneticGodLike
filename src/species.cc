@@ -96,3 +96,7 @@ Fighter_specie::Fighter_specie(Basics basic_infos, Thresholds threshold_infos)
    :  Specie(basic_infos, threshold_infos) {
 
 }
+
+Basics basic_infos_1 = {"Racoon", 50, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 0.001, 0.5, 10, 2};
+Thresholds threshold_infos_1 = {0.25, 0.25, 0.75, 0.75};
+static Fighter_specie *Racoon = new Fighter_specie(basic_infos_1, threshold_infos_1);
