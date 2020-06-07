@@ -7,9 +7,9 @@
 class Specie {
     public:
         void newTick();
-        void consuming();
-        void eating(float food_quantity);
-        void drinking(float water_quantity);
+        void consume();
+        void eat(float food_quantity);
+        void drink(float water_quantity);
         void reproduction();
         int choose_action(float distance_nearest_food, float distance_nearest_water);
     private:

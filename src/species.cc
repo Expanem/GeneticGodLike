@@ -9,10 +9,10 @@
 using namespace std;
 
 void Specie::newTick() {
-    this->consuming();
+    this->consume();
 }
 
-void Specie::consuming() {
+void Specie::consume() {
     this->food_stored -= this->base_food_consumption;
     this->water_stored -= this->base_water_consumption;
     if ((this->water_stored <= 0) or (this->food_stored <= 0)){
@@ -20,7 +20,7 @@ void Specie::consuming() {
     }
 }
 
-void Specie::drinking(float water_quantity) {
+void Specie::drink(float water_quantity) {
     if (this->water_stored == this->water_storage) {
         return;
     } else if (this->water_stored <= this->water_storage - water_quantity) {
@@ -31,7 +31,7 @@ void Specie::drinking(float water_quantity) {
     }
 }
 
-void Specie::eating(float food_quantity) {
+void Specie::eat(float food_quantity) {
     if (this->food_stored == this->food_storage) {
         return;
     } else if (this->food_stored <= this->food_storage - food_quantity) {
