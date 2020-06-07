@@ -51,6 +51,7 @@ class Specie {
         int choose_action(float distance_nearest_food, float distance_nearest_water);
 
         std::string get_name(){return name;};
+        char get_icone(){return icone;};
     protected:
         std::string name;
         char icone;
