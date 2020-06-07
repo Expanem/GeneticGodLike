@@ -9,7 +9,8 @@ class World{
 public :     
     World();
     ~World();
-    void show();
+    void generate();
+    const void show();
 private :
     std::vector<std::vector<Tile>> environement;
     std::vector<std::vector<Specie*>> population;

@@ -5,12 +5,13 @@
 #ifndef TILE_H
 #define TILE_H
 
-enum TYPE {aquatic,fertile,barren};
+enum TYPE {aquatic,fertile,barren,NOTYPE};
 
 class Tile{
 public :     
     Tile();
     TYPE get_type(){return type;}
+    void set_type(int new_type);
 private :
     std::vector<Specie*> occupation;
     //std::vector<Tree*> vegetation;
