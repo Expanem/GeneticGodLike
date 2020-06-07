@@ -48,6 +48,8 @@ class Specie {
         void reproduction();
         void move_to_objective();
         int choose_action(float distance_nearest_food, float distance_nearest_water);
+
+        string get_name(){return name;};
     protected:
         std::string name;
         double size;

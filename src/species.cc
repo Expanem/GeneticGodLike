@@ -121,15 +121,11 @@ int Specie::choose_action(float distance_nearest_food, float distance_nearest_wa
 
 Pacifist_specie::Pacifist_specie(Basics basic_infos, Positions position_info, Thresholds threshold_infos) 
    :  Specie(basic_infos, position_info, threshold_infos) {
-        // miss position
-        // miss velocity storage
 
 }
 
 Fighter_specie::Fighter_specie(Basics basic_infos, Positions position_info, Thresholds threshold_infos)
    :  Specie(basic_infos, position_info, threshold_infos) {
-       // miss posiiton
-       // miss velocity storage
 }
 
 Basics basic_infos_1 = {"Racoon", 50, 20, 20, 20, 20, 1, 20, 20, 20, 20, 0.5, 10, 2};
