@@ -12,6 +12,7 @@ void Tile::set_type(int new_type)
 {
     if(new_type < 0 || new_type > 2) type = NOTYPE;
     else type = (TYPE)new_type;
+    if(type == fertile) plant = new Vegetation(2,0,false,5,0.1,0.2,growing,'*');
 }
 
 void Tile::set_pos(unsigned int x, unsigned int y)
@@ -94,5 +95,5 @@ Specie* Tile::get_top()
 
 void Tile::update()
 {
-    plant.update(irrigated,sunlight);
+    //plant.update(irrigated,sunlight);
 }

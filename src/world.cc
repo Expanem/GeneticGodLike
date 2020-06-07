@@ -13,6 +13,11 @@ World::World()
 {
     environement.resize(world_size,vector<Tile>(world_size));
     generate();
+    Basics basic_infos_1 = {"Racoon", 'R', 50, 20, 20, 20, 20, 1, 20, 20, 20, 20, 0.5, 10, 2};
+    Thresholds threshold_infos_1 = {0.25, 0.25, 0.75, 0.75};
+    Coordinates position_infos_1 = {25,25};
+    population.push_back(new Fighter_specie(basic_infos_1, position_infos_1, threshold_infos_1));
+    environement[25][25].add_specie(population[0]);
 }
 
 World::~World()
@@ -36,6 +41,7 @@ const void World::show()
                 break;
 
             case fertile:
+                x[0] = tile.get_plant()->get_icon();
                 cout << "\033[31;42m"<<x<<"\033[0m";
                 break;
 
@@ -127,12 +133,24 @@ void World::smooth_terrain(unsigned int times, unsigned int res)
 
 void World::update_population() {
     for (int i = 0; i < population.size(); i++){
-        Coordinates nearest_food = get_nearest_food(i);
-        Coordinates nearest_water = get_nearest_water(i);
+        Coordinates nearest_food = get_nearest_food(population[i]);
+        Coordinates nearest_water = get_nearest_water(population[i]);
         int distance_nearest_food = distance(population[i]->get_coordinates(), nearest_food);
         int distance_nearest_water = distance(population[i]->get_coordinates(), nearest_water);
         int action = population[i]->choose_action(distance_nearest_food, distance_nearest_water);
-        population[i]->newTick(action);
+        switch (action)
+        {
+        case 1:
+            population[i]->newTick(action,nearest_food);
+            break;
+
+        case 0:
+            population[i]->newTick(action,nearest_water);
+            break;
+        
+        default:
+            break;
+        }
     }
 }
 
@@ -176,6 +194,7 @@ Coordinates World::get_nearest_food(Specie* specie) {
         }
         return coord;
     }
+    return coord;
 }
 
 Coordinates World::get_nearest_water(Specie* specie) {
@@ -218,6 +237,7 @@ Coordinates World::get_nearest_water(Specie* specie) {
         }
         return coord;
     }
+    return coord;
 }
 
 void World::update_tiles()

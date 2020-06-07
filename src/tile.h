@@ -14,6 +14,7 @@ public :
     TYPE get_type(){return type;}
     double get_height(){return height;}
     Specie* get_top();
+    Vegetation* get_plant(){return plant;}
     bool is_occupied(){return occupied;}
     void add_specie(Specie* specie);
     void remove_specie(Specie* specie);
@@ -24,7 +25,7 @@ public :
     void update();
 private :
     std::vector<Specie*> occupation;
-    Vegetation plant;
+    Vegetation* plant;
     TYPE type;
     unsigned int posX;
     unsigned int posY;

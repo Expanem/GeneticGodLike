@@ -1,9 +1,17 @@
 #include <iostream>
 #include "vegetation.h"
 
-Vegetation::Vegetation()
+Vegetation::Vegetation(unsigned int gspd, unsigned int cnt, bool pois, 
+               double top, double aqu, double light,STAGE sta,char ico ):
+grow_speed(gspd),
+counter(cnt),
+poisonous(pois),
+top_energy(top),
+aqua_needs(aqu),
+light_needs(light),
+state(sta),
+icon(ico)
 {
-    counter = 0;
 }
 
 Vegetation::~Vegetation()
