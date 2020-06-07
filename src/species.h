@@ -40,13 +40,14 @@ typedef struct Basics {
 
 class Specie {
     public:
+        Specie(Basics basic_infos, Thresholds threshold_infos);
         void newTick();
         void consume();
         void eat(float food_quantity);
         void drink(float water_quantity);
         void reproduction();
         int choose_action(float distance_nearest_food, float distance_nearest_water);
-    private:
+    protected:
         std::string name;
         double size;
         double weight;

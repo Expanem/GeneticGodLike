@@ -8,6 +8,30 @@
 
 using namespace std;
 
+Specie::Specie(Basics basic_infos, Thresholds threshold_infos)   
+  : name(basic_infos.name),
+    size(basic_infos.size),
+    weight(basic_infos.weight),
+    strengh(basic_infos.strengh),
+    attack(basic_infos.attack),
+    defense(basic_infos.defense),
+    velocity(basic_infos.velocity),
+    base_food_consumption(basic_infos.base_food_consumption),
+    base_water_consumption(basic_infos.base_water_consumption),
+    food_consumption(basic_infos.food_consumption),
+    water_consumption(basic_infos.water_consumption),
+    water_storage(basic_infos.water_storage),
+    food_storage(basic_infos.food_storage),
+    water_stored(basic_infos.water_stored),
+    food_stored(basic_infos.food_stored),
+    deviation(basic_infos.deviation),
+    libido(basic_infos.libido),
+    life_span(basic_infos.life_span),
+    diet(basic_infos.diet),
+    tick_lived(0),
+    dead(false) {
+}
+
 void Specie::newTick() {
     this->consume();
 }
@@ -62,10 +86,13 @@ int Specie::choose_action(float distance_nearest_food, float distance_nearest_wa
     }
 }
 
-Pacifist_specie::Pacifist_specie(Basics basic_infos, Thresholds threshold_infos) {
+Pacifist_specie::Pacifist_specie(Basics basic_infos, Thresholds threshold_infos) 
+   :  Specie(basic_infos, threshold_infos) {
+
 
 }
 
-Fighter_specie::Fighter_specie(Basics basic_infos, Thresholds threshold_infos) {
+Fighter_specie::Fighter_specie(Basics basic_infos, Thresholds threshold_infos)
+   :  Specie(basic_infos, threshold_infos) {
 
 }
