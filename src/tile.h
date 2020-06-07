@@ -12,12 +12,13 @@ public :
     Tile();
     TYPE get_type(){return type;}
     void set_type(int new_type);
+    void set_pos(unsigned int x, unsigned int y);
 private :
     std::vector<Specie*> occupation;
     //std::vector<Tree*> vegetation;
     TYPE type;
-    //const unsigned int posX;
-    //const unsigned int posY;
+    unsigned int posX;
+    unsigned int posY;
     double irrigated; // 0 (far from aquatic tile) to 1 (border with an aquatic tile)
     double height;
     double sunlight;

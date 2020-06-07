@@ -12,6 +12,5 @@ using namespace std;
 
 int main(int argc, char *argv[]) {
     World my_world;
-    my_world.generate();
     my_world.show();
 }

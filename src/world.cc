@@ -9,6 +9,7 @@ using namespace std;
 World::World()
 {
     environement.resize(world_size,vector<Tile>(world_size));
+    generate();
 }
 
 World::~World()
@@ -22,7 +23,6 @@ const void World::show()
     {
         for (auto tile : latitude)
         {
-            cout<<tile.get_type();
             switch (tile.get_type())
             {
             case aquatic:
@@ -38,6 +38,7 @@ const void World::show()
                 break;
             
             default:
+                cout<<"  ";
                 break;
             }
         }
@@ -49,14 +50,39 @@ const void World::show()
 void World::generate()
 {
     srand((unsigned)time(0));
-    for (auto latitude : environement)
-    {
-        for (auto tile : latitude)
-        {
+    for (int i = 0; i < environement.size(); i++){
+        for (int j = 0; j < environement[i].size(); j++){
             int a = rand()%3;
-            cout<<a<<", ";
-            tile.set_type(a);
+            environement[i][j].set_type(a);
         }
     }
-    cout<<"Done generating terrain."<<endl;
+    
+    for (size_t i = 0; i < 16; i++)
+    {
+        smooth_terrain();
+    }
+    
+
+}
+
+void World::smooth_terrain()
+{
+    for (unsigned int i = 1; i < environement.size()-1; i++)
+    {
+        for (unsigned int j = 1; j < environement[i].size()-1; j++)
+        {
+            unsigned int terraincount [3] = {};
+            terraincount[environement[i+1][j].get_type()]++;
+            terraincount[environement[i-1][j].get_type()]++;
+            terraincount[environement[i][j+1].get_type()]++;
+            terraincount[environement[i][j-1].get_type()]++;
+
+            for (size_t m = 0; m < 3; m++)
+            {
+                if(terraincount[m] > 2) environement[i][j].set_type(m);
+            }
+            
+        }
+    }
+    
 }
