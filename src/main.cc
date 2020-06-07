@@ -7,6 +7,7 @@
 #include <iostream>
 #include <string>
 #include "world.h"
+#include "species.h"
 
 using namespace std;
 

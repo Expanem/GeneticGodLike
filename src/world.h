@@ -13,7 +13,8 @@ public :
     //void numeric();
 private :
     void generate();
-    void smooth_terrain();
+    void smooth_terrain(unsigned int times, unsigned int res);
+    void smooth_height(unsigned int times);
 
     std::vector<std::vector<Tile>> environement;
     std::vector<std::vector<Specie*>> population;

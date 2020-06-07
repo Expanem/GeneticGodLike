@@ -11,8 +11,11 @@ class Tile{
 public :     
     Tile();
     TYPE get_type(){return type;}
+    double get_height(){return height;}
+    void set_height(double new_height);
     void set_type(int new_type);
     void set_pos(unsigned int x, unsigned int y);
+    void generate_intra();
 private :
     std::vector<Specie*> occupation;
     //std::vector<Tree*> vegetation;

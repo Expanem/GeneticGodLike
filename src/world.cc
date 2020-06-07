@@ -34,7 +34,7 @@ const void World::show()
                 break;
 
             case barren:
-                cout << "\033[1,30m\u2588\u2588\033[0m";
+                cout << "\030\u2592\u2592\033[0m";
                 break;
             
             default:
@@ -50,39 +50,71 @@ const void World::show()
 void World::generate()
 {
     srand((unsigned)time(0));
-    for (int i = 0; i < environement.size(); i++){
-        for (int j = 0; j < environement[i].size(); j++){
+    for (int i = 1; i < environement.size()-1; i++){
+        for (int j = 1; j < environement[i].size()-1; j++){
             int a = rand()%3;
             environement[i][j].set_type(a);
         }
     }
     
-    for (size_t i = 0; i < 16; i++)
-    {
-        smooth_terrain();
-    }
+    smooth_terrain(3,3);
     
-
-}
-
-void World::smooth_terrain()
-{
-    for (unsigned int i = 1; i < environement.size()-1; i++)
-    {
-        for (unsigned int j = 1; j < environement[i].size()-1; j++)
-        {
-            unsigned int terraincount [3] = {};
-            terraincount[environement[i+1][j].get_type()]++;
-            terraincount[environement[i-1][j].get_type()]++;
-            terraincount[environement[i][j+1].get_type()]++;
-            terraincount[environement[i][j-1].get_type()]++;
-
-            for (size_t m = 0; m < 3; m++)
-            {
-                if(terraincount[m] > 2) environement[i][j].set_type(m);
-            }
-            
+    for (int i = 1; i < environement.size()-1; i++){
+        for (int j = 1; j < environement[i].size()-1; j++){
+            environement[i][j].generate_intra();
         }
     }
-    
+
+    smooth_height(1);
+}
+
+void World::smooth_height(unsigned int times)
+{
+    for (unsigned int t = 0 ; t < times ; t++)
+    {
+        for (unsigned int i = 1; i < environement.size()-1; i++)
+        {
+            for (unsigned int j = 1; j < environement[i].size()-1; j++)
+            {
+                double mean = 0;
+                mean += environement[i+1][j+1].get_height();
+                mean += environement[i+1][j].get_height();
+                mean += environement[i+1][j-1].get_height();
+                mean += environement[i-1][j+1].get_height();
+                mean += environement[i-1][j].get_height();
+                mean += environement[i-1][j-1].get_height();
+                mean += environement[i][j+1].get_height();
+                mean += environement[i][j-1].get_height();
+                environement[i][j].set_height(mean/8);
+            }
+        }
+    }
+}
+
+void World::smooth_terrain(unsigned int times, unsigned int res)
+{
+    for (unsigned int t =0 ; t < times ; t++)
+    {
+        for (unsigned int i = 1; i < environement.size()-1; i++)
+        {
+            for (unsigned int j = 1; j < environement[i].size()-1; j++)
+            {
+                unsigned int terraincount [3] = {};
+                terraincount[environement[i+1][j].get_type()]++;
+                terraincount[environement[i-1][j].get_type()]++;
+                terraincount[environement[i][j+1].get_type()]++;
+                terraincount[environement[i][j-1].get_type()]++;
+                terraincount[environement[i+1][j+1].get_type()]++;
+                terraincount[environement[i-1][j-1].get_type()]++;
+                terraincount[environement[i+1][j-1].get_type()]++;
+                terraincount[environement[i-1][j+1].get_type()]++;
+
+                for (size_t m = 0; m < res; m++)
+                {
+                    if(terraincount[m] > 3) environement[i][j].set_type(m);
+                }
+                
+            }
+        }
+    }
 }
