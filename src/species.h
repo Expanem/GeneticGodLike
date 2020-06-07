@@ -11,6 +11,7 @@ class Specie {
         void eating(float food_quantity);
         void drinking(float water_quantity);
         void reproduction();
+        int choose_action(float distance_nearest_food, float distance_nearest_water);
     private:
         double size;
         double weight;
@@ -32,5 +33,9 @@ class Specie {
         int diet;
         int tick_lived;
         bool dead;
-        
+
+        float threshold_urgent_food;
+        float threshold_urgent_water;
+        float threshold_chill_food;
+        float threshold_chill_water;
 }

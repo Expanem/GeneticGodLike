@@ -41,3 +41,23 @@ void Specie::eating(float food_quantity) {
         this->food_stored += food_quantity;
     }
 }
+
+int Specie::choose_action(float distance_nearest_food, float distance_nearest_water) {
+    float food_per = food_stored / food_storage;
+    float water_per = water_stored / water_storage;
+    if (food_per <= threshold_urgent_food or water_per <= threshold_urgent_water) {
+        if (food_per <= water_per) {
+            return 1; // Choose food
+        } else {
+            return 2; // Choose water
+        }
+    } else if (food_per < threshold_chill_food or water_per < threshold_chill_water) {
+        if (food_per <= water_per) {
+            return 1; // Choose food
+        } else {
+            return 2; // Choose water
+        }
+    } else {
+            return 3; // Try to mate
+    }
+}
