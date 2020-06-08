@@ -212,6 +212,9 @@ Coordinates World::get_nearest_food(Specie* specie) {
 
 Coordinates World::get_nearest_food(Specie* specie) {
     Coordinates specie_coord = specie->get_coordinates();
+    if(environement[specie_coord.x][specie_coord.y].get_type()==fertile){
+        return specie_coord;
+    }
     Coordinates food_coord = {0,0};
     int half_world_size = world_size / 2;
     for (int radius = 0; radius < half_world_size; radius++){
@@ -233,6 +236,9 @@ Coordinates World::get_nearest_food(Specie* specie) {
 
 Coordinates World::get_nearest_water(Specie* specie) {
     Coordinates specie_coord = specie->get_coordinates();
+    if(environement[specie_coord.x][specie_coord.y].get_type()==aquatic){
+        return specie_coord;
+    }
     Coordinates water_coord = {0,0};
     int half_world_size = world_size / 2;
     for (int radius = 0; radius < half_world_size; radius++){
@@ -242,7 +248,7 @@ Coordinates World::get_nearest_water(Specie* specie) {
                 water_coord.y = specie_coord.y + clock_y;
                 if (water_coord.x < 0 || water_coord.x >= world_size){}
                 else if (water_coord.y < 0 || water_coord.y >= world_size){}
-                else if(environement[water_coord.x][water_coord.y].get_type()==fertile){
+                else if(environement[water_coord.x][water_coord.y].get_type()==aquatic){
                     std::cout << "FIND " << water_coord.x << " " << water_coord.y << std::endl;
                     return water_coord;
                 
