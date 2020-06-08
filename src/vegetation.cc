@@ -56,3 +56,9 @@ double Vegetation::eat()
     icon = '.';
     return ene;
 }
+
+bool Vegetation::is_eatable(){
+    if (state == (full or spreading)) {
+        return true;
+    } else { return false; }
+}

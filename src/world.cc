@@ -13,7 +13,7 @@ World::World()
 {
     environement.resize(world_size,vector<Tile>(world_size));
     generate();
-    Basics basic_infos_1 = {"Racoon", 'R', 50, 20, 20, 20, 1, 1, 1, 1, 50, 80, 0.5, 10, 2};
+    Basics basic_infos_1 = {"Racoon", 'R', 50, 20, 20, 20, 1, 1, 1, 1, 50, 40, 0.5, 10, 2};
     Thresholds threshold_infos_1 = {0.25, 0.25, 0.75, 0.75};
     Coordinates position_infos_1 = {25,25};
     population.push_back(new Fighter_specie(basic_infos_1, position_infos_1, threshold_infos_1));
@@ -157,14 +157,24 @@ void World::update_population() {
             exit(1);
             break;
         }
-        std::cout << "Update : " << std::endl;
+        std::cout << "----------------------" << std::endl;
+        std::cout << "Update of : " << i << std::endl;
         std::cout << "OLD POSITION " << current.x << " " << current.y << std::endl;
-        std::cout << "WATER " << nearest_food.x << " " << nearest_food.y << std::endl;
-        std::cout << "FOOD " << nearest_water.x << " " << nearest_water.y << std::endl;
+        std::cout << "WATER COORD " << nearest_food.x << " " << nearest_food.y << std::endl;
+        std::cout << "FOOD COORD " << nearest_water.x << " " << nearest_water.y << std::endl;
         population[i]->update(nearest_food,nearest_water);
         environement[current.x][current.y].remove_specie(population[i]);
         environement[population[i]->get_coordinates().x][population[i]->get_coordinates().y].add_specie(population[i]);
-        std::cout << "NEW COORD " << population[i]->get_coordinates().x << " " << population[i]->get_coordinates().y << std::endl;
+        current = population[i]->get_coordinates();
+        std::cout << "NEW POSITION " << population[i]->get_coordinates().x << " " << population[i]->get_coordinates().y << std::endl;
+        std::cout << "FOOD STORED " << population[i]->get_food_stored() << std::endl;
+        std::cout << "WATER STORED " << population[i]->get_water_stored() << std::endl;
+    
+        if (population[i]->get_state()) {
+            environement[current.x][current.y].remove_specie(population[i]); 
+            population[i] = population.back();
+            population.pop_back();
+        } // Should let the corpse
     }
 }
 
@@ -183,8 +193,10 @@ Coordinates World::get_nearest_food(Specie* specie) {
                 if (food_coord.x < 0 || food_coord.x >= world_size){}
                 else if (food_coord.y < 0 || food_coord.y >= world_size){}
                 else if(environement[food_coord.x][food_coord.y].get_type()==fertile){
+                    if (environement[food_coord.x][food_coord.y].get_plant()->is_eatable() == true) {
                     return food_coord;
-                
+
+                    }
                 }
             }
         }

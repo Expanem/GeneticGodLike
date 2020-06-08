@@ -12,6 +12,7 @@ public:
     STAGE get_state(){return state;}
     char get_icon(){return icon;}
     bool is_poisonous(){return poisonous;}
+    bool is_eatable();
     void update(double light,double water);
     double eat();
 protected:

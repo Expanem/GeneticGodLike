@@ -51,6 +51,8 @@ class Specie {
         char get_icon(){return icon;};
         Coordinates get_coordinates(){return coord;}; 
         bool get_state(){return dead;};
+        double get_food_stored(){return food_stored;};
+        double get_water_stored(){return water_stored;};
 
         void set_icon(char ic){icon = ic;};
     protected:
