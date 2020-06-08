@@ -40,7 +40,7 @@ typedef struct Basics {
 class Specie {
     public:
         Specie(Basics basic_infos, Coordinates position_info, Thresholds threshold_infos);
-        void update(Tile* actual_tile, Coordinates nearest_food, Coordinates nearest_water);
+        void update(Tile actual_tile, Coordinates nearest_food, Coordinates nearest_water);
         void consume(float ratio);
         void eat(Vegetation* plant);
         void drink(float water_quantity);

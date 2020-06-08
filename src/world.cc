@@ -139,7 +139,7 @@ void World::update_population() {
         int distance_nearest_food = distance(current, nearest_food);
         int distance_nearest_water = distance(current, nearest_water);
         
-        population[i]->update(environement[current.x][current.y],nearest_food,nearest_water)
+        population[i]->update(environement[current.x][current.y],nearest_food,nearest_water);
     }
 }
 
