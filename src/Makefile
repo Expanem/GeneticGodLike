@@ -20,7 +20,7 @@ world.o: world.cc world.h tile.h const.h species.h tools.h
 tile.o: tile.cc tile.h species.h vegetation.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
-species.o: species.cc species.h tools.h const.h
+species.o: species.cc species.h tools.h const.h tile.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
 vegetation.o: vegetation.cc vegetation.h

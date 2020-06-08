@@ -135,33 +135,11 @@ void World::update_population() {
     for (int i = 0; i < population.size(); i++){
         Coordinates nearest_food = get_nearest_food(population[i]);
         Coordinates nearest_water = get_nearest_water(population[i]);
-        int distance_nearest_food = distance(population[i]->get_coordinates(), nearest_food);
-        int distance_nearest_water = distance(population[i]->get_coordinates(), nearest_water);
-        int action = population[i]->choose_action(distance_nearest_food, distance_nearest_water);
-        Coordinates old;
-        std::cout << "FOOD " << nearest_food.x << " " << nearest_food.y << std::endl;
-        switch (action)
-        {
-        case 1: 
-            std::cout << nearest_food.x << nearest_food.y << std::endl;
-            old = population[i]->get_coordinates();
-            population[i]->newTick(action,nearest_food);
-            environement[old.x][old.y].remove_specie(population[i]);
-            environement[population[i]->get_coordinates().x][population[i]->get_coordinates().y].add_specie(population[i]);
-            break;
-
-        case 2: 
-            std::cout << nearest_food.x << nearest_food.y << std::endl;
-            old = population[i]->get_coordinates();
-            population[i]->newTick(action,nearest_water);
-            environement[old.x][old.y].remove_specie(population[i]);
-            environement[population[i]->get_coordinates().x][population[i]->get_coordinates().y].add_specie(population[i]);
-            break;
+        Coordinates current = population[i]->get_coordinates();
+        int distance_nearest_food = distance(current, nearest_food);
+        int distance_nearest_water = distance(current, nearest_water);
         
-        default:
-            break;
-        }
-        if (population[i]->is_dead()) population[i].set_icon('X');
+        population[i]->update(environement[current.x][current.y],nearest_food,nearest_water)
     }
 }
 
