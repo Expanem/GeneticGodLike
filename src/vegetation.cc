@@ -58,7 +58,7 @@ double Vegetation::eat()
 }
 
 bool Vegetation::is_eatable(){
-    if (state == (full or spreading)) {
+    if (state == full or state == spreading) {
         return true;
     } else { return false; }
 }

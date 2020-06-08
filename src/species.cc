@@ -96,7 +96,9 @@ void Specie::eat(Vegetation* plant) {
 }
 
 void Specie::move_to_objective() { //Keep velocity energy without taking care of direction
+    std::cout << "THIS IS MY OBJECTIVE " << objective.x << " " << objective.y << std::endl; 
     velocity_storage += velocity;
+    std::cout << "VELOCITY STORED" << velocity_storage << std::endl;
     while ((velocity + velocity_storage) > 1) {
         this->consume(RATIO_VELOCITY_FOOD_CONSUMPTION);
         velocity_storage -= 1;

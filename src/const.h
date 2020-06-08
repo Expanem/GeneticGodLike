@@ -1,7 +1,7 @@
 #ifndef CONST_H
 #define CONST_H
 
-#define RATIO_VELOCITY_FOOD_CONSUMPTION 3.0
+#define RATIO_VELOCITY_FOOD_CONSUMPTION 2
 
 const double max_height = 1000;
 const double max_intrasec = 1;
