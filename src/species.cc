@@ -101,6 +101,9 @@ void Specie::move_to_objective() { //Keep velocity energy without taking care of
         velocity_storage -= 1;
         int distance_x = objective.x - coord.x;
         int distance_y = objective.y - coord.y;
+        if (distance_x == 0 and distance_y == 0){
+            return;
+        }
         if (abs(distance_x) > abs(distance_y)) {
             if (distance_x > 0) {
                 coord.x += 1;
