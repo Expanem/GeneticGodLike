@@ -12,6 +12,8 @@ light_needs(light),
 state(sta),
 icon(ico)
 {
+    energy = top_energy/2;
+    std::cout << "ENERGY AT CREATION" << energy << std::endl;
 }
 
 Vegetation::~Vegetation()
@@ -51,6 +53,7 @@ void Vegetation::update(double light, double water)
 double Vegetation::eat()
 {
     double ene = energy;
+    std::cout << "ENERGY STORED BY PLANT " << ene << std::endl;
     energy = 0;
     state = damaged;
     icon = '.';
