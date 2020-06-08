@@ -7,7 +7,12 @@
 #include "simulation.h"
 #include "world.h"
 
+#include <chrono>
+#include <thread>
+
 using namespace std;
+using namespace std::this_thread; // sleep_for, sleep_until
+using namespace std::chrono; // nanoseconds, system_clock, seconds
 
 static World* my_world;
 
@@ -21,6 +26,7 @@ void main_loop(int nb_ticks) {
     for (int i = 0; i < nb_ticks; i++) {
         cout << i << endl;
         my_world->update_population();
+        my_world->show();
+        sleep_for(nanoseconds(100000000));
     }
-    my_world->show();
 }

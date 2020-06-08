@@ -27,7 +27,7 @@ World::~World()
 
 const void World::show()
 {
-    // system("clear");
+    system("clear");
     for (auto latitude : environement)
     {
         for (auto tile : latitude)
@@ -139,6 +139,8 @@ void World::update_population() {
         int distance_nearest_water = distance(population[i]->get_coordinates(), nearest_water);
         int action = population[i]->choose_action(distance_nearest_food, distance_nearest_water);
         Coordinates old;
+        nearest_water = {30,30};
+        nearest_food  = {30,20};
         switch (action)
         {
         case 1: 
