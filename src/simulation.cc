@@ -27,6 +27,6 @@ void main_loop(int nb_ticks) {
         cout << i << endl;
         my_world->update_population();
         my_world->show();
-        sleep_for(nanoseconds(200000000));
+        sleep_for(nanoseconds(800000000));
     }
 }

@@ -6,7 +6,6 @@
 
 #include "species.h"
 #include "const.h"
-#include "tile.h"
 #include <iostream>
 
 using namespace std;
@@ -45,25 +44,11 @@ Specie::Specie(Basics basic_infos, Coordinates position_info, Thresholds thresho
     threshold_chill_water(threshold_infos.threshold_chill_water) {
 }
 
-void Specie::update(Tile actual_tile, Coordinates nearest_food, Coordinates nearest_water) {
+void Specie::update(Coordinates nearest_food, Coordinates nearest_water) {
     int distance_nearest_food = distance(coord, nearest_food);
     int distance_nearest_water = distance(coord, nearest_water);
     int action = choose_action(distance_nearest_food, distance_nearest_water);
-    switch (actual_tile.get_type())
-    {
-    case aquatic:
-        drink(1); // REALLY THIS MUCH !!!!!!!!!!!!?????
-        break;
-    case fertile:
-        eat(actual_tile.get_plant());
-        break;
-    case barren:
-        break;
-    default:
-        std::cout << "ERROR" << std::endl;
-        exit(1);
-        break;
-    }
+    std::cout << "OBJECTIVE " << action << std::endl;
     this->consume(1.0);
     switch (action) {
     case 1: // FOOD

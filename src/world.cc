@@ -13,11 +13,14 @@ World::World()
 {
     environement.resize(world_size,vector<Tile>(world_size));
     generate();
-    Basics basic_infos_1 = {"Racoon", 'R', 50, 20, 20, 20, 1, 1, 20, 20, 20, 200, 0.5, 10, 2};
+    Basics basic_infos_1 = {"Racoon", 'R', 50, 20, 20, 20, 1, 1, 1, 1, 50, 80, 0.5, 10, 2};
     Thresholds threshold_infos_1 = {0.25, 0.25, 0.75, 0.75};
     Coordinates position_infos_1 = {25,25};
     population.push_back(new Fighter_specie(basic_infos_1, position_infos_1, threshold_infos_1));
     environement[25][25].add_specie(population[0]);
+    position_infos_1 = {15,15};
+    population.push_back(new Fighter_specie(basic_infos_1, position_infos_1, threshold_infos_1));
+    environement[15][15].add_specie(population[0]);
 }
 
 World::~World()
@@ -27,7 +30,7 @@ World::~World()
 
 const void World::show()
 {
-    system("clear");
+    //system("clear");
     for (auto latitude : environement)
     {
         for (auto tile : latitude)
@@ -139,7 +142,29 @@ void World::update_population() {
         int distance_nearest_food = distance(current, nearest_food);
         int distance_nearest_water = distance(current, nearest_water);
         
-        population[i]->update(environement[current.x][current.y],nearest_food,nearest_water);
+        switch (environement[current.x][current.y].get_type())
+        {
+        case aquatic:
+            population[i]->drink(20); // REALLY THIS MUCH !!!!!!!!!!!!?????
+            break;
+        case fertile:
+            population[i]->eat(environement[current.x][current.y].get_plant());
+            break;
+        case barren:
+            break;
+        default:
+            std::cout << "ERROR" << std::endl;
+            exit(1);
+            break;
+        }
+        std::cout << "Update : " << std::endl;
+        std::cout << "OLD POSITION " << current.x << " " << current.y << std::endl;
+        std::cout << "WATER " << nearest_food.x << " " << nearest_food.y << std::endl;
+        std::cout << "FOOD " << nearest_water.x << " " << nearest_water.y << std::endl;
+        population[i]->update(nearest_food,nearest_water);
+        environement[current.x][current.y].remove_specie(population[i]);
+        environement[population[i]->get_coordinates().x][population[i]->get_coordinates().y].add_specie(population[i]);
+        std::cout << "NEW COORD " << population[i]->get_coordinates().x << " " << population[i]->get_coordinates().y << std::endl;
     }
 }
 
@@ -158,7 +183,6 @@ Coordinates World::get_nearest_food(Specie* specie) {
                 if (food_coord.x < 0 || food_coord.x >= world_size){}
                 else if (food_coord.y < 0 || food_coord.y >= world_size){}
                 else if(environement[food_coord.x][food_coord.y].get_type()==fertile){
-                    std::cout << "FIND " << food_coord.x << " " << food_coord.y << std::endl;
                     return food_coord;
                 
                 }
@@ -182,7 +206,6 @@ Coordinates World::get_nearest_water(Specie* specie) {
                 if (water_coord.x < 0 || water_coord.x >= world_size){}
                 else if (water_coord.y < 0 || water_coord.y >= world_size){}
                 else if(environement[water_coord.x][water_coord.y].get_type()==aquatic){
-                    std::cout << "FIND " << water_coord.x << " " << water_coord.y << std::endl;
                     return water_coord;
                 
                 }
