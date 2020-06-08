@@ -6,6 +6,7 @@
 
 #include "species.h"
 #include "const.h"
+#include "tile.h"
 #include <iostream>
 
 using namespace std;
@@ -44,19 +45,36 @@ Specie::Specie(Basics basic_infos, Coordinates position_info, Thresholds thresho
     threshold_chill_water(threshold_infos.threshold_chill_water) {
 }
 
-void Specie::newTick(int action, Coordinates obj) {
-    this->consume(1.0);
-    objective=obj;
-    std::cout << "POS " << coord.x << " " << coord.y << " OBJ " << objective.x << " " << objective.y << std::endl;
-    switch (action)
+void Specie::update(Tile* actual_tile, Coordinates nearest_food, Coordinates nearest_water) {
+    int distance_nearest_food = distance(coord, nearest_food);
+    int distance_nearest_water = distance(coord, nearest_water);
+    int action = choose_action(distance_nearest_food, distance_nearest_water);
+    switch (actual_tile->get_type())
     {
-    case 1:
-        move_to_objective();
+    case aquatic:
+        drink(1); // REALLY THIS MUCH !!!!!!!!!!!!?????
         break;
+    case fertile:
+        eat(actual_tile->get_plant());
+        break;
+    case barren:
+        break;
+    default:
+        std::cout << "ERROR" << std::endl;
+        exit(1);
+        break;
+    }
+    this->consume(1.0);
+    switch (action) {
+    case 1: // FOOD
+        objective = nearest_food;
+        move_to_objective();
+        break; // WATER
     case 2:
+        objective = nearest_water;
         move_to_objective();
         break;
-    case 3:
+    case 3: // MATE
         move_to_objective();
         break;
     default:
@@ -83,7 +101,9 @@ void Specie::drink(float water_quantity) {
     }
 }
 
-void Specie::eat(float food_quantity) {
+void Specie::eat(Vegetation* plant) {
+    // TO DO !!!!!!!!!!!!
+    int food_quantity = 0;
     if (this->food_stored == this->food_storage) {
         return;
     } else if (this->food_stored <= this->food_storage - food_quantity) {
