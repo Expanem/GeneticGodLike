@@ -4,11 +4,11 @@
   \brief  simulation module
 */
 
-#include "simulation.h"
-#include "world.h"
-
 #include <chrono>
 #include <thread>
+
+#include "simulation.h"
+#include "world.h"
 
 using namespace std;
 using namespace std::this_thread; // sleep_for, sleep_until

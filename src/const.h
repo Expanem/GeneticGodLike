@@ -1,3 +1,9 @@
+/*!
+  \file   const.h
+  \date   June 2020
+  \brief  constants used in the project
+*/
+
 #ifndef CONST_H
 #define CONST_H
 
