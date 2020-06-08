@@ -9,6 +9,7 @@
 
 #include <string>
 #include "tools.h"
+#include "vegetation.h"
 #include "tile.h"
 
 typedef struct Thresholds {

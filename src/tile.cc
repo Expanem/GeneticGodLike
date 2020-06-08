@@ -2,6 +2,7 @@
 #include "tile.h"
 #include "const.h"
 #include "vegetation.h"
+#include "species.h"
 
 Tile::Tile()
 {

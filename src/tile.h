@@ -1,10 +1,10 @@
+#ifndef TILE_H
+#define TILE_H
+
 #include <iostream>
 #include <vector>
 #include "species.h"
 #include "vegetation.h"
-
-#ifndef TILE_H
-#define TILE_H
 
 enum TYPE {aquatic,fertile,barren,NOTYPE};
 
