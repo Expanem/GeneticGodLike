@@ -12,7 +12,7 @@ using namespace std;
 
 Specie::Specie(Basics basic_infos, Coordinates position_info, Thresholds threshold_infos)   
   : name(basic_infos.name),
-    icone(basic_infos.icone),
+    icon(basic_infos.icon),
     size(basic_infos.size),
     weight(basic_infos.weight),
     strengh(basic_infos.strengh),
