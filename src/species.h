@@ -19,7 +19,7 @@ typedef struct Thresholds {
 
 typedef struct Basics {
     std::string name;
-    char icone;
+    char icon;
     double size;
     double weight;
     double strengh;
@@ -47,12 +47,14 @@ class Specie {
         int choose_action(float distance_nearest_food, float distance_nearest_water);
 
         std::string get_name(){return name;};
-        char get_icone(){return icone;};
+        char get_icon(){return icon;};
         Coordinates get_coordinates(){return coord;}; 
         bool get_state(){return dead;};
+
+        void set_icon(char ic){icon = ic;};
     protected:
         std::string name;
-        char icone;
+        char icon;
         double size;
         double weight;
         double strengh;
