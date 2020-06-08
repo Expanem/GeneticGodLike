@@ -102,15 +102,11 @@ void Specie::drink(float water_quantity) {
 }
 
 void Specie::eat(Vegetation* plant) {
-    // TO DO !!!!!!!!!!!!
-    int food_quantity = 0;
-    if (this->food_stored == this->food_storage) {
-        return;
-    } else if (this->food_stored <= this->food_storage - food_quantity) {
-        this->food_stored = this->food_storage;
-        return;
-    } else {
-        this->food_stored += food_quantity;
+    if (food_stored == food_storage) { return; }  
+    else {
+        if (plant->is_poisonous()){ dead = true; }
+        food_stored += plant->eat();
+        if (food_stored > food_storage) {food_stored = food_storage;}
     }
 }
 
