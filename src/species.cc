@@ -87,11 +87,13 @@ void Specie::drink(float water_quantity) {
 }
 
 void Specie::eat(Vegetation* plant) {
-    if (food_stored == food_storage) { return; }  
+    if (food_stored == food_storage) { std::cout << "MAXED FOOD1" << std::endl; return; }  
     else {
         if (plant->is_poisonous()){ dead = true; }
+        cout << "FOOD BEFORE " << food_stored << std::endl;
         food_stored += plant->eat();
-        if (food_stored > food_storage) {food_stored = food_storage;}
+        cout << "FOOD AFTER " << food_stored << std::endl;
+        if (food_stored > food_storage) { std::cout << "MAXED FOOD2" << std::endl; food_stored = food_storage;}
     }
 }
 

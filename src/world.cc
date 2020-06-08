@@ -13,7 +13,7 @@ World::World()
 {
     environement.resize(world_size,vector<Tile>(world_size));
     generate();
-    Basics basic_infos_1 = {"Racoon", 'R', 50, 20, 20, 20, 1, 1, 1, 1, 50, 40, 0.5, 10, 2};
+    Basics basic_infos_1 = {"Racoon", 'R', 50, 20, 20, 20, 1, 1, 1, 1, 60, 60, 0.5, 10, 2};
     Thresholds threshold_infos_1 = {0.25, 0.25, 0.75, 0.75};
     Coordinates position_infos_1 = {25,25};
     population.push_back(new Fighter_specie(basic_infos_1, position_infos_1, threshold_infos_1));
@@ -137,12 +137,16 @@ void World::smooth_terrain(unsigned int times, unsigned int res)
 void World::update_population() {
     for (int i = 0; i < population.size(); i++){
         Coordinates current = population[i]->get_coordinates();
+        std::cout << "----------------------" << std::endl;
+        std::cout << "Update of : " << i << std::endl;
+        std::cout << "OLD POSITION " << current.x << " " << current.y << std::endl;
         switch (environement[current.x][current.y].get_type())
         {
         case aquatic:
             population[i]->drink(40); // REALLY THIS MUCH !!!!!!!!!!!!?????
             break;
         case fertile:
+            cout << "EATING" << endl;
             population[i]->eat(environement[current.x][current.y].get_plant());
             break;
         case barren:
@@ -158,9 +162,6 @@ void World::update_population() {
         int distance_nearest_food = distance(current, nearest_food);
         int distance_nearest_water = distance(current, nearest_water);
         
-        std::cout << "----------------------" << std::endl;
-        std::cout << "Update of : " << i << std::endl;
-        std::cout << "OLD POSITION " << current.x << " " << current.y << std::endl;
         std::cout << "FOOD COORD " << nearest_food.x << " " << nearest_food.y << std::endl;
         std::cout << "WATER COORD " << nearest_water.x << " " << nearest_water.y << std::endl;
         population[i]->update(nearest_food,nearest_water);
@@ -196,11 +197,14 @@ Coordinates World::get_nearest_food(Specie* specie) {
                 else if (food_coord.y < 0 || food_coord.y >= world_size){}
                 else if (food_coord.x == specie_coord.x && food_coord.y == specie_coord.y){}
                 else if(environement[food_coord.x][food_coord.y].get_type()==fertile){
-                    cout << "FOUND SOME FOOD NOT EATABLE" << food_coord.x << " " << food_coord.y << std::endl;
+                    cout << "FOUND SOME FOOD MAYBE NOT EATABLE" << food_coord.x << " " << food_coord.y << std::endl;
+                    return food_coord;
+
+                    /*
                     if (environement[food_coord.x][food_coord.y].get_plant()->is_eatable() == true) {
                         return food_coord;
                         cout << "FOUND SOME FOOD" << food_coord.x << " " << food_coord.y << std::endl;
-                    }
+                    } */ // NOT WORKING !!!!
                 }
             }
         }
