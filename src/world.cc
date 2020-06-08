@@ -139,8 +139,9 @@ void World::update_population() {
         int distance_nearest_water = distance(population[i]->get_coordinates(), nearest_water);
         int action = population[i]->choose_action(distance_nearest_food, distance_nearest_water);
         Coordinates old;
-        nearest_water = {30,30};
-        nearest_food  = {30,20};
+        std::cout << "FOOD " << nearest_food.x << " " << nearest_food.y << std::endl;
+        //nearest_water = {30,30};
+        //nearest_food  = {30,20};
         switch (action)
         {
         case 1: 
@@ -164,7 +165,7 @@ void World::update_population() {
         }
     }
 }
-
+/*
 Coordinates World::get_nearest_food(Specie* specie) {
     Coordinates coord;
     Coordinates ent_pos = specie->get_coordinates();
@@ -206,8 +207,52 @@ Coordinates World::get_nearest_food(Specie* specie) {
         return coord;
     }
     return coord;
-}
+} */
 
+
+Coordinates World::get_nearest_food(Specie* specie) {
+    Coordinates specie_coord = specie->get_coordinates();
+    Coordinates food_coord = {0,0};
+    int half_world_size = world_size / 2;
+    for (int radius = 0; radius < half_world_size; radius++){
+        for (int clock_x = -radius; clock_x <= radius; clock_x++){
+            for (int clock_y = -radius; clock_y <= radius; clock_y++){
+                food_coord.x = specie_coord.x + clock_x;
+                food_coord.y = specie_coord.y + clock_y;
+                if (food_coord.x < 0 || food_coord.x >= world_size){}
+                else if (food_coord.y < 0 || food_coord.y >= world_size){}
+                else if(environement[food_coord.x][food_coord.y].get_type()==fertile){
+                    std::cout << "FIND " << food_coord.x << " " << food_coord.y << std::endl;
+                    return food_coord;
+                
+                }
+            }
+        }
+    }
+} 
+
+Coordinates World::get_nearest_water(Specie* specie) {
+    Coordinates specie_coord = specie->get_coordinates();
+    Coordinates water_coord = {0,0};
+    int half_world_size = world_size / 2;
+    for (int radius = 0; radius < half_world_size; radius++){
+        for (int clock_x = -radius; clock_x <= radius; clock_x++){
+            for (int clock_y = -radius; clock_y <= radius; clock_y++){
+                water_coord.x = specie_coord.x + clock_x;
+                water_coord.y = specie_coord.y + clock_y;
+                if (water_coord.x < 0 || water_coord.x >= world_size){}
+                else if (water_coord.y < 0 || water_coord.y >= world_size){}
+                else if(environement[water_coord.x][water_coord.y].get_type()==fertile){
+                    std::cout << "FIND " << water_coord.x << " " << water_coord.y << std::endl;
+                    return water_coord;
+                
+                }
+            }
+        }
+    }
+} 
+
+/*
 Coordinates World::get_nearest_water(Specie* specie) {
     Coordinates coord;
     Coordinates ent_pos = specie->get_coordinates();
@@ -250,7 +295,7 @@ Coordinates World::get_nearest_water(Specie* specie) {
     }
     return coord;
 }
-
+*/
 void World::update_tiles()
 {
     for (auto latitude : environement)
