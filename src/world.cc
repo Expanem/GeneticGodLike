@@ -33,7 +33,7 @@ const void World::show()
         for (auto tile : latitude)
         {
             string x = "  ";
-            if(tile.is_occupied()) x[1] = tile.get_top()->get_icone();
+            if(tile.is_occupied()) x[1] = tile.get_top()->get_icon();
             switch (tile.get_type())
             {
             case aquatic:
