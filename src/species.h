@@ -49,6 +49,7 @@ class Specie {
         std::string get_name(){return name;};
         char get_icone(){return icone;};
         Coordinates get_coordinates(){return coord;}; 
+        bool get_state(){return dead;};
     protected:
         std::string name;
         char icone;
@@ -74,7 +75,7 @@ class Specie {
 
         Coordinates coord;
         Coordinates objective;
-        
+
         float velocity_storage;
 
         float threshold_urgent_food;
