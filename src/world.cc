@@ -140,8 +140,6 @@ void World::update_population() {
         int action = population[i]->choose_action(distance_nearest_food, distance_nearest_water);
         Coordinates old;
         std::cout << "FOOD " << nearest_food.x << " " << nearest_food.y << std::endl;
-        //nearest_water = {30,30};
-        //nearest_food  = {30,20};
         switch (action)
         {
         case 1: 
@@ -163,52 +161,9 @@ void World::update_population() {
         default:
             break;
         }
+        if (population[i]->is_dead()) population[i].set_icon('X');
     }
 }
-/*
-Coordinates World::get_nearest_food(Specie* specie) {
-    Coordinates coord;
-    Coordinates ent_pos = specie->get_coordinates();
-    for (unsigned int i = 0; i < world_size/2; i++)
-    {
-        for (int j = -i; j <= i; j++)
-        {
-            int m = coord.x + j ;
-            int n = coord.y + j ;
-            if(m >= world_size) m = world_size-1;
-            if(n >= world_size) n = world_size-1;
-            if(m < 0) m = 0;
-            if(n < 0) n = 0;
-            if(environement[coord.x+i][n].get_type()==fertile)
-            {
-                coord.x = coord.x+i;
-                coord.y = n;
-                return coord;
-            }
-            if(environement[coord.x-i][n].get_type()==fertile)
-            {
-                coord.x = coord.x-i;
-                coord.y = n;
-                return coord;
-            }
-            if(environement[m][coord.y+i].get_type()==fertile)
-            {
-                coord.x = m;
-                coord.y = coord.y + i;
-                return coord;
-            }
-            if(environement[m][coord.y-i].get_type()==fertile)
-            {
-                coord.x = m;
-                coord.y = coord.y -i;
-                return coord;
-            }
-        }
-        return coord;
-    }
-    return coord;
-} */
-
 
 Coordinates World::get_nearest_food(Specie* specie) {
     Coordinates specie_coord = specie->get_coordinates();
