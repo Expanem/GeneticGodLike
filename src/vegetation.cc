@@ -28,6 +28,7 @@ void Vegetation::update(double light, double water)
         {
         case growing:
             state = full;
+            icon = '*';
             energy = top_energy;
             break;
         
@@ -37,6 +38,7 @@ void Vegetation::update(double light, double water)
         
         case damaged:
             state = growing;
+            icon = ':';
             energy = top_energy/2;
             break;
         
@@ -51,5 +53,6 @@ double Vegetation::eat()
     double ene = energy;
     energy = 0;
     state = damaged;
+    icon = '.';
     return ene;
 }
