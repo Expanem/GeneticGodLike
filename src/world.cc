@@ -268,7 +268,7 @@ void World::update_tiles()
     {
         for (auto tile : latitude)
         {
-            tile.update();
+            if(tile.get_type() == fertile)  tile.update();
         }
     }
 }
