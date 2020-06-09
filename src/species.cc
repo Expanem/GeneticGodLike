@@ -63,7 +63,7 @@ void Specie::update(Coordinates nearest_food, Coordinates nearest_water, Coordin
         break;
     case 3: // MATE
         objective = nearest_mate; // MUST BE BEFORE THE OBJECTIVE
-        move_to_objective();
+        move_to_objective(1);
         break;
     default:
         break;
@@ -100,7 +100,7 @@ void Specie::eat(Vegetation* plant) {
     }
 }
 
-void Specie::move_to_objective() { //Keep velocity energy without taking care of direction
+void Specie::move_to_objective(int distance_max) { //Keep velocity energy without taking care of direction
     std::cout << "THIS IS MY OBJECTIVE " << objective.x << " " << objective.y << std::endl; 
     velocity_storage += velocity;
     std::cout << "VELOCITY STORED" << velocity_storage << std::endl;
@@ -109,20 +109,34 @@ void Specie::move_to_objective() { //Keep velocity energy without taking care of
         velocity_storage -= 1;
         int distance_x = objective.x - coord.x;
         int distance_y = objective.y - coord.y;
-        if (distance_x == 0 and distance_y == 0){
-            return;
-        }
-        if (abs(distance_x) > abs(distance_y)) {
-            if (distance_x > 0) {
+        if (abs(distance_x) + abs(distance_y) == distance_max){ return; }
+        else if (abs(distance_x) + abs(distance_y) < distance_max) { 
+            if (abs(distance_x) > abs(distance_y)) {
+                if (distance_x > 0) {
+                    coord.x -= 1;
+                } else {
                 coord.x += 1;
+                }
             } else {
-                coord.x -= 1;
+                if (distance_y > 0) {
+                    coord.y -= 1;
+                } else {
+                    coord.y += 1;
+                }
             }
-        } else {
-            if (distance_y > 0) {
-                coord.y += 1;
+         } else {
+            if (abs(distance_x) > abs(distance_y)) {
+                if (distance_x > 0) {
+                    coord.x += 1;
+                } else {
+                coord.x -= 1;
+                }
             } else {
-                coord.y -= 1;
+                if (distance_y > 0) {
+                    coord.y += 1;
+                } else {
+                    coord.y -= 1;
+                }
             }
         }
     }

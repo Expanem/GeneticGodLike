@@ -49,7 +49,7 @@ class Specie {
         void eat(Vegetation* plant);
         void drink(float water_quantity);
         Genetic_full_data reproduction(Specie* mate);
-        void move_to_objective();
+        void move_to_objective(int distance_max = 0);
         int choose_action(float distance_nearest_food, float distance_nearest_water);
 
         std::string get_name(){return name;};
