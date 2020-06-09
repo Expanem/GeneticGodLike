@@ -7,6 +7,7 @@
 #include "species.h"
 #include "const.h"
 #include <iostream>
+#include <random>
 
 using namespace std;
 
@@ -122,6 +123,35 @@ void Specie::move_to_objective() { //Keep velocity energy without taking care of
                 coord.y -= 1;
             }
         }
+    }
+}
+
+Genetic_full_data Specie::reproduction(Specie* mate) {
+    if (deviation < 0.5) {
+        srand(NULL);
+        Basics basic_infos;
+        if (rand()%1 < 0.5) { basic_infos.name=this->name; } else { basic_infos.name=mate->name; }
+        if (rand()%1 < 0.5) { basic_infos.icon=this->icon; } else { basic_infos.icon=mate->icon; }
+        if (rand()%1 < 0.5) { basic_infos.size=this->size; } else { basic_infos.size=mate->size; }
+        if (rand()%1 < 0.5) { basic_infos.weight=this->weight; } else { basic_infos.weight=mate->weight; }
+        if (rand()%1 < 0.5) { basic_infos.strengh=this->strengh; } else { basic_infos.strengh=mate->strengh; }
+        if (rand()%1 < 0.5) { basic_infos.attack=this->attack; } else { basic_infos.attack=mate->attack; }
+        if (rand()%1 < 0.5) { basic_infos.defense=this->defense; } else { basic_infos.defense=mate->defense; }
+        if (rand()%1 < 0.5) { basic_infos.velocity=this->velocity; } else { basic_infos.velocity=mate->velocity; }
+        if (rand()%1 < 0.5) { basic_infos.food_consumption=this->food_consumption; } else { basic_infos.food_consumption=mate->food_consumption; }
+        if (rand()%1 < 0.5) { basic_infos.water_consumption=this->water_consumption; } else { basic_infos.water_consumption=mate->water_consumption; }
+        if (rand()%1 < 0.5) { basic_infos.water_storage=this->water_storage; } else { basic_infos.water_storage=mate->water_storage; }
+        if (rand()%1 < 0.5) { basic_infos.food_storage=this->food_storage; } else { basic_infos.food_storage=mate->food_storage; }
+        if (rand()%1 < 0.5) { basic_infos.libido=this->libido; } else { basic_infos.libido=mate->libido; }
+        if (rand()%1 < 0.5) { basic_infos.life_span=this->life_span; } else { basic_infos.life_span=mate->life_span; }
+        if (rand()%1 < 0.5) { basic_infos.diet=this->diet; } else { basic_infos.diet=mate->diet; }
+        Threshold threshold_infos;
+        if (rand()%1 < 0.5) { threshold_infos.threshold_urgent_food=this->threshold_urgent_food; } else { threshold_infos.threshold_urgent_food=mate->threshold_urgent_food; }
+        if (rand()%1 < 0.5) { threshold_infos.threshold_urgent_water=this->threshold_urgent_water; } else { threshold_infos.threshold_urgent_water=mate->threshold_urgent_water; }
+        if (rand()%1 < 0.5) { threshold_infos.threshold_chill_food=this->threshold_chill_food; } else { threshold_infos.threshold_chill_food=mate->threshold_chill_food; }
+        if (rand()%1 < 0.5) { threshold_infos.threshold_chill_water=this->threshold_chill_water; } else { threshold_infos.threshold_chill_water=mate->threshold_chill_water; }
+        Genetic_full_data genetics = {basic_infos,threshold_infos};
+        return genetics; 
     }
 }
 

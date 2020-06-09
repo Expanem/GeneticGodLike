@@ -36,6 +36,11 @@ typedef struct Basics {
     int diet;
 } Basics;
 
+typedef struct Genetic_full_data {
+    Basics basic_infos;
+    Threshold threshold_infos;
+} Genetic_full_data;
+
 class Specie {
     public:
         Specie(Basics basic_infos, Coordinates position_info, Thresholds threshold_infos);
@@ -43,7 +48,7 @@ class Specie {
         void consume(float ratio);
         void eat(Vegetation* plant);
         void drink(float water_quantity);
-        void reproduction();
+        Genetic_full_data reproduction(Specie* mate);
         void move_to_objective();
         int choose_action(float distance_nearest_food, float distance_nearest_water);
 
