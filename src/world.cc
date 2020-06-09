@@ -157,13 +157,17 @@ void World::update_population() {
             exit(1);
             break;
         }
+        cout << "T" << endl;
         Coordinates nearest_mate = can_reproduce_with(population[i]);
-        if (nearest_mate.x != -1 and nearest_mate.y != -1) {
+        cout << "NEAREST MATE " << nearest_mate.x << " " << nearest_mate.y << endl;
+        cout << "TT" << endl;
+        if ((nearest_mate.x != -1) && (nearest_mate.y != -1)) {
+            cout << "I'M GONNA MATE !!!" << endl;
             Genetic_full_data full_infos = population[i]->reproduction(environement[nearest_mate.x][nearest_mate.y].get_top());
             population.push_back(new Fighter_specie(full_infos.basic_infos, population[i]->get_coordinates(), full_infos.threshold_infos));
             environement[population.back()->get_coordinates().x][population.back()->get_coordinates().y].add_specie(population.back());
         }
-
+        cout << "TTT" << endl;
         Coordinates nearest_food = get_nearest_food(population[i]);
         Coordinates nearest_water = get_nearest_water(population[i]);
         int distance_nearest_food = distance(current, nearest_food);
@@ -200,6 +204,7 @@ Coordinates World::can_reproduce_with(Specie* entity) {
                 }
             }
         }
+        return {-1,-1};
     }
 }
 
