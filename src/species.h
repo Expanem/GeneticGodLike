@@ -58,7 +58,10 @@ class Specie {
         bool get_state(){return dead;};
         double get_food_stored(){return food_stored;};
         double get_water_stored(){return water_stored;};
+        int get_reproduced(){return reproduced;};
 
+        void reset_reproduced(){reproduced = 0;};
+        void increase_reproduced(){reproduced++;};
         void set_icon(char ic){icon = ic;};
     protected:
         std::string name;
@@ -82,6 +85,7 @@ class Specie {
         double deviation;
         int tick_lived;
         bool dead;
+        int reproduced;
 
         Coordinates coord;
         Coordinates objective;

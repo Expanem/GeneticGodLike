@@ -8,6 +8,7 @@
 #define CONST_H
 
 #define RATIO_VELOCITY_FOOD_CONSUMPTION 2
+#define TIME_AFTER_REPRODUCTION 5
 
 const double max_height = 1000;
 const double max_intrasec = 1;

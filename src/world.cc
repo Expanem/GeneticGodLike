@@ -157,6 +157,12 @@ void World::update_population() {
             exit(1);
             break;
         }
+        Coordinates nearest_mate = can_reproduce_with(population[i]);
+        if (nearest_mate.x != -1 and nearest_mate.y != -1) {
+            Genetic_full_data full_infos = population[i]->reproduction(environement[nearest_mate.x][nearest_mate.y].get_top());
+            population.push_back(new Fighter_specie(full_infos.basic_infos, population[i]->get_coordinates(), full_infos.threshold_infos));
+            environement[population.back()->get_coordinates().x][population.back()->get_coordinates().y].add_specie(population.back());
+        }
 
         Coordinates nearest_food = get_nearest_food(population[i]);
         Coordinates nearest_water = get_nearest_water(population[i]);
@@ -178,6 +184,22 @@ void World::update_population() {
             population[i] = population.back();
             population.pop_back();
         } // Should let the corpse
+    }
+}
+
+Coordinates World::can_reproduce_with(Specie* entity) {
+    if (entity->get_reproduced() >=0 and entity->get_reproduced() < TIME_AFTER_REPRODUCTION) {
+        entity->increase_reproduced();
+        return {-1,-1};
+    } else {  
+        for (int clock_x = -1; clock_x <= 1; clock_x++){
+            for (int clock_y = -1; clock_y <= 1; clock_y++){
+                if (clock_x == 0 and clock_y == 0) {}
+                else if (environement[entity->get_coordinates().x + clock_x][entity->get_coordinates().y + clock_y].is_occupied() == true ) {  // IS OCCUPIED NOT WORKING
+                    return {entity->get_coordinates().x + clock_x, entity->get_coordinates().y + clock_y};
+                }
+            }
+        }
     }
 }
 

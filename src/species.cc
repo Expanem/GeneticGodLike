@@ -33,6 +33,7 @@ Specie::Specie(Basics basic_infos, Coordinates position_info, Thresholds thresho
     deviation(0),
     tick_lived(0),
     dead(false),
+    reproduced(-1),
 
     coord(position_info),
     objective({0,0}),
@@ -127,6 +128,8 @@ void Specie::move_to_objective() { //Keep velocity energy without taking care of
 }
 
 Genetic_full_data Specie::reproduction(Specie* mate) {
+    this->reset_reproduced();
+    mate->reset_reproduced();
     if (deviation < 0.5) {
         srand(NULL);
         Basics basic_infos;
@@ -158,7 +161,7 @@ Genetic_full_data Specie::reproduction(Specie* mate) {
 int Specie::choose_action(float distance_nearest_food, float distance_nearest_water) {
     float food_per = food_stored / food_storage;
     float water_per = water_stored / water_storage;
-    if (food_per <= threshold_urgent_food or water_per <= threshold_urgent_water) {
+    if (food_per <= 0 or water_per <= threshold_urgent_water) {
         if (food_per <= water_per) {
             return 1; // Choose food
         } else {
