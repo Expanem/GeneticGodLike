@@ -44,7 +44,7 @@ typedef struct Genetic_full_data {
 class Specie {
     public:
         Specie(Basics basic_infos, Coordinates position_info, Thresholds threshold_infos);
-        void update(Coordinates nearest_food, Coordinates nearest_water);
+        void update(Coordinates nearest_food, Coordinates nearest_water, Coordinates nearest_mate);
         void consume(float ratio);
         void eat(Vegetation* plant);
         void drink(float water_quantity);

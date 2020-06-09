@@ -171,7 +171,7 @@ void World::update_population() {
         
         std::cout << "FOOD COORD " << nearest_food.x << " " << nearest_food.y << std::endl;
         std::cout << "WATER COORD " << nearest_water.x << " " << nearest_water.y << std::endl;
-        population[i]->update(nearest_food,nearest_water);
+        population[i]->update(nearest_food, nearest_water, nearest_mate);
         environement[current.x][current.y].remove_specie(population[i]);
         environement[population[i]->get_coordinates().x][population[i]->get_coordinates().y].add_specie(population[i]);
         current = population[i]->get_coordinates();

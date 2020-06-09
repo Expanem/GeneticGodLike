@@ -46,7 +46,7 @@ Specie::Specie(Basics basic_infos, Coordinates position_info, Thresholds thresho
     threshold_chill_water(threshold_infos.threshold_chill_water) {
 }
 
-void Specie::update(Coordinates nearest_food, Coordinates nearest_water) {
+void Specie::update(Coordinates nearest_food, Coordinates nearest_water, Coordinates nearest_mate) {
     int distance_nearest_food = distance(coord, nearest_food);
     int distance_nearest_water = distance(coord, nearest_water);
     int action = choose_action(distance_nearest_food, distance_nearest_water);
@@ -62,6 +62,7 @@ void Specie::update(Coordinates nearest_food, Coordinates nearest_water) {
         move_to_objective();
         break;
     case 3: // MATE
+        objective = nearest_mate; // MUST BE BEFORE THE OBJECTIVE
         move_to_objective();
         break;
     default:
