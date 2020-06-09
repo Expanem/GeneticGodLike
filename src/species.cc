@@ -130,6 +130,8 @@ void Specie::move_to_objective() { //Keep velocity energy without taking care of
 Genetic_full_data Specie::reproduction(Specie* mate) {
     this->reset_reproduced();
     mate->reset_reproduced();
+    this->consume(5.0);
+    mate->consume(5.0);
     if (deviation < 0.5) {
         srand(NULL);
         Basics basic_infos;
