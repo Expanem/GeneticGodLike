@@ -20,7 +20,7 @@ private :
     void smooth_height(unsigned int times);
     Coordinates get_nearest_food(Specie* specie);
     Coordinates get_nearest_water(Specie* specie);
-        Coordinates get_nearest_same_specie(Specie* specie);
+    Coordinates get_nearest_same_specie(Specie* specie);
     Coordinates can_reproduce_with(Specie* entity);
 
     std::vector<std::vector<Tile>> environement;
