@@ -148,7 +148,9 @@ void World::update_population() {
         bool is_alone = false;
         if (population.size() == 1 ) { is_alone = true; }
 
-        population_reproduction(population[i], environement[nearest_mate.x][nearest_mate.y].get_top());
+        if (nearest_mate.x >= 0 and nearest_mate.x < world_size and nearest_mate.y >= 0 and nearest_mate.y < world_size) {
+            population_reproduction(population[i], environement[nearest_mate.x][nearest_mate.y].get_top());
+        }
 
         population[i]->update(nearest_food, nearest_water, nearest_mate, is_alone);
         environement[old_position.x][old_position.y].remove_specie(population[i]);
