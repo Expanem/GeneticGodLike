@@ -187,13 +187,13 @@ int Specie::choose_action(float distance_nearest_food, float distance_nearest_wa
         } else {
             return 2; // Choose water
         }
-    } else if (is_chill()) {
+    } else if (is_chill() == false) {
         if (food_per <= water_per) {
             return 1; // Choose food
         } else {
             return 2; // Choose water
         }
-    } else {
+    } else if (is_chill()) {
             return 3; // Try to mate
     }
 }
