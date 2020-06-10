@@ -14,7 +14,7 @@ World::World()
     environement.resize(world_size,vector<Tile>(world_size));
     generate();
 
-    Basics basic_infos_1 = {"Racoon", 'R', 50, 20, 20, 20, 1, 1, 1, 1, 60, 60, 0.5, 10, 2};
+    Basics basic_infos_1 = {"Racoon", 'R', 50, 20, 20, 20, 1, 1, 0.5, 0.5, 60, 60, 0.5, 10, 2};
     Thresholds threshold_infos_1 = {0.25, 0.25, 0.75, 0.75};
     Coordinates position_infos_1 = {25,25};
     population.push_back(new Fighter_specie(basic_infos_1, position_infos_1, threshold_infos_1));

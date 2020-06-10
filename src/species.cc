@@ -28,8 +28,8 @@ Specie::Specie(Basics basic_infos, Coordinates position_info, Thresholds thresho
     life_span(basic_infos.life_span),
     diet(basic_infos.diet),
 
-    food_stored(20),
-    water_stored(10),
+    food_stored(50),
+    water_stored(50),
     deviation(0),
     tick_lived(0),
     dead(false),
