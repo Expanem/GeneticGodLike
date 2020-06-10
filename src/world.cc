@@ -159,6 +159,7 @@ void World::update_population() {
         }
         Coordinates nearest_mate = get_nearest_same_specie(population[i]);
         cout << "NEAREST MATE " << nearest_mate.x << " " << nearest_mate.y << endl;
+
         if(distance(nearest_mate, population[i]->get_coordinates()) == 1){
             Specie* mate = environement[nearest_mate.x][nearest_mate.y].get_top();
             population[i]->increase_reproduced();
@@ -277,6 +278,7 @@ Coordinates World::get_nearest_same_specie(Specie* specie) {
                 mate_coord.y = specie_coord.y + clock_y;
                 if (mate_coord.x < 0 || mate_coord.x >= world_size){}
                 else if (mate_coord.y < 0 || mate_coord.y >= world_size){}
+                else if (mate_coord.x == specie_coord.x && mate_coord.y == specie_coord.y){}
                 else if(environement[mate_coord.x][mate_coord.y].is_occupied()){ // CHECK !
                     return mate_coord;
                 }
