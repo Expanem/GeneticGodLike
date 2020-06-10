@@ -31,7 +31,7 @@ World::~World()
 
 const void World::show()
 {
-    system("clear");
+    //system("clear");
     for (auto latitude : environement)
     {
         for (auto tile : latitude)
@@ -177,13 +177,14 @@ void World::update_population() {
         Coordinates nearest_water = get_nearest_water(population[i]);
         int distance_nearest_food = distance(current, nearest_food);
         int distance_nearest_water = distance(current, nearest_water);
-        
+        bool is_alone = false;
+        if (population.size() == 1 ) { is_alone = true; }
         // std::cout << "FOOD COORD " << nearest_food.x << " " << nearest_food.y << std::endl;
         // std::cout << "WATER COORD " << nearest_water.x << " " << nearest_water.y << std::endl;
-        population[i]->update(nearest_food, nearest_water, nearest_mate);
+        population[i]->update(nearest_food, nearest_water, nearest_mate, is_alone);
         environement[current.x][current.y].remove_specie(population[i]);
-        environement[population[i]->get_coordinates().x][population[i]->get_coordinates().y].add_specie(population[i]);
         current = population[i]->get_coordinates();
+        environement[current.x][current.y].add_specie(population[i]);
         // std::cout << "NEW POSITION " << population[i]->get_coordinates().x << " " << population[i]->get_coordinates().y << std::endl;
         // std::cout << "FOOD STORED " << population[i]->get_food_stored() << std::endl;
         //std::cout << "WATER STORED " << population[i]->get_water_stored() << std::endl;
@@ -205,6 +206,7 @@ Coordinates World::can_reproduce_with(Specie* entity) {
             for (int clock_y = -1; clock_y <= 1; clock_y++){
                 if (clock_x == 0 and clock_y == 0) {}
                 else if (environement[entity->get_coordinates().x + clock_x][entity->get_coordinates().y + clock_y].is_occupied() == true ) {  // IS OCCUPIED NOT WORKING
+                    // cout << "FOUND" << endl;
                     return {entity->get_coordinates().x + clock_x, entity->get_coordinates().y + clock_y};
                 }
             }
@@ -219,9 +221,8 @@ Coordinates World::get_nearest_food(Specie* specie) {
     if(environement[specie_coord.x][specie_coord.y].get_type()==fertile){
         return specie_coord;
     } */
-    Coordinates food_coord = {0,0};
-    int half_world_size = world_size / 2;
-    for (int radius = 0; radius < half_world_size; radius++){
+    Coordinates food_coord = {-2,-2};
+    for (int radius = 0; radius < world_size; radius++){
         for (int clock_x = -radius; clock_x <= radius; clock_x++){
             for (int clock_y = -radius; clock_y <= radius; clock_y++){
                 food_coord.x = specie_coord.x + clock_x;
@@ -232,7 +233,7 @@ Coordinates World::get_nearest_food(Specie* specie) {
                 else if(environement[food_coord.x][food_coord.y].get_type()==fertile){
                      // cout << "POTENTIAL FOOD SOURCE AT " << food_coord.x << " " << food_coord.y << std::endl;
                     if (environement[food_coord.x][food_coord.y].get_plant()->is_eatable()) {
-                        //cout << "FOUND SOME FOOD" << food_coord.x << " " << food_coord.y << std::endl;
+                        // cout << "FOUND SOME FOOD" << food_coord.x << " " << food_coord.y << std::endl;
                         return food_coord;
                     }  // NOT WORKING !!!!
                 }
@@ -247,8 +248,7 @@ Coordinates World::get_nearest_water(Specie* specie) {
         return specie_coord;
     }
     Coordinates water_coord = {0,0};
-    int half_world_size = world_size / 2;
-    for (int radius = 0; radius < half_world_size; radius++){
+    for (int radius = 0; radius < world_size; radius++){
         for (int clock_x = -radius; clock_x <= radius; clock_x++){
             for (int clock_y = -radius; clock_y <= radius; clock_y++){
                 water_coord.x = specie_coord.x + clock_x;
@@ -267,8 +267,7 @@ Coordinates World::get_nearest_water(Specie* specie) {
 Coordinates World::get_nearest_same_specie(Specie* specie) {
     Coordinates specie_coord = specie->get_coordinates();
     Coordinates mate_coord = {-1,-1};
-    int half_world_size = world_size / 2;
-    for (int radius = 0; radius < half_world_size; radius++){
+    for (int radius = 0; radius < world_size; radius++){
         for (int clock_x = -radius; clock_x <= radius; clock_x++){
             for (int clock_y = -radius; clock_y <= radius; clock_y++){
                 mate_coord.x = specie_coord.x + clock_x;

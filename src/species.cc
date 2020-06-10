@@ -46,11 +46,12 @@ Specie::Specie(Basics basic_infos, Coordinates position_info, Thresholds thresho
     threshold_chill_water(threshold_infos.threshold_chill_water) {
 }
 
-void Specie::update(Coordinates nearest_food, Coordinates nearest_water, Coordinates nearest_mate) {
+void Specie::update(Coordinates nearest_food, Coordinates nearest_water, Coordinates nearest_mate, bool is_alone) {
     int distance_nearest_food = distance(coord, nearest_food);
     int distance_nearest_water = distance(coord, nearest_water);
     int action = choose_action(distance_nearest_food, distance_nearest_water);
     // std::cout << "OBJECTIVE " << action << std::endl;
+    if (is_alone && action == 3) {action = 4;}
     this->consume(1.0);
     switch (action) {
     case 1: // FOOD
@@ -96,9 +97,9 @@ void Specie::eat(Vegetation* plant) {
     if (food_stored == food_storage) { /* std::cout << "MAXED FOOD1" << std::endl; return;*/ }  
     else {
         if (plant->is_poisonous()){ dead = true; }
-        cout << "FOOD BEFORE " << food_stored << std::endl;
+        // cout << "FOOD BEFORE " << food_stored << std::endl;
         food_stored += plant->eat();
-        cout << "FOOD AFTER " << food_stored << std::endl;
+        // cout << "FOOD AFTER " << food_stored << std::endl;
         if (food_stored > food_storage) { /* std::cout << "MAXED FOOD2" << std::endl; food_stored = food_storage;*/}
     }
 }

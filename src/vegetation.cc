@@ -13,7 +13,7 @@ state(sta),
 icon(ico)
 {
     energy = top_energy/2;
-    std::cout << "ENERGY AT CREATION" << energy << std::endl;
+    // std::cout << "ENERGY AT CREATION" << energy << std::endl;
 }
 
 Vegetation::~Vegetation()
@@ -56,7 +56,7 @@ void Vegetation::update(double light, double water)
 double Vegetation::eat()
 {
     double ene = energy;
-    std::cout << "EATING... GAINED " << ene << "ENERGY PTS" << std::endl;
+    // std::cout << "EATING... GAINED " << ene << "ENERGY PTS" << std::endl;
     energy = 0;
     counter = 0;
     state = damaged;
@@ -65,8 +65,8 @@ double Vegetation::eat()
 }
 
 bool Vegetation::is_eatable(){
-    if (state == (full or spreading or growing)) {
+    if ((state == full) || (state == spreading) || (state == growing)) {
         return true;
-        //std::cout << "okayfood" << std::endl;
+        // std::cout << "okayfood" << std::endl;
     } else { return false; }
 }
