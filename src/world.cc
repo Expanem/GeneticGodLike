@@ -262,6 +262,25 @@ Coordinates World::get_nearest_water(Specie* specie) {
     }
 } 
 
+Coordinates World::get_nearest_same_specie(Specie* specie) {
+    Coordinates specie_coord = specie->get_coordinates();
+    Coordinates mate_coord = {-1,-1};
+    int half_world_size = world_size / 2;
+    for (int radius = 0; radius < half_world_size; radius++){
+        for (int clock_x = -radius; clock_x <= radius; clock_x++){
+            for (int clock_y = -radius; clock_y <= radius; clock_y++){
+                mate_coord.x = specie_coord.x + clock_x;
+                mate_coord.y = specie_coord.y + clock_y;
+                if (mate_coord.x < 0 || mate_coord.x >= world_size){}
+                else if (mate_coord.y < 0 || mate_coord.y >= world_size){}
+                else if(environement[mate_coord.x][mate_coord.y].is_occupied()){ // CHECK !
+                    return mate_coord;
+                }
+            }
+        }
+    }
+} 
+
 void World::update_tiles()
 {
     for (auto latitude : environement)
