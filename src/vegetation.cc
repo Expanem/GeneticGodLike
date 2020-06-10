@@ -32,16 +32,19 @@ void Vegetation::update(double light, double water)
             state = full;
             icon = '*';
             energy = top_energy;
+            counter = 0;
             break;
         
         case full:
             state = spreading;
+            counter = 0;
             break;
         
         case damaged:
             state = growing;
             icon = ':';
             energy = top_energy/2;
+            counter = 0;
             break;
         
         default:
@@ -55,6 +58,7 @@ double Vegetation::eat()
     double ene = energy;
     std::cout << "ENERGY STORED BY PLANT " << ene << std::endl;
     energy = 0;
+    counter = 0;
     state = damaged;
     icon = '.';
     return ene;

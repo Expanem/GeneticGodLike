@@ -28,8 +28,8 @@ Specie::Specie(Basics basic_infos, Coordinates position_info, Thresholds thresho
     life_span(basic_infos.life_span),
     diet(basic_infos.diet),
 
-    food_stored(50),
-    water_stored(50),
+    food_stored(40),
+    water_stored(40),
     deviation(0),
     tick_lived(0),
     dead(false),
@@ -145,8 +145,8 @@ void Specie::move_to_objective(int distance_max) { //Keep velocity energy withou
 Genetic_full_data Specie::reproduction(Specie* mate) {
     this->reset_reproduced();
     mate->reset_reproduced();
-    this->consume(5.0);
-    mate->consume(5.0);
+    this->consume(10.0);
+    mate->consume(10.0);
     if (deviation < 0.5) {
         srand(NULL);
         Basics basic_infos;

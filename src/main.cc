@@ -12,5 +12,5 @@ using namespace std;
 
 int main(int argc, char *argv[]) {
     initialisation();
-    main_loop(40);
+    main_loop(100);
 }
