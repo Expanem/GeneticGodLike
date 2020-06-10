@@ -199,32 +199,8 @@ void World::debug(int iteration, Coordinates old_position, Coordinates new_posit
 
 }
 
-
-
-Coordinates World::can_reproduce_with(Specie* entity) {
-    if (entity->get_reproduced() >=0 and entity->get_reproduced() < TIME_AFTER_REPRODUCTION) {
-        entity->increase_reproduced();
-        return {-1,-1};
-    } else {  
-        for (int clock_x = -1; clock_x <= 1; clock_x++){
-            for (int clock_y = -1; clock_y <= 1; clock_y++){
-                if (clock_x == 0 and clock_y == 0) {}
-                else if (environement[entity->get_coordinates().x + clock_x][entity->get_coordinates().y + clock_y].is_occupied() == true ) {  // IS OCCUPIED NOT WORKING
-                    // cout << "FOUND" << endl;
-                    return {entity->get_coordinates().x + clock_x, entity->get_coordinates().y + clock_y};
-                }
-            }
-        }
-        return {-1,-1};
-    }
-}
-
 Coordinates World::get_nearest_food(Specie* specie) {
     Coordinates specie_coord = specie->get_coordinates();
-    /* 
-    if(environement[specie_coord.x][specie_coord.y].get_type()==fertile){
-        return specie_coord;
-    } */
     Coordinates food_coord = {-2,-2};
     for (int radius = 0; radius < world_size; radius++){
         for (int clock_x = -radius; clock_x <= radius; clock_x++){
@@ -235,11 +211,9 @@ Coordinates World::get_nearest_food(Specie* specie) {
                 else if (food_coord.y < 0 || food_coord.y >= world_size){}
                 else if (food_coord.x == specie_coord.x && food_coord.y == specie_coord.y){}
                 else if(environement[food_coord.x][food_coord.y].get_type()==fertile){
-                     // cout << "POTENTIAL FOOD SOURCE AT " << food_coord.x << " " << food_coord.y << std::endl;
                     if (environement[food_coord.x][food_coord.y].get_plant()->is_eatable()) {
-                        // cout << "FOUND SOME FOOD" << food_coord.x << " " << food_coord.y << std::endl;
                         return food_coord;
-                    }  // NOT WORKING !!!!
+                    } 
                 }
             }
         }
@@ -279,7 +253,7 @@ Coordinates World::get_nearest_same_specie(Specie* specie) {
                 if (mate_coord.x < 0 || mate_coord.x >= world_size){}
                 else if (mate_coord.y < 0 || mate_coord.y >= world_size){}
                 else if (mate_coord.x == specie_coord.x && mate_coord.y == specie_coord.y){}
-                else if(environement[mate_coord.x][mate_coord.y].is_occupied()){ // CHECK !
+                else if(environement[mate_coord.x][mate_coord.y].is_occupied()){
                     return mate_coord;
                 }
             }
