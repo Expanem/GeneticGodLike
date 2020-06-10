@@ -166,7 +166,7 @@ void World::update_population() {
             mate->increase_reproduced();
             if (population[i]->get_reproduced() >=0 and population[i]->get_reproduced() < TIME_AFTER_REPRODUCTION) {
             } else if (mate->get_reproduced() >=0 and mate->get_reproduced() < TIME_AFTER_REPRODUCTION) {
-            } else{
+            } else if ((population[i]->is_chill()) && (mate->is_chill())) {
                 cout << "I'M GONNA MATE !!!" << endl;
                 Genetic_full_data full_infos = population[i]->reproduction(mate);
                 population.push_back(new Fighter_specie(full_infos.basic_infos, population[i]->get_coordinates(), full_infos.threshold_infos));

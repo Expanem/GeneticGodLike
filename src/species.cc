@@ -184,7 +184,7 @@ int Specie::choose_action(float distance_nearest_food, float distance_nearest_wa
         } else {
             return 2; // Choose water
         }
-    } else if (food_per < threshold_chill_food or water_per < threshold_chill_water) {
+    } else if (is_chill()) {
         if (food_per <= water_per) {
             return 1; // Choose food
         } else {
@@ -192,6 +192,16 @@ int Specie::choose_action(float distance_nearest_food, float distance_nearest_wa
         }
     } else {
             return 3; // Try to mate
+    }
+}
+
+bool Specie::is_chill() {
+    float food_per = food_stored / food_storage;
+    float water_per = water_stored / water_storage;
+    if (food_per < threshold_chill_food or water_per < threshold_chill_water) {
+        return false;
+    } else { 
+        return true;
     }
 }
 
