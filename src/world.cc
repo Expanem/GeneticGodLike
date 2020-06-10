@@ -138,27 +138,21 @@ void World::smooth_terrain(unsigned int times, unsigned int res)
 void World::update_population() {
     for (int i = 0; i < population.size(); i++){
         Coordinates current = population[i]->get_coordinates();
-        // std::cout << "----------------------" << std::endl;
-        // std::cout << "Update of : " << i << std::endl;
-        // std::cout << "OLD POSITION " << current.x << " " << current.y << std::endl;
         switch (environement[current.x][current.y].get_type())
         {
         case aquatic:
-            population[i]->drink(40); // REALLY THIS MUCH !!!!!!!!!!!!?????
+            population[i]->drink(30);
             break;
         case fertile:
-            // cout << "EATING" << endl;
             population[i]->eat(environement[current.x][current.y].get_plant());
             break;
         case barren:
             break;
         default:
-            // std::cout << "ERROR" << std::endl;
             exit(1);
             break;
         }
         Coordinates nearest_mate = get_nearest_same_specie(population[i]);
-        // cout << "NEAREST MATE " << nearest_mate.x << " " << nearest_mate.y << endl;
 
         if(distance(nearest_mate, population[i]->get_coordinates()) == 1){
             Specie* mate = environement[nearest_mate.x][nearest_mate.y].get_top();
@@ -167,7 +161,6 @@ void World::update_population() {
             if (population[i]->get_reproduced() >=0 and population[i]->get_reproduced() < TIME_AFTER_REPRODUCTION) {
             } else if (mate->get_reproduced() >=0 and mate->get_reproduced() < TIME_AFTER_REPRODUCTION) {
             } else if ((population[i]->is_chill()) && (mate->is_chill())) {
-                //cout << "I'M GONNA MATE !!!" << endl;
                 Genetic_full_data full_infos = population[i]->reproduction(mate);
                 population.push_back(new Fighter_specie(full_infos.basic_infos, population[i]->get_coordinates(), full_infos.threshold_infos));
                 environement[population.back()->get_coordinates().x][population.back()->get_coordinates().y].add_specie(population.back());
@@ -179,15 +172,10 @@ void World::update_population() {
         int distance_nearest_water = distance(current, nearest_water);
         bool is_alone = false;
         if (population.size() == 1 ) { is_alone = true; }
-        // std::cout << "FOOD COORD " << nearest_food.x << " " << nearest_food.y << std::endl;
-        // std::cout << "WATER COORD " << nearest_water.x << " " << nearest_water.y << std::endl;
         population[i]->update(nearest_food, nearest_water, nearest_mate, is_alone);
         environement[current.x][current.y].remove_specie(population[i]);
         current = population[i]->get_coordinates();
         environement[current.x][current.y].add_specie(population[i]);
-        // std::cout << "NEW POSITION " << population[i]->get_coordinates().x << " " << population[i]->get_coordinates().y << std::endl;
-        // std::cout << "FOOD STORED " << population[i]->get_food_stored() << std::endl;
-        //std::cout << "WATER STORED " << population[i]->get_water_stored() << std::endl;
     
         if (population[i]->get_state()) {
             environement[current.x][current.y].remove_specie(population[i]); 
@@ -196,6 +184,22 @@ void World::update_population() {
         } // Should let the corpse
     }
 }
+
+
+void World::debug(int iteration, Coordinates old_position, Coordinates new_position, Coordinates nearest_food, Coordinates nearest_water, Coordinates nearest_mate, int food_stored, int water_stored) {
+    std::cout << "----------------------" << std::endl;
+    std::cout << "Update of : " << iteration << std::endl;
+    std::cout << "OLD POSITION : " << old_position.x << " " << old_position.y << std::endl;
+    std::cout << "NEW POSITION : " << new_position.x << " " << new_position.y << std::endl;
+    std::cout << "NEAREST MATE : " << nearest_mate.x << " " << nearest_mate.y << std::endl;
+    std::cout << "FOOD COORD : " << nearest_food.x << " " << nearest_food.y << std::endl;
+    std::cout << "WATER COORD : " << nearest_water.x << " " << nearest_water.y << std::endl;
+    std::cout << "FOOD STORED : " << food_stored << std::endl;
+    std::cout << "WATER STORED : " << water_stored << std::endl;
+
+}
+
+
 
 Coordinates World::can_reproduce_with(Specie* entity) {
     if (entity->get_reproduced() >=0 and entity->get_reproduced() < TIME_AFTER_REPRODUCTION) {
