@@ -19,6 +19,9 @@ private :
     void smooth_terrain(unsigned int times, unsigned int res);
     void smooth_height(unsigned int times);
 
+    void population_interact_with_environement(Specie* entity);
+    void population_reproduction(Specie* entity, Specie* nearest_mate);
+
     void debug(int iteration, Coordinates old_position, Coordinates new_position, Coordinates nearest_food, Coordinates nearest_water, Coordinates nearest_mate, int food_stored, int water_stored);
 
     Coordinates get_nearest_food(Specie* specie);
