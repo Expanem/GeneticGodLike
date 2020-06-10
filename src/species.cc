@@ -87,6 +87,9 @@ void Specie::drink(float water_quantity) {
     } else {
         this->water_stored += water_quantity;
     }
+    if (water_stored > water_storage) {
+        water_stored = water_storage;
+    }
 }
 
 void Specie::eat(Vegetation* plant) {
