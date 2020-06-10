@@ -157,17 +157,21 @@ void World::update_population() {
             exit(1);
             break;
         }
-        cout << "T" << endl;
-        Coordinates nearest_mate = can_reproduce_with(population[i]);
+        Coordinates nearest_mate = get_nearest_same_specie(population[i]);
         cout << "NEAREST MATE " << nearest_mate.x << " " << nearest_mate.y << endl;
-        cout << "TT" << endl;
-        if ((nearest_mate.x != -1) && (nearest_mate.y != -1)) {
-            cout << "I'M GONNA MATE !!!" << endl;
-            Genetic_full_data full_infos = population[i]->reproduction(environement[nearest_mate.x][nearest_mate.y].get_top());
-            population.push_back(new Fighter_specie(full_infos.basic_infos, population[i]->get_coordinates(), full_infos.threshold_infos));
-            environement[population.back()->get_coordinates().x][population.back()->get_coordinates().y].add_specie(population.back());
+        if(distance(nearest_mate, population[i]->get_coordinates()) == 1){
+            Specie* mate = environement[nearest_mate.x][nearest_mate.y].get_top();
+            population[i]->increase_reproduced();
+            mate->increase_reproduced();
+            if (population[i]->get_reproduced() >=0 and population[i]->get_reproduced() < TIME_AFTER_REPRODUCTION) {
+            } else if (mate->get_reproduced() >=0 and mate->get_reproduced() < TIME_AFTER_REPRODUCTION) {
+            } else{
+                cout << "I'M GONNA MATE !!!" << endl;
+                Genetic_full_data full_infos = population[i]->reproduction(mate);
+                population.push_back(new Fighter_specie(full_infos.basic_infos, population[i]->get_coordinates(), full_infos.threshold_infos));
+                environement[population.back()->get_coordinates().x][population.back()->get_coordinates().y].add_specie(population.back());
+            }
         }
-        cout << "TTT" << endl;
         Coordinates nearest_food = get_nearest_food(population[i]);
         Coordinates nearest_water = get_nearest_water(population[i]);
         int distance_nearest_food = distance(current, nearest_food);
