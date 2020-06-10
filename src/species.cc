@@ -50,7 +50,7 @@ void Specie::update(Coordinates nearest_food, Coordinates nearest_water, Coordin
     int distance_nearest_food = distance(coord, nearest_food);
     int distance_nearest_water = distance(coord, nearest_water);
     int action = choose_action(distance_nearest_food, distance_nearest_water);
-    std::cout << "OBJECTIVE " << action << std::endl;
+    // std::cout << "OBJECTIVE " << action << std::endl;
     this->consume(1.0);
     switch (action) {
     case 1: // FOOD
@@ -93,20 +93,20 @@ void Specie::drink(float water_quantity) {
 }
 
 void Specie::eat(Vegetation* plant) {
-    if (food_stored == food_storage) { std::cout << "MAXED FOOD1" << std::endl; return; }  
+    if (food_stored == food_storage) { /* std::cout << "MAXED FOOD1" << std::endl; return;*/ }  
     else {
         if (plant->is_poisonous()){ dead = true; }
         cout << "FOOD BEFORE " << food_stored << std::endl;
         food_stored += plant->eat();
         cout << "FOOD AFTER " << food_stored << std::endl;
-        if (food_stored > food_storage) { std::cout << "MAXED FOOD2" << std::endl; food_stored = food_storage;}
+        if (food_stored > food_storage) { /* std::cout << "MAXED FOOD2" << std::endl; food_stored = food_storage;*/}
     }
 }
 
 void Specie::move_to_objective(int distance_max) { //Keep velocity energy without taking care of direction
-    std::cout << "THIS IS MY OBJECTIVE " << objective.x << " " << objective.y << std::endl; 
+    // std::cout << "THIS IS MY OBJECTIVE " << objective.x << " " << objective.y << std::endl; 
     velocity_storage += velocity;
-    std::cout << "VELOCITY STORED" << velocity_storage << std::endl;
+    // std::cout << "VELOCITY STORED" << velocity_storage << std::endl;
     while ((velocity + velocity_storage) > 1) {
         this->consume(RATIO_VELOCITY_FOOD_CONSUMPTION);
         velocity_storage -= 1;

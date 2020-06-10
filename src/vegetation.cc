@@ -56,7 +56,7 @@ void Vegetation::update(double light, double water)
 double Vegetation::eat()
 {
     double ene = energy;
-    std::cout << "ENERGY STORED BY PLANT " << ene << std::endl;
+    std::cout << "EATING... GAINED " << ene << "ENERGY PTS" << std::endl;
     energy = 0;
     counter = 0;
     state = damaged;
@@ -65,7 +65,8 @@ double Vegetation::eat()
 }
 
 bool Vegetation::is_eatable(){
-    if (state == full or state == spreading) {
+    if (state == (full or spreading or growing)) {
         return true;
+        //std::cout << "okayfood" << std::endl;
     } else { return false; }
 }
