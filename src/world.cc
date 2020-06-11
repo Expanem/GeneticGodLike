@@ -157,12 +157,16 @@ void World::update_population() {
         Coordinates new_position = population[i]->get_coordinates();
         environement[new_position.x][new_position.y].add_specie(population[i]);
     
-        if (population[i]->get_state()) {
-            environement[new_position.x][new_position.y].remove_specie(population[i]); 
-            population[i] = population.back();
-            population.pop_back();
-        } // Should let the corpse
+        population_update_deads(population[i]);
     }
+}
+
+void World::population_update_deads(Specie* entity) {
+    if (entity->get_state()) {
+        environement[entity->get_coordinates().x][entity->get_coordinates().y].remove_specie(entity); 
+        entity = population.back();
+        population.pop_back();
+    } // Should let the corpse
 }
 
 void World::population_interact_with_environement(Specie* entity) {
