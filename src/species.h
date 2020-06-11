@@ -51,6 +51,7 @@ class Specie {
         Genetic_full_data reproduction(Specie* mate);
         void move_to_objective(int distance_max = 0);
         int choose_action(float distance_nearest_food, float distance_nearest_water);
+        void fight(Specie* entity);
 
         bool is_chill();
 
@@ -61,10 +62,13 @@ class Specie {
         double get_food_stored(){return food_stored;};
         double get_water_stored(){return water_stored;};
         int get_reproduced(){return reproduced;};
+        double get_attack(){return attack;};
+        double get_defense(){return defense;};
 
         void reset_reproduced(){reproduced = 0;};
         void increase_reproduced(){reproduced++;};
         void set_icon(char ic){icon = ic;};
+        void set_dead(){dead = true;};
     protected:
         std::string name;
         char icon;
@@ -99,11 +103,12 @@ class Specie {
         float threshold_chill_food;
         float threshold_chill_water;
 };
-
+/*
 class Pacifist_specie: virtual public Specie {
     public:
         Pacifist_specie(Basics basic_infos, Coordinates position_info, Thresholds threshold_infos);
         ~Pacifist_specie();
+        void fight(Specie* entity);
     private:
 };
 
@@ -111,7 +116,9 @@ class Fighter_specie: virtual public Specie {
     public:
         Fighter_specie(Basics basic_infos, Coordinates position_info, Thresholds threshold_infos);
         ~Fighter_specie();
+        void fight(Specie* entity);
     private:
-};
+}; 
+*/
 
 #endif

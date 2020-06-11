@@ -20,15 +20,16 @@ private :
     void smooth_height(unsigned int times);
 
     void population_interact_with_environement(Specie* entity);
+    void population_interact_with_population(Specie* entity, Specie* nearest_non_mate);
     void population_reproduction(Specie* entity, Specie* nearest_mate);
-    void population_update_deads(Specie* entity);
+    bool population_update_deads(Specie* entity);
 
     void debug(int iteration, Coordinates old_position, Coordinates new_position, Coordinates nearest_food, Coordinates nearest_water, Coordinates nearest_mate, int food_stored, int water_stored);
 
     Coordinates get_nearest_food(Specie* specie);
     Coordinates get_nearest_water(Specie* specie);
     Coordinates get_nearest_same_specie(Specie* specie);
-    Coordinates can_reproduce_with(Specie* entity);
+    Specie* get_nearest_other_specie(Specie* specie);
 
     std::vector<std::vector<Tile>> environement;
     std::vector<Specie*> population;

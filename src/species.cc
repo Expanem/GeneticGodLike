@@ -209,16 +209,39 @@ bool Specie::is_chill() {
     }
 }
 
+void Specie::fight(Specie* entity) {
+    consume(FIGHT_FOOD_CONSUMPTION);
+    if (attack >= entity->get_defense()) {
+        entity->set_dead();
+    } else {
+        entity->consume(entity->get_defense() - attack);
+    }
+}
+
+/*
 Pacifist_specie::Pacifist_specie(Basics basic_infos, Coordinates position_info, Thresholds threshold_infos) 
    :  Specie(basic_infos, position_info, threshold_infos) {
 
+}
+
+void Pacifist_specie::fight(Specie* entity) {
+    consume(FIGHT_FOOD_CONSUMPTION);
+    if (attack > entity->get_defense()) {
+        entity->consume(attack - entity->get_defense());
+    } else {
+    }
 }
 
 Fighter_specie::Fighter_specie(Basics basic_infos, Coordinates position_info, Thresholds threshold_infos)
    :  Specie(basic_infos, position_info, threshold_infos) {
 }
 
-Basics basic_infos_1 = {"Racoon", 'R', 50, 20, 20, 20, 20, 1, 20, 20, 20, 20, 0.5, 10, 2};
-Thresholds threshold_infos_1 = {0.25, 0.25, 0.75, 0.75};
-Coordinates position_infos_1 = {0,0};
-static Fighter_specie *Racoon = new Fighter_specie(basic_infos_1, position_infos_1, threshold_infos_1);
+void Fighter_specie::fight(Specie* entity) {
+    consume(FIGHT_FOOD_CONSUMPTION);
+    if (attack >= entity->get_defense()) {
+        entity->set_dead();
+    } else {
+        entity->consume(entity->get_defense() - attack);
+    }
+}
+*/

@@ -14,14 +14,23 @@ World::World()
     environement.resize(world_size,vector<Tile>(world_size));
     generate();
 
-    Basics basic_infos_1 = {"Racoon", 'R', 50, 20, 20, 20, 1, 1, 1, 1, 60, 60, 0.5, 10, 2};
+    Basics basic_infos_1 = {"Racoon", 'R', 50, 20, 20, 10, 10, 1, 1, 1, 60, 60, 0.5, 10, 2};
     Thresholds threshold_infos_1 = {0.25, 0.25, 0.75, 0.75};
     Coordinates position_infos_1 = {25,25};
-    population.push_back(new Fighter_specie(basic_infos_1, position_infos_1, threshold_infos_1));
+    population.push_back(new Specie(basic_infos_1, position_infos_1, threshold_infos_1));
     environement[25][25].add_specie(population[0]);
     position_infos_1 = {15,15};
-    population.push_back(new Fighter_specie(basic_infos_1, position_infos_1, threshold_infos_1));
+    population.push_back(new Specie(basic_infos_1, position_infos_1, threshold_infos_1));
     environement[15][15].add_specie(population[1]);
+
+    basic_infos_1 = {"Eagle", 'E', 50, 20, 20, 20, 9, 2, 1, 1, 60, 60, 0.5, 10, 1};
+    threshold_infos_1 = {0.25, 0.25, 0.75, 0.75};
+    position_infos_1 = {20,20};
+    population.push_back(new Specie(basic_infos_1, position_infos_1, threshold_infos_1));
+    environement[20][20].add_specie(population[2]);
+    position_infos_1 = {10,10};
+    population.push_back(new Specie(basic_infos_1, position_infos_1, threshold_infos_1));
+    environement[10][10].add_specie(population[3]);
 }
 
 World::~World()
@@ -137,36 +146,44 @@ void World::smooth_terrain(unsigned int times, unsigned int res)
 
 void World::update_population() {
     for (int i = 0; i < population.size(); i++){
-        population_interact_with_environement(population[i]);
+        Specie* nearest_non_mate = get_nearest_other_specie(population[i]);
 
-        Coordinates old_position = population[i]->get_coordinates();
-        Coordinates nearest_mate = get_nearest_same_specie(population[i]);
-        Coordinates nearest_food = get_nearest_food(population[i]);
-        Coordinates nearest_water = get_nearest_water(population[i]);
-        int distance_nearest_food = distance(old_position, nearest_food);
-        int distance_nearest_water = distance(old_position, nearest_water);
-        bool is_alone = false;
-        if (population.size() == 1 ) { is_alone = true; }
+        if (not population_update_deads(population[i])) { // Before or after or both ?
 
-        if (nearest_mate.x >= 0 and nearest_mate.x < world_size and nearest_mate.y >= 0 and nearest_mate.y < world_size) {
-            population_reproduction(population[i], environement[nearest_mate.x][nearest_mate.y].get_top());
+            population_interact_with_environement(population[i]);
+            population_interact_with_population(population[i], nearest_non_mate);
+
+            Coordinates old_position = population[i]->get_coordinates();
+            Coordinates nearest_mate = get_nearest_same_specie(population[i]);
+            Coordinates nearest_food = get_nearest_food(population[i]);
+            Coordinates nearest_water = get_nearest_water(population[i]);
+            int distance_nearest_food = distance(old_position, nearest_food);
+            int distance_nearest_water = distance(old_position, nearest_water);
+            bool is_alone = false;
+            if (population.size() == 1 ) { is_alone = true; }
+
+            if (nearest_mate.x >= 0 and nearest_mate.x < world_size and nearest_mate.y >= 0 and nearest_mate.y < world_size) {
+                population_reproduction(population[i], environement[nearest_mate.x][nearest_mate.y].get_top());
+            }
+
+            population[i]->update(nearest_food, nearest_water, nearest_mate, is_alone);
+            environement[old_position.x][old_position.y].remove_specie(population[i]);
+            Coordinates new_position = population[i]->get_coordinates();
+            environement[new_position.x][new_position.y].add_specie(population[i]);
+        
+            population_update_deads(population[i]);
         }
-
-        population[i]->update(nearest_food, nearest_water, nearest_mate, is_alone);
-        environement[old_position.x][old_position.y].remove_specie(population[i]);
-        Coordinates new_position = population[i]->get_coordinates();
-        environement[new_position.x][new_position.y].add_specie(population[i]);
-    
-        population_update_deads(population[i]);
     }
 }
 
-void World::population_update_deads(Specie* entity) {
+bool World::population_update_deads(Specie* entity) {
     if (entity->get_state()) {
         environement[entity->get_coordinates().x][entity->get_coordinates().y].remove_specie(entity); 
         entity = population.back();
         population.pop_back();
+        return true;
     } // Should let the corpse
+    return false;
 }
 
 void World::population_interact_with_environement(Specie* entity) {
@@ -189,6 +206,14 @@ void World::population_interact_with_environement(Specie* entity) {
         }
 }
 
+void World::population_interact_with_population(Specie* entity, Specie* nearest_non_mate) {
+    Coordinates entity_coordinates = entity->get_coordinates();
+    Coordinates nearest_non_mate_coordinates = nearest_non_mate->get_coordinates();
+    if (distance(entity_coordinates, nearest_non_mate_coordinates) <= 1) {
+        entity->fight(nearest_non_mate);
+    }
+}
+
 void World::population_reproduction(Specie* entity, Specie* nearest_mate) {
     if(distance(nearest_mate->get_coordinates(), entity->get_coordinates()) == 1){
             entity->increase_reproduced();
@@ -197,7 +222,7 @@ void World::population_reproduction(Specie* entity, Specie* nearest_mate) {
             } else if (nearest_mate->get_reproduced() >=0 and nearest_mate->get_reproduced() < TIME_AFTER_REPRODUCTION) {
             } else if ((entity->is_chill()) && (nearest_mate->is_chill())) {
                 Genetic_full_data full_infos = entity->reproduction(nearest_mate);
-                population.push_back(new Fighter_specie(full_infos.basic_infos, entity->get_coordinates(), full_infos.threshold_infos));
+                population.push_back(new Specie(full_infos.basic_infos, entity->get_coordinates(), full_infos.threshold_infos));
                 environement[population.back()->get_coordinates().x][population.back()->get_coordinates().y].add_specie(population.back());
             }
         }
@@ -271,7 +296,30 @@ Coordinates World::get_nearest_same_specie(Specie* specie) {
                 else if (mate_coord.y < 0 || mate_coord.y >= world_size){}
                 else if (mate_coord.x == specie_coord.x && mate_coord.y == specie_coord.y){}
                 else if(environement[mate_coord.x][mate_coord.y].is_occupied()){
-                    return mate_coord;
+                    if (environement[mate_coord.x][mate_coord.y].get_top()->get_name() == specie->get_name()) {
+                        return mate_coord;
+                    }
+                }
+            }
+        }
+    }
+} 
+
+Specie* World::get_nearest_other_specie(Specie* specie) {
+    Coordinates specie_coord = specie->get_coordinates();
+    Coordinates other_coord = {-1,-1};
+    for (int radius = 0; radius < world_size; radius++){
+        for (int clock_x = -radius; clock_x <= radius; clock_x++){
+            for (int clock_y = -radius; clock_y <= radius; clock_y++){
+                other_coord.x = specie_coord.x + clock_x;
+                other_coord.y = specie_coord.y + clock_y;
+                if (other_coord.x < 0 || other_coord.x >= world_size){}
+                else if (other_coord.y < 0 || other_coord.y >= world_size){}
+                else if (other_coord.x == specie_coord.x && other_coord.y == specie_coord.y){}
+                else if(environement[other_coord.x][other_coord.y].is_occupied()){
+                    if (environement[other_coord.x][other_coord.y].get_top()->get_name() != specie->get_name()) {
+                        return environement[other_coord.x][other_coord.y].get_top();
+                    }
                 }
             }
         }
