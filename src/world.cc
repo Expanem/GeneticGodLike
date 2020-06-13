@@ -147,9 +147,9 @@ void World::smooth_terrain(unsigned int times, unsigned int res)
 
 void World::update_population() {
     for (int i = 0; i < population.size(); i++){
-        Specie* nearest_non_mate = get_nearest_other_specie(population[i]);
-
         if (not population_update_deads(population[i])) { // Before or after or both ?
+            Specie* nearest_non_mate = get_nearest_other_specie(population[i]);
+
             population_interact_with_environement(population[i]);
             if (nearest_non_mate != nullptr ) { population_interact_with_population(population[i], nearest_non_mate); }
 
@@ -171,9 +171,12 @@ void World::update_population() {
             Coordinates new_position = population[i]->get_coordinates();
             environement[new_position.x][new_position.y].add_specie(population[i]);
 
-            // debug(i, old_position, new_position, nearest_food, nearest_water, nearest_mate, population[i]->get_food_stored(), population[i]->get_water_stored());
+            debug(i, old_position, new_position, nearest_food, nearest_water, nearest_mate, population[i]->get_food_stored(), population[i]->get_water_stored());
 
-            population_update_deads(population[i]);
+            if (population_update_deads(population[i])) {i--;}
+        
+        } else {
+            i --;
         }
     }
 }
@@ -181,7 +184,9 @@ void World::update_population() {
 bool World::population_update_deads(Specie* entity) {
     if (entity->get_state()) {
         environement[entity->get_coordinates().x][entity->get_coordinates().y].remove_specie(entity); 
+        entity = nullptr;
         entity = population.back();
+        population.back() = nullptr;
         population.pop_back();
         return true;
     } // Should let the corpse
