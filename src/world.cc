@@ -18,11 +18,11 @@ World::World()
     Thresholds threshold_infos_1 = {0.25, 0.25, 0.75, 0.75};
     Coordinates position_infos_1 = {25,25};
     population.push_back(new Specie(basic_infos_1, position_infos_1, threshold_infos_1));
-    environement[25][25].add_specie(population[0]);
+    environement[25][25].add_specie(population.back());
     position_infos_1 = {15,15};
     population.push_back(new Specie(basic_infos_1, position_infos_1, threshold_infos_1));
-    environement[15][15].add_specie(population[1]);
-
+    environement[15][15].add_specie(population.back());
+    /*
     basic_infos_1 = {"Eagle", 'E', 50, 20, 20, 20, 9, 2, 1, 1, 60, 60, 0.5, 10, 1};
     threshold_infos_1 = {0.25, 0.25, 0.75, 0.75};
     position_infos_1 = {20,20};
@@ -31,6 +31,7 @@ World::World()
     position_infos_1 = {10,10};
     population.push_back(new Specie(basic_infos_1, position_infos_1, threshold_infos_1));
     environement[10][10].add_specie(population[3]);
+    */
 }
 
 World::~World()
@@ -149,9 +150,8 @@ void World::update_population() {
         Specie* nearest_non_mate = get_nearest_other_specie(population[i]);
 
         if (not population_update_deads(population[i])) { // Before or after or both ?
-
             population_interact_with_environement(population[i]);
-            population_interact_with_population(population[i], nearest_non_mate);
+            if (nearest_non_mate != nullptr ) { population_interact_with_population(population[i], nearest_non_mate); }
 
             Coordinates old_position = population[i]->get_coordinates();
             Coordinates nearest_mate = get_nearest_same_specie(population[i]);
@@ -170,7 +170,9 @@ void World::update_population() {
             environement[old_position.x][old_position.y].remove_specie(population[i]);
             Coordinates new_position = population[i]->get_coordinates();
             environement[new_position.x][new_position.y].add_specie(population[i]);
-        
+
+            // debug(i, old_position, new_position, nearest_food, nearest_water, nearest_mate, population[i]->get_food_stored(), population[i]->get_water_stored());
+
             population_update_deads(population[i]);
         }
     }
@@ -324,6 +326,7 @@ Specie* World::get_nearest_other_specie(Specie* specie) {
             }
         }
     }
+    return nullptr;
 } 
 
 void World::update_tiles()
