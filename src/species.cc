@@ -32,7 +32,7 @@ Specie::Specie(Basics basic_infos, Coordinates position_info, Thresholds thresho
     water_stored(40),
     deviation(0),
     tick_lived(0),
-    dead(false),
+    state(alive),
     reproduced(-1),
 
     coord(position_info),
@@ -46,16 +46,34 @@ Specie::Specie(Basics basic_infos, Coordinates position_info, Thresholds thresho
     threshold_chill_water(threshold_infos.threshold_chill_water) {
 }
 
-void Specie::update(Coordinates nearest_food, Coordinates nearest_water, Coordinates nearest_mate, bool is_alone) {
+void Specie::update(Coordinates nearest_food, Coordinates nearest_water, Coordinates nearest_mate, Coordinates nearest_prey, Coordinates nearest_predator, bool is_alone) {
+    std::cout << "UPDATING" << std::endl;
     int distance_nearest_food = distance(coord, nearest_food);
     int distance_nearest_water = distance(coord, nearest_water);
     int action = choose_action(distance_nearest_food, distance_nearest_water);
-    // std::cout << "OBJECTIVE " << action << std::endl;
+    std::cout << "OBJECTIVE " << action << std::endl;
     if (is_alone && action == 3) {action = 4;}
     this->consume(1.0);
     switch (action) {
     case 1: // FOOD
-        objective = nearest_food;
+        switch (diet) {
+        case 0: // VEGE
+            objective = nearest_food;
+            break;
+        case 1: // MEAT
+            if (nearest_prey.x != -1 and nearest_prey.y != -1) {
+                objective = nearest_prey; // HOWVER STILL NOT EATING THE CORPSES
+            } else {
+                objective = nearest_food;
+            }
+            
+            break;
+        case 2: // BOTH
+            objective = nearest_food; // For now
+            break;
+        default:
+            break;
+        }
         move_to_objective();
         break; // WATER
     case 2:
@@ -66,10 +84,13 @@ void Specie::update(Coordinates nearest_food, Coordinates nearest_water, Coordin
         if (nearest_mate.x >= 0 and nearest_mate.x < world_size and nearest_mate.y >= 0 and nearest_mate.y < world_size) {
             objective = nearest_mate; // MUST BE BEFORE THE OBJECTIVE
             move_to_objective(1);
-        } else {
-
-        }
-
+        } else { }
+        break;
+    case 4: // FLEE / HIDE
+        if (nearest_predator.x != -1 and nearest_predator.y != -1) {
+            objective = nearest_predator;
+            move_away_from_objective();
+        } 
         break;
     default:
         break;
@@ -80,7 +101,7 @@ void Specie::consume(float ratio) {
     this->food_stored -= this->food_consumption;
     this->water_stored -= this->water_consumption;
     if ((this->water_stored <= 0) or (this->food_stored <= 0)){
-        this->dead = true;
+        state = dead;
     }
 }
 
@@ -99,20 +120,29 @@ void Specie::drink(float water_quantity) {
 }
 
 void Specie::eat(Vegetation* plant) {
-    if (food_stored == food_storage) { /* std::cout << "MAXED FOOD1" << std::endl; return;*/ }  
+    if (food_stored == food_storage) { return; }  
     else {
-        if (plant->is_poisonous()){ dead = true; }
-        // cout << "FOOD BEFORE " << food_stored << std::endl;
+        if (plant->is_poisonous()){ state = dead; }
         food_stored += plant->eat();
-        // cout << "FOOD AFTER " << food_stored << std::endl;
-        if (food_stored > food_storage) { /* std::cout << "MAXED FOOD2" << std::endl; food_stored = food_storage;*/}
+        if (food_stored > food_storage) { food_stored = food_storage; }
     }
 }
 
+void Specie::eat(Specie* prey) {
+        if (food_stored == food_storage) { return; }  
+    else {
+        food_stored += prey->be_eaten();
+        if (food_stored > food_storage) { food_stored = food_storage; }
+    }
+}
+
+double Specie::be_eaten() { 
+    state = disapeared;
+    return 0; // TO DO 
+}
+
 void Specie::move_to_objective(int distance_max) { //Keep velocity energy without taking care of direction
-    // std::cout << "THIS IS MY OBJECTIVE " << objective.x << " " << objective.y << std::endl; 
     velocity_storage += velocity;
-    // std::cout << "VELOCITY STORED" << velocity_storage << std::endl;
     while ((velocity + velocity_storage) > 1) {
         this->consume(RATIO_VELOCITY_FOOD_CONSUMPTION);
         velocity_storage -= 1;
@@ -149,6 +179,10 @@ void Specie::move_to_objective(int distance_max) { //Keep velocity energy withou
             }
         }
     }
+}
+
+void Specie::move_away_from_objective() {
+    // TO DO
 }
 
 Genetic_full_data Specie::reproduction(Specie* mate) {
@@ -217,7 +251,7 @@ bool Specie::is_chill() {
 void Specie::fight(Specie* entity) {
     consume(FIGHT_FOOD_CONSUMPTION);
     if (attack >= entity->get_defense()) {
-        entity->set_dead();
+        entity->set_state(dead);
     } else {
         entity->consume(entity->get_defense() - attack);
     }

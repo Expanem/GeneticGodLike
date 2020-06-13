@@ -24,12 +24,13 @@ private :
     void population_reproduction(Specie* entity, Specie* nearest_mate);
     bool population_update_deads(int iteration, Specie* entity);
 
-    void debug(int iteration, Coordinates old_position, Coordinates new_position, Coordinates nearest_food, Coordinates nearest_water, Coordinates nearest_mate, int food_stored, int water_stored);
+    void debug(int iteration, Coordinates old_position, Coordinates new_position, Coordinates nearest_vege_food, Coordinates nearest_water, Coordinates nearest_mate, int food_stored, int water_stored);
 
-    Coordinates get_nearest_food(Specie* specie);
+    Coordinates get_nearest_vege_food(Specie* specie);
     Coordinates get_nearest_water(Specie* specie);
-    Coordinates get_nearest_same_specie(Specie* specie);
+    Specie* get_nearest_same_specie(Specie* specie);
     Specie* get_nearest_other_specie(Specie* specie);
+    Specie* get_nearest_prey(Specie* specie);
 
     std::vector<std::vector<Tile>> environement;
     std::vector<Specie*> population;

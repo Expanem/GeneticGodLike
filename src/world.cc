@@ -154,24 +154,30 @@ void World::update_population() {
             if (nearest_non_mate != nullptr ) { population_interact_with_population(population[i], nearest_non_mate); }
 
             Coordinates old_position = population[i]->get_coordinates();
-            Coordinates nearest_mate = get_nearest_same_specie(population[i]);
-            Coordinates nearest_food = get_nearest_food(population[i]);
-            Coordinates nearest_water = get_nearest_water(population[i]);
-            int distance_nearest_food = distance(old_position, nearest_food);
-            int distance_nearest_water = distance(old_position, nearest_water);
+            Specie* nearest_mate = get_nearest_same_specie(population[i]);
+            Coordinates nearest_mate_coord = {-1,-1};
+            if (nearest_mate != nullptr) { nearest_mate_coord = nearest_mate->get_coordinates(); }
+            Coordinates nearest_vege_food_coord = get_nearest_vege_food(population[i]);
+            Coordinates nearest_water_coord = get_nearest_water(population[i]);
+            Specie* nearest_prey = get_nearest_prey(population[i]);
+            Coordinates nearest_prey_coord = {-1,-1};
+            if (nearest_prey != nullptr) { nearest_prey_coord = nearest_prey->get_coordinates(); }
+            Coordinates nearest_predator_coord;
+            int distance_nearest_vege_food = distance(old_position, nearest_vege_food_coord);
+            int distance_nearest_water = distance(old_position, nearest_water_coord);
             bool is_alone = false;
-            if (population.size() == 1 ) { is_alone = true; }
+            if (population.size() == 1 ) { is_alone = true; } // NEED TO USE IT BETTER
 
-            if (nearest_mate.x >= 0 and nearest_mate.x < world_size and nearest_mate.y >= 0 and nearest_mate.y < world_size) {
-                population_reproduction(population[i], environement[nearest_mate.x][nearest_mate.y].get_top());
+            if (nearest_mate_coord.x >= 0 and nearest_mate_coord.x < world_size and nearest_mate_coord.y >= 0 and nearest_mate_coord.y < world_size) {
+                population_reproduction(population[i], nearest_mate);
             }
-
-            population[i]->update(nearest_food, nearest_water, nearest_mate, is_alone);
+            cout << population[i]->get_name() << endl;
+            population[i]->update(nearest_vege_food_coord, nearest_water_coord, nearest_mate_coord, nearest_prey_coord, nearest_predator_coord, is_alone);
             environement[old_position.x][old_position.y].remove_specie(population[i]);
             Coordinates new_position = population[i]->get_coordinates();
             environement[new_position.x][new_position.y].add_specie(population[i]);
-
-            debug(i, old_position, new_position, nearest_food, nearest_water, nearest_mate, population[i]->get_food_stored(), population[i]->get_water_stored());
+            
+            debug(i, old_position, new_position, nearest_vege_food_coord, nearest_water_coord, nearest_mate_coord, population[i]->get_food_stored(), population[i]->get_water_stored());
 
             if (population_update_deads(i, population[i])) {i--;}
         
@@ -182,7 +188,7 @@ void World::update_population() {
 }
 
 bool World::population_update_deads(int i, Specie* entity) {
-    if (population[i]->get_state()) {
+    if (population[i]->get_state() == 1) { // TO DO : USE DISAPEAR NOW
         cout << i << " IS DEAD, at coord " << population[i]->get_coordinates().x << " " << population[i]->get_coordinates().y << endl;
         environement[population[i]->get_coordinates().x][population[i]->get_coordinates().y].remove_specie(population[i]); 
         population[i] = population.back();
@@ -211,6 +217,7 @@ void World::population_interact_with_environement(Specie* entity) {
             exit(1);
             break;
         }
+        // if corpse and eater of corpse then it eat
 }
 
 void World::population_interact_with_population(Specie* entity, Specie* nearest_non_mate) {
@@ -235,20 +242,20 @@ void World::population_reproduction(Specie* entity, Specie* nearest_mate) {
         }
 }
 
-void World::debug(int iteration, Coordinates old_position, Coordinates new_position, Coordinates nearest_food, Coordinates nearest_water, Coordinates nearest_mate, int food_stored, int water_stored) {
+void World::debug(int iteration, Coordinates old_position, Coordinates new_position, Coordinates nearest_vege_food_coord, Coordinates nearest_water_coord, Coordinates nearest_mate, int food_stored, int water_stored) {
     std::cout << "----------------------" << std::endl;
     std::cout << "Update of : " << iteration << std::endl;
     std::cout << "OLD POSITION : " << old_position.x << " " << old_position.y << std::endl;
     std::cout << "NEW POSITION : " << new_position.x << " " << new_position.y << std::endl;
     std::cout << "NEAREST MATE : " << nearest_mate.x << " " << nearest_mate.y << std::endl;
-    std::cout << "FOOD COORD : " << nearest_food.x << " " << nearest_food.y << std::endl;
-    std::cout << "WATER COORD : " << nearest_water.x << " " << nearest_water.y << std::endl;
+    std::cout << "FOOD COORD : " << nearest_vege_food_coord.x << " " << nearest_vege_food_coord.y << std::endl;
+    std::cout << "WATER COORD : " << nearest_water_coord.x << " " << nearest_water_coord.y << std::endl;
     std::cout << "FOOD STORED : " << food_stored << std::endl;
     std::cout << "WATER STORED : " << water_stored << std::endl;
 
 }
 
-Coordinates World::get_nearest_food(Specie* specie) {
+Coordinates World::get_nearest_vege_food(Specie* specie) {
     Coordinates specie_coord = specie->get_coordinates();
     Coordinates food_coord = {-2,-2};
     for (int radius = 0; radius < world_size; radius++){
@@ -291,7 +298,7 @@ Coordinates World::get_nearest_water(Specie* specie) {
     }
 } 
 
-Coordinates World::get_nearest_same_specie(Specie* specie) {
+Specie* World::get_nearest_same_specie(Specie* specie) {
     Coordinates specie_coord = specie->get_coordinates();
     Coordinates mate_coord = {-1,-1};
     for (int radius = 0; radius < world_size; radius++){
@@ -303,13 +310,14 @@ Coordinates World::get_nearest_same_specie(Specie* specie) {
                 else if (mate_coord.y < 0 || mate_coord.y >= world_size){}
                 else if (mate_coord.x == specie_coord.x && mate_coord.y == specie_coord.y){}
                 else if(environement[mate_coord.x][mate_coord.y].is_occupied()){
-                    if (environement[mate_coord.x][mate_coord.y].get_top()->get_name() == specie->get_name()) {
-                        return mate_coord;
+                    if (environement[mate_coord.x][mate_coord.y].get_top()->get_name() == specie->get_name()) { // WHAT IF NON TOP ??
+                        return environement[mate_coord.x][mate_coord.y].get_top();
                     }
                 }
             }
         }
     }
+    return nullptr;
 } 
 
 Specie* World::get_nearest_other_specie(Specie* specie) {
@@ -324,8 +332,30 @@ Specie* World::get_nearest_other_specie(Specie* specie) {
                 else if (other_coord.y < 0 || other_coord.y >= world_size){}
                 else if (other_coord.x == specie_coord.x && other_coord.y == specie_coord.y){}
                 else if(environement[other_coord.x][other_coord.y].is_occupied()){
-                    if (environement[other_coord.x][other_coord.y].get_top()->get_name() != specie->get_name()) {
+                    if (environement[other_coord.x][other_coord.y].get_top()->get_name() != specie->get_name()) {  // WHAT IF NON TOP
                         return environement[other_coord.x][other_coord.y].get_top();
+                    }
+                }
+            }
+        }
+    }
+    return nullptr;
+} 
+
+Specie* World::get_nearest_prey(Specie* specie) { // NEED TO CORRECT IT, GETTING NEAREST OTHER SPECIE FOR NOW
+    Coordinates specie_coord = specie->get_coordinates();
+    Coordinates prey_coord = {-1,-1};
+    for (int radius = 0; radius < world_size; radius++){
+        for (int clock_x = -radius; clock_x <= radius; clock_x++){
+            for (int clock_y = -radius; clock_y <= radius; clock_y++){
+                prey_coord.x = specie_coord.x + clock_x;
+                prey_coord.y = specie_coord.y + clock_y;
+                if (prey_coord.x < 0 || prey_coord.x >= world_size){}
+                else if (prey_coord.y < 0 || prey_coord.y >= world_size){}
+                else if (prey_coord.x == specie_coord.x && prey_coord.y == specie_coord.y){}
+                else if(environement[prey_coord.x][prey_coord.y].is_occupied()){
+                    if (environement[prey_coord.x][prey_coord.y].get_top()->get_name() != specie->get_name()) { // WHAT IF NON TOP
+                        return environement[prey_coord.x][prey_coord.y].get_top();
                     }
                 }
             }

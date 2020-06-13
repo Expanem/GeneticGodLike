@@ -11,6 +11,8 @@
 #include "tools.h"
 #include "vegetation.h"
 
+enum STATE {alive, dead, disapeared};
+
 typedef struct Thresholds {
     float threshold_urgent_food;
     float threshold_urgent_water;
@@ -44,12 +46,15 @@ typedef struct Genetic_full_data {
 class Specie {
     public:
         Specie(Basics basic_infos, Coordinates position_info, Thresholds threshold_infos);
-        void update(Coordinates nearest_food, Coordinates nearest_water, Coordinates nearest_mate, bool is_alone);
+        void update(Coordinates nearest_food, Coordinates nearest_water, Coordinates nearest_mate, Coordinates nearest_prey, Coordinates nearest_predator, bool is_alone);
         void consume(float ratio);
         void eat(Vegetation* plant);
+        void eat(Specie* entity);
+        double be_eaten();
         void drink(float water_quantity);
         Genetic_full_data reproduction(Specie* mate);
         void move_to_objective(int distance_max = 0);
+        void move_away_from_objective();
         int choose_action(float distance_nearest_food, float distance_nearest_water);
         void fight(Specie* entity);
 
@@ -58,7 +63,7 @@ class Specie {
         std::string get_name(){return name;};
         char get_icon(){return icon;};
         Coordinates get_coordinates(){return coord;}; 
-        bool get_state(){return dead;};
+        STATE get_state(){return state;};
         double get_food_stored(){return food_stored;};
         double get_water_stored(){return water_stored;};
         int get_reproduced(){return reproduced;};
@@ -68,7 +73,7 @@ class Specie {
         void reset_reproduced(){reproduced = 0;};
         void increase_reproduced(){reproduced++;};
         void set_icon(char ic){icon = ic;};
-        void set_dead(){dead = true;};
+        void set_state(STATE new_state){state = new_state;};
     protected:
         std::string name;
         char icon;
@@ -90,7 +95,7 @@ class Specie {
         double water_stored;
         double deviation;
         int tick_lived;
-        bool dead;
+        STATE state;
         int reproduced;
 
         Coordinates coord;
