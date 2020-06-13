@@ -147,7 +147,7 @@ void World::smooth_terrain(unsigned int times, unsigned int res)
 
 void World::update_population() {
     for (int i = 0; i < population.size(); i++){
-        if (not population_update_deads(population[i])) { // Before or after or both ?
+        if (population_update_deads(i, population[i]) == false) { // Before or after or both ?
             Specie* nearest_non_mate = get_nearest_other_specie(population[i]);
 
             population_interact_with_environement(population[i]);
@@ -173,7 +173,7 @@ void World::update_population() {
 
             debug(i, old_position, new_position, nearest_food, nearest_water, nearest_mate, population[i]->get_food_stored(), population[i]->get_water_stored());
 
-            if (population_update_deads(population[i])) {i--;}
+            if (population_update_deads(i, population[i])) {i--;}
         
         } else {
             i --;
@@ -181,12 +181,13 @@ void World::update_population() {
     }
 }
 
-bool World::population_update_deads(Specie* entity) {
-    if (entity->get_state()) {
-        environement[entity->get_coordinates().x][entity->get_coordinates().y].remove_specie(entity); 
-        entity = nullptr;
-        entity = population.back();
+bool World::population_update_deads(int i, Specie* entity) {
+    if (population[i]->get_state()) {
+        cout << i << " IS DEAD, at coord " << population[i]->get_coordinates().x << " " << population[i]->get_coordinates().y << endl;
+        environement[population[i]->get_coordinates().x][population[i]->get_coordinates().y].remove_specie(population[i]); 
+        population[i] = population.back();
         population.back() = nullptr;
+        // std::swap(population[i],population.back());
         population.pop_back();
         return true;
     } // Should let the corpse

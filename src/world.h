@@ -22,7 +22,7 @@ private :
     void population_interact_with_environement(Specie* entity);
     void population_interact_with_population(Specie* entity, Specie* nearest_non_mate);
     void population_reproduction(Specie* entity, Specie* nearest_mate);
-    bool population_update_deads(Specie* entity);
+    bool population_update_deads(int iteration, Specie* entity);
 
     void debug(int iteration, Coordinates old_position, Coordinates new_position, Coordinates nearest_food, Coordinates nearest_water, Coordinates nearest_mate, int food_stored, int water_stored);
 
