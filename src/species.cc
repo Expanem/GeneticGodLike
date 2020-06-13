@@ -63,8 +63,13 @@ void Specie::update(Coordinates nearest_food, Coordinates nearest_water, Coordin
         move_to_objective();
         break;
     case 3: // MATE
-        objective = nearest_mate; // MUST BE BEFORE THE OBJECTIVE
-        move_to_objective(1);
+        if (nearest_mate.x >= 0 and nearest_mate.x < world_size and nearest_mate.y >= 0 and nearest_mate.y < world_size) {
+            objective = nearest_mate; // MUST BE BEFORE THE OBJECTIVE
+            move_to_objective(1);
+        } else {
+
+        }
+
         break;
     default:
         break;

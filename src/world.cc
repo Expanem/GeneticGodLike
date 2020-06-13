@@ -22,7 +22,7 @@ World::World()
     position_infos_1 = {15,15};
     population.push_back(new Specie(basic_infos_1, position_infos_1, threshold_infos_1));
     environement[15][15].add_specie(population.back());
-    /*
+    
     basic_infos_1 = {"Eagle", 'E', 50, 20, 20, 20, 9, 2, 1, 1, 60, 60, 0.5, 10, 1};
     threshold_infos_1 = {0.25, 0.25, 0.75, 0.75};
     position_infos_1 = {20,20};
@@ -31,7 +31,7 @@ World::World()
     position_infos_1 = {10,10};
     population.push_back(new Specie(basic_infos_1, position_infos_1, threshold_infos_1));
     environement[10][10].add_specie(population[3]);
-    */
+    
 }
 
 World::~World()
@@ -187,7 +187,6 @@ bool World::population_update_deads(int i, Specie* entity) {
         environement[population[i]->get_coordinates().x][population[i]->get_coordinates().y].remove_specie(population[i]); 
         population[i] = population.back();
         population.back() = nullptr;
-        // std::swap(population[i],population.back());
         population.pop_back();
         return true;
     } // Should let the corpse
