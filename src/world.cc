@@ -11,6 +11,8 @@ using namespace std;
 
 World::World()
 {
+    srand(time(NULL));
+    
     environement.resize(world_size,vector<Tile>(world_size));
     generate();
 
@@ -22,15 +24,23 @@ World::World()
     position_infos_1 = {15,15};
     population.push_back(new Specie(basic_infos_1, position_infos_1, threshold_infos_1));
     environement[15][15].add_specie(population.back());
+    position_infos_1 = {17,17};
+    population.push_back(new Specie(basic_infos_1, position_infos_1, threshold_infos_1));
+    environement[17][17].add_specie(population.back());
     
-    basic_infos_1 = {"Eagle", predator, 'E', 50, 20, 20, 20, 9, 2, 1, 1, 60, 60, 0.5, 10, carnivore};
-    threshold_infos_1 = {0.25, 0.25, 0.75, 0.75};
-    position_infos_1 = {20,20};
+
+    int pos_x = rand() % world_size;
+    int pos_y = rand() % world_size;
+    basic_infos_1 = {"Eagle", predator, 'E', 50, 20, 20, 20, 9, 2, 1, 1, 100, 100, 0.5, 10, carnivore};
+    threshold_infos_1 = {0.25, 0.25, 0.9, 0.9};
+    position_infos_1 = {pos_x, pos_y};
     population.push_back(new Specie(basic_infos_1, position_infos_1, threshold_infos_1));
-    environement[20][20].add_specie(population[2]);
-    position_infos_1 = {10,10};
+    environement[pos_x][pos_y].add_specie(population.back());
+    pos_x = rand() % world_size;
+    pos_y = rand() % world_size;
+    position_infos_1 = {pos_x,pos_y};
     population.push_back(new Specie(basic_infos_1, position_infos_1, threshold_infos_1));
-    environement[10][10].add_specie(population[3]);
+    environement[pos_x][pos_y].add_specie(population.back());
     
 }
 
@@ -41,7 +51,7 @@ World::~World()
 
 const void World::show()
 {
-    //system("clear");
+    system("clear");
     for (auto latitude : environement)
     {
         for (auto tile : latitude)
@@ -148,7 +158,7 @@ void World::smooth_terrain(unsigned int times, unsigned int res)
 void World::update_population() {
     for (int i = 0; i < population.size(); i++){
         STATE state = population_update_state(i);
-        if ( state == alive) { // Before or after or both ?
+        if ( state == alive) {
             Specie* nearest_non_mate = get_nearest_other_specie(population[i]);
 
             population_interact_with_environement(population[i]);
@@ -178,13 +188,12 @@ void World::update_population() {
             if (nearest_mate_coord.x >= 0 and nearest_mate_coord.x < world_size and nearest_mate_coord.y >= 0 and nearest_mate_coord.y < world_size) {
                 population_reproduction(population[i], nearest_mate);
             }
-            cout << population[i]->get_name() << endl;
             population[i]->update(nearest_vege_food_coord, nearest_water_coord, nearest_mate_coord, nearest_prey_coord, nearest_prey_corpse_coord, nearest_predator_coord, is_alone);
             environement[old_position.x][old_position.y].remove_specie(population[i]);
             Coordinates new_position = population[i]->get_coordinates();
             environement[new_position.x][new_position.y].add_specie(population[i]);
             
-            debug(i, old_position, new_position, nearest_vege_food_coord, nearest_water_coord, nearest_mate_coord, nearest_prey_coord, nearest_prey_corpse_coord, population[i]->get_food_stored(), population[i]->get_water_stored());
+            // debug(i, old_position, new_position, nearest_vege_food_coord, nearest_water_coord, nearest_mate_coord, nearest_prey_coord, nearest_prey_corpse_coord, population[i]->get_food_stored(), population[i]->get_water_stored());
 
             state = population_update_state(i);
         }

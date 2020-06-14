@@ -29,8 +29,8 @@ Specie::Specie(Basics basic_infos, Coordinates position_info, Thresholds thresho
     life_span(basic_infos.life_span),
     diet(basic_infos.diet),
 
-    food_stored(40),
-    water_stored(40),
+    food_stored(0.7 * food_storage),
+    water_stored(0.7 * water_storage),
     deviation(0),
     tick_lived(0),
     state(alive),
@@ -48,7 +48,6 @@ Specie::Specie(Basics basic_infos, Coordinates position_info, Thresholds thresho
 }
 
 void Specie::update(Coordinates nearest_food, Coordinates nearest_water, Coordinates nearest_mate, Coordinates nearest_prey, Coordinates nearest_prey_corpse, Coordinates nearest_predator, bool is_alone) {
-    std::cout << "UPDATING" << std::endl;
     int distance_nearest_food = distance(coord, nearest_food);
     int distance_nearest_water = distance(coord, nearest_water);
     int distance_nearest_prey, distance_nearest_prey_corpse, distance_nearest_predator;
@@ -58,7 +57,7 @@ void Specie::update(Coordinates nearest_food, Coordinates nearest_water, Coordin
 
     // IF CARN OR OMNI ? WHICH ARGUMENTS ?
     ACTION action = choose_action(distance_nearest_food, distance_nearest_water, distance_nearest_predator);
-    std::cout << "OBJECTIVE " << action << std::endl;
+    // std::cout << "OBJECTIVE " << action << std::endl;
     if (is_alone && action == to_mate) {action = do_nothing;}
     this->consume(1.0);
     switch (action) {
@@ -69,15 +68,14 @@ void Specie::update(Coordinates nearest_food, Coordinates nearest_water, Coordin
             break;
         case carnivore:
             if ((nearest_prey_corpse.x != -1 and nearest_prey_corpse.y != -1)) { // CHOOSE BETTER MAX DIST
-                std::cout << "going to nearest corpse at : " <<  nearest_prey_corpse.x << " " << nearest_prey_corpse.y << std::endl;
+                // std::cout << "going to nearest corpse at : " <<  nearest_prey_corpse.x << " " << nearest_prey_corpse.y << std::endl;
                 objective = nearest_prey_corpse;
             } else if (nearest_prey.x != -1 and nearest_prey.y != -1) {
-                std::cout << "going to nearest prey at : " <<  nearest_prey.x << " " << nearest_prey.y << std::endl;
+                // std::cout << "going to nearest prey at : " <<  nearest_prey.x << " " << nearest_prey.y << std::endl;
                 objective = nearest_prey;
             } else {
-                std::cout << "NO FOOD FOUND" << std::endl;
+                // std::cout << "NO FOOD FOUND" << std::endl;
             }
-            
             break;
         case omnivore:
             objective = nearest_food; // For now
@@ -86,18 +84,18 @@ void Specie::update(Coordinates nearest_food, Coordinates nearest_water, Coordin
             break;
         }
         move_to_objective();
-        break; // WATER
+        break;
     case to_drink:
         objective = nearest_water;
         move_to_objective();
         break;
-    case to_mate: // MATE
+    case to_mate:
         if (nearest_mate.x >= 0 and nearest_mate.x < world_size and nearest_mate.y >= 0 and nearest_mate.y < world_size) {
             objective = nearest_mate; // MUST BE BEFORE THE OBJECTIVE
             move_to_objective(1);
         } else { }
         break;
-    case to_flee: // FLEE / HIDE
+    case to_flee:
         if (nearest_predator.x != -1 and nearest_predator.y != -1) {
             objective = nearest_predator;
             move_away_from_objective();
@@ -254,7 +252,6 @@ Genetic_full_data Specie::reproduction(Specie* mate) {
 ACTION Specie::choose_action(int distance_nearest_food, int distance_nearest_water, int distance_nearest_predator) {
     float food_per = food_stored / food_storage;
     float water_per = water_stored / water_storage;
-    cout << distance_nearest_predator << endl;
     if (abs(distance_nearest_predator) <= 2 ) { // CHOOSE BETTER NUMBER
         return to_flee;
     }
