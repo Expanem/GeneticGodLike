@@ -163,6 +163,9 @@ void World::update_population() {
             Specie* nearest_prey = get_nearest_prey(population[i]);
             Coordinates nearest_prey_coord = {-1,-1};
             if (nearest_prey != nullptr) { nearest_prey_coord = nearest_prey->get_coordinates(); }
+            Specie* nearest_prey_corpse = get_nearest_prey(population[i], dead);
+            Coordinates nearest_prey_corpse_coord = {-1,-1};
+            if (nearest_prey_corpse != nullptr) { nearest_prey_corpse_coord = nearest_prey_corpse->get_coordinates(); }
             Coordinates nearest_predator_coord;
             int distance_nearest_vege_food = distance(old_position, nearest_vege_food_coord);
             int distance_nearest_water = distance(old_position, nearest_water_coord);
@@ -173,12 +176,12 @@ void World::update_population() {
                 population_reproduction(population[i], nearest_mate);
             }
             cout << population[i]->get_name() << endl;
-            population[i]->update(nearest_vege_food_coord, nearest_water_coord, nearest_mate_coord, nearest_prey_coord, nearest_predator_coord, is_alone);
+            population[i]->update(nearest_vege_food_coord, nearest_water_coord, nearest_mate_coord, nearest_prey_coord, nearest_prey_corpse_coord, nearest_predator_coord, is_alone);
             environement[old_position.x][old_position.y].remove_specie(population[i]);
             Coordinates new_position = population[i]->get_coordinates();
             environement[new_position.x][new_position.y].add_specie(population[i]);
             
-            debug(i, old_position, new_position, nearest_vege_food_coord, nearest_water_coord, nearest_mate_coord, population[i]->get_food_stored(), population[i]->get_water_stored());
+            debug(i, old_position, new_position, nearest_vege_food_coord, nearest_water_coord, nearest_mate_coord, nearest_prey_coord, nearest_prey_corpse_coord, population[i]->get_food_stored(), population[i]->get_water_stored());
 
             state = population_update_state(i);
         }
@@ -208,8 +211,10 @@ void World::population_interact_with_environement(Specie* entity) {
             entity->drink(30);
             break;
         case fertile:
-            if (environement[entity_coordinates.x][entity_coordinates.y].get_plant()->is_eatable()) {
-                entity->eat(environement[entity_coordinates.x][entity_coordinates.y].get_plant());
+            if (entity->get_diet() == omnivore || entity->get_diet() == herbivore) {
+                if (environement[entity_coordinates.x][entity_coordinates.y].get_plant()->is_eatable()) {
+                    entity->eat(environement[entity_coordinates.x][entity_coordinates.y].get_plant());
+            }
             }
             break;
         case barren:
@@ -218,6 +223,15 @@ void World::population_interact_with_environement(Specie* entity) {
             exit(1);
             break;
         }
+    if (entity->get_diet() == carnivore) { // To do with omnivore too
+        if (environement[entity_coordinates.x][entity_coordinates.y].get_corpse() != nullptr) {
+            Specie* corpse = environement[entity_coordinates.x][entity_coordinates.y].get_corpse();
+            if (corpse->get_name() != entity->get_name()) {
+                entity->eat(corpse);
+            }
+        }
+    }
+
 }
 
 void World::population_interact_with_population(Specie* entity, Specie* nearest_non_mate) {
@@ -242,7 +256,7 @@ void World::population_reproduction(Specie* entity, Specie* nearest_mate) {
         }
 }
 
-void World::debug(int iteration, Coordinates old_position, Coordinates new_position, Coordinates nearest_vege_food_coord, Coordinates nearest_water_coord, Coordinates nearest_mate, int food_stored, int water_stored) {
+void World::debug(int iteration, Coordinates old_position, Coordinates new_position, Coordinates nearest_vege_food_coord, Coordinates nearest_water_coord, Coordinates nearest_mate, Coordinates nearest_prey_coord, Coordinates nearest_prey_corpse_coord, int food_stored, int water_stored) {
     std::cout << "----------------------" << std::endl;
     std::cout << "Update of : " << iteration << std::endl;
     std::cout << "OLD POSITION : " << old_position.x << " " << old_position.y << std::endl;
@@ -250,6 +264,8 @@ void World::debug(int iteration, Coordinates old_position, Coordinates new_posit
     std::cout << "NEAREST MATE : " << nearest_mate.x << " " << nearest_mate.y << std::endl;
     std::cout << "FOOD COORD : " << nearest_vege_food_coord.x << " " << nearest_vege_food_coord.y << std::endl;
     std::cout << "WATER COORD : " << nearest_water_coord.x << " " << nearest_water_coord.y << std::endl;
+    std::cout << "PREY COORD : " << nearest_prey_coord.x << " " << nearest_prey_coord.y << std::endl;
+    std::cout << "CORPSE COORD : " << nearest_prey_corpse_coord.x << " " << nearest_prey_corpse_coord.y << std::endl;
     std::cout << "FOOD STORED : " << food_stored << std::endl;
     std::cout << "WATER STORED : " << water_stored << std::endl;
 
@@ -343,6 +359,7 @@ Specie* World::get_nearest_other_specie(Specie* specie) {
 } 
 
 Specie* World::get_nearest_prey(Specie* specie, STATE state) { // NEED TO CORRECT IT, GETTING NEAREST OTHER SPECIE FOR NOW
+    cout << "NEED " << state << endl;
     Coordinates specie_coord = specie->get_coordinates();
     Coordinates prey_coord = {-1,-1};
     for (int radius = 0; radius < world_size; radius++){
@@ -355,9 +372,12 @@ Specie* World::get_nearest_prey(Specie* specie, STATE state) { // NEED TO CORREC
                 else if (prey_coord.x == specie_coord.x && prey_coord.y == specie_coord.y){}
                 else if(environement[prey_coord.x][prey_coord.y].is_occupied()){
                     if (environement[prey_coord.x][prey_coord.y].get_top()->get_name() != specie->get_name()) { // WHAT IF NON TOP
+                        cout << "FOUND " << environement[prey_coord.x][prey_coord.y].get_top()->get_name() << " " << prey_coord.x << " " << prey_coord.y << " " << environement[prey_coord.x][prey_coord.y].get_top()->get_state();
                         if (environement[prey_coord.x][prey_coord.y].get_top()->get_state() == state) { // MAKE IT CLEAN !
+                            cout << " PERFECT" << endl;
                             return environement[prey_coord.x][prey_coord.y].get_top();
                         }
+                        cout << endl;
                     }
                 }
             }

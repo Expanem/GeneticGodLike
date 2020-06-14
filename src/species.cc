@@ -46,29 +46,35 @@ Specie::Specie(Basics basic_infos, Coordinates position_info, Thresholds thresho
     threshold_chill_water(threshold_infos.threshold_chill_water) {
 }
 
-void Specie::update(Coordinates nearest_food, Coordinates nearest_water, Coordinates nearest_mate, Coordinates nearest_prey, Coordinates nearest_predator, bool is_alone) {
+void Specie::update(Coordinates nearest_food, Coordinates nearest_water, Coordinates nearest_mate, Coordinates nearest_prey, Coordinates nearest_prey_corpse, Coordinates nearest_predator, bool is_alone) {
     std::cout << "UPDATING" << std::endl;
     int distance_nearest_food = distance(coord, nearest_food);
     int distance_nearest_water = distance(coord, nearest_water);
+    int distance_nearest_prey = distance(coord, nearest_prey);
+    int distance_nearest_prey_corpse = distance(coord, nearest_prey_corpse);
     ACTION action = choose_action(distance_nearest_food, distance_nearest_water);
     std::cout << "OBJECTIVE " << action << std::endl;
-    if (is_alone && action == 3) {action = do_nothing;}
+    if (is_alone && action == to_mate) {action = do_nothing;}
     this->consume(1.0);
     switch (action) {
-    case to_eat: // FOOD
+    case to_eat:
         switch (diet) {
-        case herbivore: // VEGE
+        case herbivore:
             objective = nearest_food;
             break;
-        case carnivore: // MEAT
-            if (nearest_prey.x != -1 and nearest_prey.y != -1) {
-                objective = nearest_prey; // HOWVER STILL NOT EATING THE CORPSES
+        case carnivore:
+            if ((nearest_prey_corpse.x != -1 and nearest_prey_corpse.y != -1)) { // CHOOSE BETTER MAX DIST
+                std::cout << "going to nearest corpse at : " <<  nearest_prey_corpse.x << " " << nearest_prey_corpse.y << std::endl;
+                objective = nearest_prey_corpse;
+            } if (nearest_prey.x != -1 and nearest_prey.y != -1) {
+                std::cout << "going to nearest prey at : " <<  nearest_prey.x << " " << nearest_prey.y << std::endl;
+                objective = nearest_prey;
             } else {
-                objective = nearest_food;
+                std::cout << "NO FOOD FOUND" << std::endl;
             }
             
             break;
-        case omnivore: // BOTH
+        case omnivore:
             objective = nearest_food; // For now
             break;
         default:
@@ -129,7 +135,7 @@ void Specie::eat(Vegetation* plant) {
 }
 
 void Specie::eat(Specie* prey) {
-        if (food_stored == food_storage) { return; }  
+    if (food_stored == food_storage) { return; }  
     else {
         food_stored += prey->be_eaten();
         if (food_stored > food_storage) { food_stored = food_storage; }
@@ -138,7 +144,7 @@ void Specie::eat(Specie* prey) {
 
 double Specie::be_eaten() { 
     state = disapeared;
-    return 0; // TO DO 
+    return food_stored;
 }
 
 void Specie::move_to_objective(int distance_max) { //Keep velocity energy without taking care of direction

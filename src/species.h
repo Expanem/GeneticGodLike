@@ -48,7 +48,7 @@ typedef struct Genetic_full_data {
 class Specie {
     public:
         Specie(Basics basic_infos, Coordinates position_info, Thresholds threshold_infos);
-        void update(Coordinates nearest_food, Coordinates nearest_water, Coordinates nearest_mate, Coordinates nearest_prey, Coordinates nearest_predator, bool is_alone);
+        void update(Coordinates nearest_food, Coordinates nearest_water, Coordinates nearest_mate, Coordinates nearest_prey, Coordinates nearest_prey_corpse, Coordinates nearest_predator, bool is_alone);
         void consume(float ratio);
         void eat(Vegetation* plant);
         void eat(Specie* entity);
@@ -71,6 +71,7 @@ class Specie {
         int get_reproduced(){return reproduced;};
         double get_attack(){return attack;};
         double get_defense(){return defense;};
+        DIET get_diet(){return diet;};
 
         void reset_reproduced(){reproduced = 0;};
         void increase_reproduced(){reproduced++;};

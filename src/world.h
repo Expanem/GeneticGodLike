@@ -24,7 +24,7 @@ private :
     void population_reproduction(Specie* entity, Specie* nearest_mate);
     STATE population_update_state(int iteration);
 
-    void debug(int iteration, Coordinates old_position, Coordinates new_position, Coordinates nearest_vege_food, Coordinates nearest_water, Coordinates nearest_mate, int food_stored, int water_stored);
+    void debug(int iteration, Coordinates old_position, Coordinates new_position, Coordinates nearest_vege_food, Coordinates nearest_water, Coordinates nearest_mate, Coordinates nearest_prey_coord, Coordinates nearest_prey_corpse_coord, int food_stored, int water_stored);
 
     Coordinates get_nearest_vege_food(Specie* specie);
     Coordinates get_nearest_water(Specie* specie);

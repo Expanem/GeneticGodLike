@@ -28,6 +28,6 @@ void main_loop(int nb_ticks) {
         my_world->update_population();
         my_world->update_tiles();
         my_world->show();
-        sleep_for(nanoseconds(80000000));
+        sleep_for(nanoseconds(800000000));
     }
 }

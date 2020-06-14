@@ -15,6 +15,7 @@ public :
     double get_height(){return height;}
     Specie* get_top();
     Vegetation* get_plant(){return plant;}
+    Specie* get_corpse();
     bool is_occupied(){return occupied;}
     void add_specie(Specie* specie);
     void remove_specie(Specie* specie);

@@ -98,3 +98,12 @@ void Tile::update()
 {
     plant->update(1,1);
 }
+
+Specie* Tile::get_corpse() {
+    for (int i = 0; i < occupation.size(); i++) {
+        if(occupation[i]->get_state() == dead) {
+            return occupation[i];
+        }
+    }
+    return nullptr;
+}
