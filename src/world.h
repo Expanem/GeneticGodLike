@@ -31,6 +31,7 @@ private :
     Specie* get_nearest_same_specie(Specie* specie);
     Specie* get_nearest_other_specie(Specie* specie);
     Specie* get_nearest_prey(Specie* specie, STATE state = alive);
+    Specie* get_nearest_predator(Specie* specie);
 
     std::vector<std::vector<Tile>> environement;
     std::vector<Specie*> population;

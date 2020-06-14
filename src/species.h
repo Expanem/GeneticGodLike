@@ -14,6 +14,7 @@
 enum STATE {alive, dead, disapeared};
 enum DIET {herbivore, carnivore, omnivore};
 enum ACTION {to_eat, to_drink, to_mate, to_flee, do_nothing};
+enum SPECIE_TYPE {prey, predator};
 
 typedef struct Thresholds {
     float threshold_urgent_food;
@@ -24,6 +25,7 @@ typedef struct Thresholds {
 
 typedef struct Basics {
     std::string name;
+    SPECIE_TYPE type;
     char icon;
     double size;
     double weight;
@@ -56,8 +58,8 @@ class Specie {
         void drink(float water_quantity);
         Genetic_full_data reproduction(Specie* mate);
         void move_to_objective(int distance_max = 0);
-        void move_away_from_objective();
-        ACTION choose_action(float distance_nearest_food, float distance_nearest_water);
+        void move_away_from_objective(int distance_max = 5); // CHOOSE BETTER, USE CONST
+        ACTION choose_action(int distance_nearest_food, int distance_nearest_water, int distance_nearest_predator); // TO DO
         void fight(Specie* entity);
 
         bool is_chill();
@@ -72,6 +74,7 @@ class Specie {
         double get_attack(){return attack;};
         double get_defense(){return defense;};
         DIET get_diet(){return diet;};
+        SPECIE_TYPE get_type(){return type;};
 
         void reset_reproduced(){reproduced = 0;};
         void increase_reproduced(){reproduced++;};
@@ -79,6 +82,7 @@ class Specie {
         void set_state(STATE new_state){state = new_state;};
     protected:
         std::string name;
+        SPECIE_TYPE type;
         char icon;
         double size;
         double weight;
