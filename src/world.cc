@@ -14,7 +14,7 @@ World::World()
     environement.resize(world_size,vector<Tile>(world_size));
     generate();
 
-    Basics basic_infos_1 = {"Racoon", 'R', 50, 20, 20, 10, 10, 1, 1, 1, 60, 60, 0.5, 10, 2};
+    Basics basic_infos_1 = {"Racoon", 'R', 50, 20, 20, 10, 10, 1, 1, 1, 60, 60, 0.5, 10, omnivore};
     Thresholds threshold_infos_1 = {0.25, 0.25, 0.75, 0.75};
     Coordinates position_infos_1 = {25,25};
     population.push_back(new Specie(basic_infos_1, position_infos_1, threshold_infos_1));
@@ -23,7 +23,7 @@ World::World()
     population.push_back(new Specie(basic_infos_1, position_infos_1, threshold_infos_1));
     environement[15][15].add_specie(population.back());
     
-    basic_infos_1 = {"Eagle", 'E', 50, 20, 20, 20, 9, 2, 1, 1, 60, 60, 0.5, 10, 1};
+    basic_infos_1 = {"Eagle", 'E', 50, 20, 20, 20, 9, 2, 1, 1, 60, 60, 0.5, 10, carnivore};
     threshold_infos_1 = {0.25, 0.25, 0.75, 0.75};
     position_infos_1 = {20,20};
     population.push_back(new Specie(basic_infos_1, position_infos_1, threshold_infos_1));
@@ -218,7 +218,6 @@ void World::population_interact_with_environement(Specie* entity) {
             exit(1);
             break;
         }
-        // if corpse and eater of corpse then it eat
 }
 
 void World::population_interact_with_population(Specie* entity, Specie* nearest_non_mate) {

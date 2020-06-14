@@ -12,6 +12,8 @@
 #include "vegetation.h"
 
 enum STATE {alive, dead, disapeared};
+enum DIET {herbivore, carnivore, omnivore};
+enum ACTION {to_eat, to_drink, to_mate, to_flee, do_nothing};
 
 typedef struct Thresholds {
     float threshold_urgent_food;
@@ -35,7 +37,7 @@ typedef struct Basics {
     double food_storage;
     double libido;
     double life_span;
-    int diet;
+    DIET diet;
 } Basics;
 
 typedef struct Genetic_full_data {
@@ -55,7 +57,7 @@ class Specie {
         Genetic_full_data reproduction(Specie* mate);
         void move_to_objective(int distance_max = 0);
         void move_away_from_objective();
-        int choose_action(float distance_nearest_food, float distance_nearest_water);
+        ACTION choose_action(float distance_nearest_food, float distance_nearest_water);
         void fight(Specie* entity);
 
         bool is_chill();
@@ -89,7 +91,7 @@ class Specie {
         double food_storage;
         double libido;
         double life_span;
-        int diet;
+        DIET diet;
 
         double food_stored;
         double water_stored;

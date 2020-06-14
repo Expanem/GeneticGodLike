@@ -50,17 +50,17 @@ void Specie::update(Coordinates nearest_food, Coordinates nearest_water, Coordin
     std::cout << "UPDATING" << std::endl;
     int distance_nearest_food = distance(coord, nearest_food);
     int distance_nearest_water = distance(coord, nearest_water);
-    int action = choose_action(distance_nearest_food, distance_nearest_water);
+    ACTION action = choose_action(distance_nearest_food, distance_nearest_water);
     std::cout << "OBJECTIVE " << action << std::endl;
-    if (is_alone && action == 3) {action = 4;}
+    if (is_alone && action == 3) {action = do_nothing;}
     this->consume(1.0);
     switch (action) {
-    case 1: // FOOD
+    case to_eat: // FOOD
         switch (diet) {
-        case 0: // VEGE
+        case herbivore: // VEGE
             objective = nearest_food;
             break;
-        case 1: // MEAT
+        case carnivore: // MEAT
             if (nearest_prey.x != -1 and nearest_prey.y != -1) {
                 objective = nearest_prey; // HOWVER STILL NOT EATING THE CORPSES
             } else {
@@ -68,7 +68,7 @@ void Specie::update(Coordinates nearest_food, Coordinates nearest_water, Coordin
             }
             
             break;
-        case 2: // BOTH
+        case omnivore: // BOTH
             objective = nearest_food; // For now
             break;
         default:
@@ -76,17 +76,17 @@ void Specie::update(Coordinates nearest_food, Coordinates nearest_water, Coordin
         }
         move_to_objective();
         break; // WATER
-    case 2:
+    case to_drink:
         objective = nearest_water;
         move_to_objective();
         break;
-    case 3: // MATE
+    case to_mate: // MATE
         if (nearest_mate.x >= 0 and nearest_mate.x < world_size and nearest_mate.y >= 0 and nearest_mate.y < world_size) {
             objective = nearest_mate; // MUST BE BEFORE THE OBJECTIVE
             move_to_objective(1);
         } else { }
         break;
-    case 4: // FLEE / HIDE
+    case to_flee: // FLEE / HIDE
         if (nearest_predator.x != -1 and nearest_predator.y != -1) {
             objective = nearest_predator;
             move_away_from_objective();
@@ -218,23 +218,23 @@ Genetic_full_data Specie::reproduction(Specie* mate) {
     }
 }
 
-int Specie::choose_action(float distance_nearest_food, float distance_nearest_water) {
+ACTION Specie::choose_action(float distance_nearest_food, float distance_nearest_water) {
     float food_per = food_stored / food_storage;
     float water_per = water_stored / water_storage;
     if (food_per <= 0 or water_per <= threshold_urgent_water) {
         if (food_per <= water_per) {
-            return 1; // Choose food
+            return to_eat; // Choose food
         } else {
-            return 2; // Choose water
+            return to_drink; // Choose water
         }
     } else if (is_chill() == false) {
         if (food_per <= water_per) {
-            return 1; // Choose food
+            return to_eat; // Choose food
         } else {
-            return 2; // Choose water
+            return to_drink; // Choose water
         }
     } else if (is_chill()) {
-            return 3; // Try to mate
+            return to_mate; // Try to mate
     }
 }
 
