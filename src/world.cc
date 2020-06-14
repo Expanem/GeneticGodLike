@@ -147,7 +147,8 @@ void World::smooth_terrain(unsigned int times, unsigned int res)
 
 void World::update_population() {
     for (int i = 0; i < population.size(); i++){
-        if (population_update_deads(i, population[i]) == false) { // Before or after or both ?
+        STATE state = population_update_state(i);
+        if ( state == alive) { // Before or after or both ?
             Specie* nearest_non_mate = get_nearest_other_specie(population[i]);
 
             population_interact_with_environement(population[i]);
@@ -179,24 +180,24 @@ void World::update_population() {
             
             debug(i, old_position, new_position, nearest_vege_food_coord, nearest_water_coord, nearest_mate_coord, population[i]->get_food_stored(), population[i]->get_water_stored());
 
-            if (population_update_deads(i, population[i])) {i--;}
-        
-        } else {
-            i --;
+            state = population_update_state(i);
         }
+        if (state == disapeared) {i--;}
     }
 }
 
-bool World::population_update_deads(int i, Specie* entity) {
-    if (population[i]->get_state() == 1) { // TO DO : USE DISAPEAR NOW
-        cout << i << " IS DEAD, at coord " << population[i]->get_coordinates().x << " " << population[i]->get_coordinates().y << endl;
+STATE World::population_update_state(int i) {
+    if (population[i]->get_state() == dead) { 
+        population[i]->set_icon('X');
+        return dead;
+    } else if (population[i]->get_state() == disapeared) {
         environement[population[i]->get_coordinates().x][population[i]->get_coordinates().y].remove_specie(population[i]); 
         population[i] = population.back();
         population.back() = nullptr;
         population.pop_back();
-        return true;
-    } // Should let the corpse
-    return false;
+        return disapeared;
+    }
+    return alive;
 }
 
 void World::population_interact_with_environement(Specie* entity) {
@@ -342,7 +343,7 @@ Specie* World::get_nearest_other_specie(Specie* specie) {
     return nullptr;
 } 
 
-Specie* World::get_nearest_prey(Specie* specie) { // NEED TO CORRECT IT, GETTING NEAREST OTHER SPECIE FOR NOW
+Specie* World::get_nearest_prey(Specie* specie, STATE state) { // NEED TO CORRECT IT, GETTING NEAREST OTHER SPECIE FOR NOW
     Coordinates specie_coord = specie->get_coordinates();
     Coordinates prey_coord = {-1,-1};
     for (int radius = 0; radius < world_size; radius++){
@@ -355,7 +356,9 @@ Specie* World::get_nearest_prey(Specie* specie) { // NEED TO CORRECT IT, GETTING
                 else if (prey_coord.x == specie_coord.x && prey_coord.y == specie_coord.y){}
                 else if(environement[prey_coord.x][prey_coord.y].is_occupied()){
                     if (environement[prey_coord.x][prey_coord.y].get_top()->get_name() != specie->get_name()) { // WHAT IF NON TOP
-                        return environement[prey_coord.x][prey_coord.y].get_top();
+                        if (environement[prey_coord.x][prey_coord.y].get_top()->get_state() == state) { // MAKE IT CLEAN !
+                            return environement[prey_coord.x][prey_coord.y].get_top();
+                        }
                     }
                 }
             }
