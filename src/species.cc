@@ -71,7 +71,7 @@ void Specie::update(Coordinates nearest_food, Coordinates nearest_water, Coordin
             if ((nearest_prey_corpse.x != -1 and nearest_prey_corpse.y != -1)) { // CHOOSE BETTER MAX DIST
                 std::cout << "going to nearest corpse at : " <<  nearest_prey_corpse.x << " " << nearest_prey_corpse.y << std::endl;
                 objective = nearest_prey_corpse;
-            } if (nearest_prey.x != -1 and nearest_prey.y != -1) {
+            } else if (nearest_prey.x != -1 and nearest_prey.y != -1) {
                 std::cout << "going to nearest prey at : " <<  nearest_prey.x << " " << nearest_prey.y << std::endl;
                 objective = nearest_prey;
             } else {
