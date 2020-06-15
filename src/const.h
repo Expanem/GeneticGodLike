@@ -7,6 +7,8 @@
 #ifndef CONST_H
 #define CONST_H
 
+#define GAME_VERSION "v0.0.3"
+
 #define MAX_SIMULATION_ITERATIONS 1000
 
 #define RATIO_SIZE_STRENGTH_MASS 1

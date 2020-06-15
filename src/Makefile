@@ -11,7 +11,7 @@ clean:
 main.o: main.cc simulation.h const.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
-simulation.o: simulation.cc simulation.h world.h
+simulation.o: simulation.cc simulation.h world.h const.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
 world.o: world.cc world.h tile.h const.h species.h tools.h
