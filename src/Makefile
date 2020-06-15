@@ -8,7 +8,7 @@ projet: $(OFILES)
 clean:
 	@/bin/rm -f *.o *.x *.c~ *.h~ projet
 
-main.o: main.cc simulation.h
+main.o: main.cc simulation.h const.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
 simulation.o: simulation.cc simulation.h world.h
