@@ -9,6 +9,7 @@
 
 #include <string>
 #include <vector>
+#include <fstream>
 #include "tools.h"
 #include "vegetation.h"
 
@@ -90,7 +91,7 @@ class Specie {
         void set_icon(char ic){icon = ic;};
         void set_state(STATE new_state){state = new_state;};
 
-        void save(ostream& flux) {
+        void save(std::ofstream& flux) {
             flux << name << " " << type << " " << icon << " "
                  << size << " " << strength << " " << attack << " " << defense << " "
                  << velocity << " " << libido << " " << life_span << " " << diet << " ";
@@ -98,9 +99,9 @@ class Specie {
             flux << threshold_urgent_food << " " << threshold_urgent_water << " " << threshold_chill_food << " " << threshold_chill_water << " ";
             flux << mutation_factor << " ";
             flux << predators.size() << " ";
-            for (int i = 0; i < predators.size()) {flux << predators[i] << " ";}
+            for (int i = 0; i < predators.size(); i++) {flux << predators[i] << " ";}
             flux << food_stored << " " << water_stored << " " << tick_lived << " " << state << " " << reproduced << " ";
-            flux << endl;
+            flux << std::endl;
         };
     protected:
         std::string name;

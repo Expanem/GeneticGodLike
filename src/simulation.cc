@@ -62,4 +62,6 @@ int save(string file_name) {
     for (int entity = 0; entity < population.size(); entity++) {
         population[entity]->save(flux);
     }
+
+    flux.close();
 }
