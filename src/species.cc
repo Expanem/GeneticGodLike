@@ -11,26 +11,19 @@
 
 using namespace std;
 
-Specie::Specie(Basics basic_infos, Coordinates position_info, Thresholds threshold_infos)   
+Specie::Specie(Basics basic_infos, Coordinates position_info, Thresholds threshold_infos, Genetics genetic_infos, Learnt learnt_infos)   
   : name(basic_infos.name),
     type(basic_infos.type),
     icon(basic_infos.icon),
     size(basic_infos.size),
-    weight(basic_infos.weight),
-    strengh(basic_infos.strengh),
+    strength(basic_infos.strength),
     attack(basic_infos.attack),
     defense(basic_infos.defense),
     velocity(basic_infos.velocity),
-    food_consumption(basic_infos.food_consumption),
-    water_consumption(basic_infos.water_consumption),
-    water_storage(basic_infos.water_storage),
-    food_storage(basic_infos.food_storage),
     libido(basic_infos.libido),
     life_span(basic_infos.life_span),
     diet(basic_infos.diet),
 
-    food_stored(0.7 * food_storage),
-    water_stored(0.7 * water_storage),
     deviation(0),
     tick_lived(0),
     state(alive),
@@ -44,7 +37,26 @@ Specie::Specie(Basics basic_infos, Coordinates position_info, Thresholds thresho
     threshold_urgent_food(threshold_infos.threshold_urgent_food),
     threshold_urgent_water(threshold_infos.threshold_urgent_water),
     threshold_chill_food(threshold_infos.threshold_chill_food),
-    threshold_chill_water(threshold_infos.threshold_chill_water) {
+    threshold_chill_water(threshold_infos.threshold_chill_water),
+    
+    mutation_factor(genetic_infos.mutation_factor),
+    
+    predators(learnt_infos.predators) {
+        characteristics_update();
+        food_stored = INITIAL_STARTING_FOOD * food_storage;
+        water_stored = INITIAL_STARTING_WATER * water_storage;
+
+        std::cout << name << " " << icon << " AT " << coord.x << "," << coord.y << " FOOD STORAGE " << food_storage << " CONSUME " << water_consumption << " WATER STORAGE " << water_storage << " CONSUME " << base_food_consumption << " MASS " << mass << std::endl;
+
+}
+
+void Specie::characteristics_update() {
+    mass =  RATIO_SIZE_STRENGTH_MASS * size * strength + RATIO_ATTACK_MASS * attack + RATIO_DEFENSE_MASS * defense;
+    base_food_consumption = RATIO_MASS_FOOD_CONSUMPTION * mass;
+    water_consumption = RATIO_FOOD_WATER_CONSUMPTION * base_food_consumption;
+    food_storage = RATIO_MASS_SIZE_FOOD_STORAGE * mass * size;
+    water_storage = RATIO_FOOD_WATER_STORAGE * food_storage;
+    view_distance = (int) RATIO_SIZE_VIEW_DISTANCE * size;
 }
 
 void Specie::update(Coordinates nearest_food, Coordinates nearest_water, Coordinates nearest_mate, Coordinates nearest_prey, Coordinates nearest_prey_corpse, Coordinates nearest_predator, bool is_alone) {
@@ -59,7 +71,10 @@ void Specie::update(Coordinates nearest_food, Coordinates nearest_water, Coordin
     ACTION action = choose_action(distance_nearest_food, distance_nearest_water, distance_nearest_predator);
     // std::cout << "OBJECTIVE " << action << std::endl;
     if (is_alone && action == to_mate) {action = do_nothing;}
+
     this->consume(1.0);
+    aging();
+
     switch (action) {
     case to_eat:
         switch (diet) {
@@ -98,7 +113,7 @@ void Specie::update(Coordinates nearest_food, Coordinates nearest_water, Coordin
     case to_flee:
         if (nearest_predator.x != -1 and nearest_predator.y != -1) {
             objective = nearest_predator;
-            move_away_from_objective();
+            move_away_from_objective(view_distance);
         } 
         break;
     default:
@@ -106,15 +121,22 @@ void Specie::update(Coordinates nearest_food, Coordinates nearest_water, Coordin
     }
 }
 
-void Specie::consume(float ratio) {
-    this->food_stored -= this->food_consumption;
+void Specie::aging() {
+    tick_lived++;
+    if (tick_lived >= life_span) {
+        state = dead;
+    }
+}
+
+void Specie::consume(double ratio) {
+    this->food_stored -= this->base_food_consumption;
     this->water_stored -= this->water_consumption;
     if ((this->water_stored <= 0) or (this->food_stored <= 0)){
         state = dead;
     }
 }
 
-void Specie::drink(float water_quantity) {
+void Specie::drink(double water_quantity) {
     if (this->water_stored == this->water_storage) {
         return;
     } else if (this->water_stored <= this->water_storage - water_quantity) {
@@ -153,7 +175,7 @@ double Specie::be_eaten() {
 void Specie::move_to_objective(int distance_max) { //Keep velocity energy without taking care of direction
     velocity_storage += velocity;
     while ((velocity + velocity_storage) > 1) {
-        this->consume(RATIO_VELOCITY_FOOD_CONSUMPTION);
+        this->consume(VELOCITY_FOOD_CONSUMPTION * velocity * velocity);
         velocity_storage -= 1;
         int distance_x = objective.x - coord.x;
         int distance_y = objective.y - coord.y;
@@ -193,7 +215,7 @@ void Specie::move_to_objective(int distance_max) { //Keep velocity energy withou
 void Specie::move_away_from_objective(int distance_max) { // MERGE WITH MOVE_TO_OBJ  !
     velocity_storage += velocity;
     while ((velocity + velocity_storage) > 1) {
-        this->consume(RATIO_VELOCITY_FOOD_CONSUMPTION);
+        this->consume(VELOCITY_FOOD_CONSUMPTION * velocity * velocity);
         velocity_storage -= 1;
         int distance_x = objective.x - coord.x;
         int distance_y = objective.y - coord.y;
@@ -219,23 +241,18 @@ void Specie::move_away_from_objective(int distance_max) { // MERGE WITH MOVE_TO_
 Genetic_full_data Specie::reproduction(Specie* mate) {
     this->reset_reproduced();
     mate->reset_reproduced();
-    this->consume(10.0);
-    mate->consume(10.0);
+    this->consume(REPRODUCTION_FOOD_CONSUMPTION);
+    mate->consume(REPRODUCTION_FOOD_CONSUMPTION);
     if (deviation < 0.5) {
         srand(NULL);
         Basics basic_infos;
         if (rand()%1 < 0.5) { basic_infos.name=this->name; } else { basic_infos.name=mate->name; }
         if (rand()%1 < 0.5) { basic_infos.icon=this->icon; } else { basic_infos.icon=mate->icon; }
         if (rand()%1 < 0.5) { basic_infos.size=this->size; } else { basic_infos.size=mate->size; }
-        if (rand()%1 < 0.5) { basic_infos.weight=this->weight; } else { basic_infos.weight=mate->weight; }
-        if (rand()%1 < 0.5) { basic_infos.strengh=this->strengh; } else { basic_infos.strengh=mate->strengh; }
+        if (rand()%1 < 0.5) { basic_infos.strength=this->strength; } else { basic_infos.strength=mate->strength; }
         if (rand()%1 < 0.5) { basic_infos.attack=this->attack; } else { basic_infos.attack=mate->attack; }
         if (rand()%1 < 0.5) { basic_infos.defense=this->defense; } else { basic_infos.defense=mate->defense; }
         if (rand()%1 < 0.5) { basic_infos.velocity=this->velocity; } else { basic_infos.velocity=mate->velocity; }
-        if (rand()%1 < 0.5) { basic_infos.food_consumption=this->food_consumption; } else { basic_infos.food_consumption=mate->food_consumption; }
-        if (rand()%1 < 0.5) { basic_infos.water_consumption=this->water_consumption; } else { basic_infos.water_consumption=mate->water_consumption; }
-        if (rand()%1 < 0.5) { basic_infos.water_storage=this->water_storage; } else { basic_infos.water_storage=mate->water_storage; }
-        if (rand()%1 < 0.5) { basic_infos.food_storage=this->food_storage; } else { basic_infos.food_storage=mate->food_storage; }
         if (rand()%1 < 0.5) { basic_infos.libido=this->libido; } else { basic_infos.libido=mate->libido; }
         if (rand()%1 < 0.5) { basic_infos.life_span=this->life_span; } else { basic_infos.life_span=mate->life_span; }
         if (rand()%1 < 0.5) { basic_infos.diet=this->diet; } else { basic_infos.diet=mate->diet; }
@@ -244,15 +261,19 @@ Genetic_full_data Specie::reproduction(Specie* mate) {
         if (rand()%1 < 0.5) { threshold_infos.threshold_urgent_water=this->threshold_urgent_water; } else { threshold_infos.threshold_urgent_water=mate->threshold_urgent_water; }
         if (rand()%1 < 0.5) { threshold_infos.threshold_chill_food=this->threshold_chill_food; } else { threshold_infos.threshold_chill_food=mate->threshold_chill_food; }
         if (rand()%1 < 0.5) { threshold_infos.threshold_chill_water=this->threshold_chill_water; } else { threshold_infos.threshold_chill_water=mate->threshold_chill_water; }
-        Genetic_full_data genetics = {basic_infos,threshold_infos};
+        Genetics genetic_infos;
+        if (rand()%1 < 0.5) { genetic_infos.mutation_factor=this->mutation_factor; } else { genetic_infos.mutation_factor=mate->mutation_factor; }
+        Learnt learnt_infos;
+        if (rand()%1 < 0.5) { learnt_infos.predators=this->predators; } else { learnt_infos.predators=mate->predators; }
+        Genetic_full_data genetics = {basic_infos,threshold_infos, genetic_infos, learnt_infos};
         return genetics; 
     }
 }
 
 ACTION Specie::choose_action(int distance_nearest_food, int distance_nearest_water, int distance_nearest_predator) {
-    float food_per = food_stored / food_storage;
-    float water_per = water_stored / water_storage;
-    if (abs(distance_nearest_predator) <= 2 ) { // CHOOSE BETTER NUMBER
+    double food_per = food_stored / food_storage;
+    double water_per = water_stored / water_storage;
+    if (abs(distance_nearest_predator) <= view_distance ) {
         return to_flee;
     }
     if (food_per <= 0 or water_per <= threshold_urgent_water) {
@@ -273,8 +294,8 @@ ACTION Specie::choose_action(int distance_nearest_food, int distance_nearest_wat
 }
 
 bool Specie::is_chill() {
-    float food_per = food_stored / food_storage;
-    float water_per = water_stored / water_storage;
+    double food_per = food_stored / food_storage;
+    double water_per = water_stored / water_storage;
     if (food_per < threshold_chill_food or water_per < threshold_chill_water) {
         return false;
     } else { 
@@ -282,8 +303,17 @@ bool Specie::is_chill() {
     }
 }
 
+bool Specie::is_predator(std::string name) {
+    for (int i = 0; i < predators.size(); i++) {
+        if (predators[i] == name) {
+            return true;
+        } 
+    }
+    return false;
+}
+
 void Specie::fight(Specie* entity) {
-    consume(FIGHT_FOOD_CONSUMPTION);
+    consume(STRENGTH_FOOD_CONSUMPTION * strength);
     if (attack >= entity->get_defense()) {
         entity->set_state(dead);
     } else {

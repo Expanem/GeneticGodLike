@@ -16,32 +16,35 @@ World::World()
     environement.resize(world_size,vector<Tile>(world_size));
     generate();
 
-    Basics basic_infos_1 = {"Racoon", prey, 'R', 50, 20, 20, 5, 5, 1, 1, 1, 60, 60, 0.5, 10, omnivore};
+    Basics basic_infos_1 = {"Racoon", prey, 'R', 0.3, 10, 1, 1, 1, 0.5, 100, omnivore};
     Thresholds threshold_infos_1 = {0.25, 0.25, 0.75, 0.75};
     Coordinates position_infos_1 = {25,25};
-    population.push_back(new Specie(basic_infos_1, position_infos_1, threshold_infos_1));
+    Genetics genetic_infos_1 = {0.01};
+    Learnt learnt_infos_1 = {{"Eagle"}};
+
+    population.push_back(new Specie(basic_infos_1, position_infos_1, threshold_infos_1, genetic_infos_1, learnt_infos_1));
     environement[25][25].add_specie(population.back());
     position_infos_1 = {15,15};
-    population.push_back(new Specie(basic_infos_1, position_infos_1, threshold_infos_1));
+    population.push_back(new Specie(basic_infos_1, position_infos_1, threshold_infos_1, genetic_infos_1, learnt_infos_1));
     environement[15][15].add_specie(population.back());
     position_infos_1 = {17,17};
-    population.push_back(new Specie(basic_infos_1, position_infos_1, threshold_infos_1));
+    population.push_back(new Specie(basic_infos_1, position_infos_1, threshold_infos_1, genetic_infos_1, learnt_infos_1));
     environement[17][17].add_specie(population.back());
     
-
+    learnt_infos_1 = {{}};
     int pos_x = rand() % world_size;
     int pos_y = rand() % world_size;
-    basic_infos_1 = {"Eagle", predator, 'E', 50, 20, 20, 20, 9, 2, 1, 1, 100, 100, 0.5, 10, carnivore};
+    basic_infos_1 = {"Eagle", predator, 'E', 0.3, 10, 5, 2, 2, 0.5, 100, carnivore};
     threshold_infos_1 = {0.25, 0.25, 0.9, 0.9};
     position_infos_1 = {pos_x, pos_y};
-    population.push_back(new Specie(basic_infos_1, position_infos_1, threshold_infos_1));
+    population.push_back(new Specie(basic_infos_1, position_infos_1, threshold_infos_1, genetic_infos_1, learnt_infos_1));
     environement[pos_x][pos_y].add_specie(population.back());
     pos_x = rand() % world_size;
     pos_y = rand() % world_size;
     position_infos_1 = {pos_x,pos_y};
-    population.push_back(new Specie(basic_infos_1, position_infos_1, threshold_infos_1));
+    population.push_back(new Specie(basic_infos_1, position_infos_1, threshold_infos_1, genetic_infos_1, learnt_infos_1));
     environement[pos_x][pos_y].add_specie(population.back());
-    
+
 }
 
 World::~World()
@@ -51,7 +54,7 @@ World::~World()
 
 const void World::show()
 {
-    system("clear");
+    // system("clear");
     for (auto latitude : environement)
     {
         for (auto tile : latitude)
@@ -193,7 +196,7 @@ void World::update_population() {
             Coordinates new_position = population[i]->get_coordinates();
             environement[new_position.x][new_position.y].add_specie(population[i]);
             
-            // debug(i, old_position, new_position, nearest_vege_food_coord, nearest_water_coord, nearest_mate_coord, nearest_prey_coord, nearest_prey_corpse_coord, population[i]->get_food_stored(), population[i]->get_water_stored());
+            debug(i, old_position, new_position, nearest_vege_food_coord, nearest_water_coord, nearest_mate_coord, nearest_prey_coord, nearest_prey_corpse_coord, population[i]->get_food_stored(), population[i]->get_water_stored());
 
             state = population_update_state(i);
         }
@@ -262,7 +265,7 @@ void World::population_reproduction(Specie* entity, Specie* nearest_mate) {
             } else if (nearest_mate->get_reproduced() >=0 and nearest_mate->get_reproduced() < TIME_AFTER_REPRODUCTION) {
             } else if ((entity->is_chill()) && (nearest_mate->is_chill())) {
                 Genetic_full_data full_infos = entity->reproduction(nearest_mate);
-                population.push_back(new Specie(full_infos.basic_infos, entity->get_coordinates(), full_infos.threshold_infos));
+                population.push_back(new Specie(full_infos.basic_infos, entity->get_coordinates(), full_infos.threshold_infos, full_infos.genetic_infos, full_infos.learnt_infos));
                 environement[population.back()->get_coordinates().x][population.back()->get_coordinates().y].add_specie(population.back());
             }
         }
@@ -408,7 +411,7 @@ Specie* World::get_nearest_predator(Specie* specie) { // NEED TO CORRECT IT, GET
                 else if (predator_coord.y < 0 || predator_coord.y >= world_size){}
                 else if (predator_coord.x == specie_coord.x && predator_coord.y == specie_coord.y){}
                 else if(environement[predator_coord.x][predator_coord.y].is_occupied()){
-                    if (environement[predator_coord.x][predator_coord.y].get_top()->get_name() != specie->get_name()) { // WHAT IF NON TOP
+                    if (specie->is_predator(environement[predator_coord.x][predator_coord.y].get_top()->get_name())) { // WHAT IF NON TOP
                         if (environement[predator_coord.x][predator_coord.y].get_top()->get_type() == predator) {
                             return environement[predator_coord.x][predator_coord.y].get_top();
                         }
