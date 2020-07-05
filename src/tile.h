@@ -8,6 +8,14 @@
 
 enum TYPE {aquatic,fertile,barren,NOTYPE};
 
+class Obstacles_map {
+    public :
+        bool is_obstacle(int x, int y); // To do
+        bool is_obstacle(Coordinates coord); // To do
+    private :
+
+};
+
 class Tile{
 public :     
     Tile();

@@ -38,6 +38,7 @@ private :
 
     std::vector<std::vector<Tile>> environement;
     std::vector<Specie*> population;
+    Obstacles_map obstacles;
 };
 
 #endif
