@@ -9,6 +9,6 @@
 
 #include "tile.h"
 
-int pathfinding(Coordinates start_coord, Coordinates end_coord);
+int pathfinding(Coordinates start_coord, Coordinates end_coord, Obstacles_map* obstacles);
 
 #endif
