@@ -14,6 +14,9 @@ public :
     //void numeric();
     void update_population();
     void update_tiles();
+
+    std::vector<Specie*> get_population() {return population;};
+    std::vector<std::vector<Tile>> get_environement() {return environement;};
 private :
     void generate();
     void smooth_terrain(unsigned int times, unsigned int res);
@@ -35,6 +38,7 @@ private :
 
     std::vector<std::vector<Tile>> environement;
     std::vector<Specie*> population;
+    Obstacles_map obstacles;
 };
 
 #endif

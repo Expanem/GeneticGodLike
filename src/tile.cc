@@ -13,7 +13,7 @@ void Tile::set_type(int new_type)
 {
     if(new_type < 0 || new_type > 2) type = NOTYPE;
     else type = (TYPE)new_type;
-    if(type == fertile) plant = new Vegetation(10,0,false,20,0.1,0.2,growing,':');
+    if(type == fertile) plant = new Vegetation(PLANT_ENERGY,0,false,20,0.1,0.2,growing,':');
 }
 
 void Tile::set_pos(unsigned int x, unsigned int y)
@@ -106,4 +106,14 @@ Specie* Tile::get_corpse() {
         }
     }
     return nullptr;
+}
+
+bool Obstacles_map::is_obstacle(int x, int y){
+    // TO DO
+    return false;
+}
+
+bool Obstacles_map::is_obstacle(Coordinates coord){
+    // TO DO
+    return false;
 }
