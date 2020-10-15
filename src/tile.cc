@@ -107,3 +107,13 @@ Specie* Tile::get_corpse() {
     }
     return nullptr;
 }
+
+bool Obstacles_map::is_obstacle(int x, int y){
+    // TO DO
+    return false;
+}
+
+bool Obstacles_map::is_obstacle(Coordinates coord){
+    // TO DO
+    return false;
+}
