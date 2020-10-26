@@ -13,6 +13,14 @@ using namespace std;
 #include "const.h"
 #include "tools.h"
 
+/**
+ * Check if two coordinates are the same.
+ * 
+ * @param c1
+ * @param c2
+ * 
+ * @return Boolean.
+ */
 bool operator==(Coordinates c1, Coordinates c2) { // PUT ELSEWHERE
     if (c1.x == c2.x && c1.y == c2.y) {
         return true;
@@ -21,6 +29,9 @@ bool operator==(Coordinates c1, Coordinates c2) { // PUT ELSEWHERE
     }
 }
 
+/**
+ * Node class.
+ */
 class Node {
   public:
     Node(Coordinates at, Node* from = nullptr);
@@ -33,6 +44,12 @@ class Node {
     int beginCost;
 };
 
+/**
+ * Node constructor.
+ * 
+ * @param at
+ * @param from
+ */
 Node::Node(Coordinates at, Node* from)
     : position(at), 
       totalCost(0), 
@@ -40,6 +57,11 @@ Node::Node(Coordinates at, Node* from)
       beginCost(0), 
       parent(from) {}
 
+/**
+ * Copy constructor of Node.
+ * 
+ * @param copy
+ */
 Node::Node(Node* const& copy)
     : parent(copy->parent),
       position(copy->position), 
@@ -47,6 +69,13 @@ Node::Node(Node* const& copy)
       endCost(copy->endCost), 
       beginCost(copy->beginCost) {}
 
+/**
+ * 
+ * 
+ * @param openedList
+ * @param closedList
+ * @param current
+ */
 void getBestOpenedNode(vector<Node*>& openedList, vector<Node*>& closedList, Node*& current) {
     current = openedList[0];
     long unsigned int currentIndex = 0;
@@ -60,6 +89,17 @@ void getBestOpenedNode(vector<Node*>& openedList, vector<Node*>& closedList, Nod
     closedList.push_back(current);
 }
 
+/**
+ * 
+ * 
+ * @param path
+ * @param current
+ * @param start
+ * @param target
+ * @param foundSolution
+ * 
+ * @return Boolean.
+ */
 bool won(vector<Coordinates>& path, Node* current, Node* start, Node* target, bool& foundSolution) {
     if (current->position == target->position) {
         Node* back = current;
@@ -74,6 +114,13 @@ bool won(vector<Coordinates>& path, Node* current, Node* start, Node* target, bo
     return false;
 }
 
+/**
+ * 
+ * 
+ * @param obstacles
+ * @param children
+ * @param current
+ */
 void getNewChildren(Obstacles_map* obstacles, vector<Node*>& children, Node* current) {
     for (short i = -1; i <= 1; i++) {
         for (short j = -1; j <= 1; j++) {
@@ -92,6 +139,15 @@ void getNewChildren(Obstacles_map* obstacles, vector<Node*>& children, Node* cur
     }
 }
 
+/**
+ * 
+ * 
+ * @param openedList
+ * @param closedList
+ * @param children
+ * @param current
+ * @param target
+ */
 void addChildrenToOpened(vector<Node*>& openedList, vector<Node*> closedList, vector<Node*>& children, Node* current, Node* target) {
     for (long unsigned int childID = 0; childID < children.size(); childID++) {
         bool already = false;
@@ -119,8 +175,15 @@ void addChildrenToOpened(vector<Node*>& openedList, vector<Node*> closedList, ve
     }
 }
 
-
-
+/**
+ * Main pathfinding part. Uses A* algorithm.
+ * 
+ * @param start_coord
+ * @param end_coord
+ * @param obstacles
+ * 
+ * @return Coordinates to go to.
+ */
 Coordinates pathfinding(Coordinates start_coord, Coordinates end_coord, Obstacles_map* obstacles) {
     int direction;
     Node* start = new Node( {start_coord.x, start_coord.y});

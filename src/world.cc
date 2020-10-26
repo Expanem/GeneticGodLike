@@ -9,6 +9,9 @@
     
 using namespace std;
 
+/**
+ * World Constructor.
+ */
 World::World()
 {
     srand(time(NULL));
@@ -47,11 +50,17 @@ World::World()
 
 }
 
+/**
+ * World destructor.
+ */
 World::~World()
 {
 
 }
 
+/**
+ * Show the world on the user's console. 
+ */
 const void World::show()
 {
     // system("clear");
@@ -86,6 +95,9 @@ const void World::show()
     
 }
 
+/**
+ * Generate the world map.
+ */
 void World::generate()
 {
     srand((unsigned)time(0));
@@ -107,6 +119,11 @@ void World::generate()
     smooth_height(1);
 }
 
+/**
+ * Smooth the height of the generated map.
+ * 
+ * @param times Number of iteration of the algo.
+ */
 void World::smooth_height(unsigned int times)
 {
     for (unsigned int t = 0 ; t < times ; t++)
@@ -130,6 +147,12 @@ void World::smooth_height(unsigned int times)
     }
 }
 
+/**
+ * Smooth the terrain composition of the generated map.
+ * 
+ * @param times Number of iteration of the algo.
+ * @param res Resolution of the algo.
+ */
 void World::smooth_terrain(unsigned int times, unsigned int res)
 {
     for (unsigned int t =0 ; t < times ; t++)
@@ -158,6 +181,9 @@ void World::smooth_terrain(unsigned int times, unsigned int res)
     }
 }
 
+/**
+ * Main loop to update at every tick all the entities.
+ */
 void World::update_population() {
     for (int i = 0; i < population.size(); i++){
         STATE state = population_update_state(i);
@@ -196,7 +222,7 @@ void World::update_population() {
             Coordinates new_position = population[i]->get_coordinates();
             environement[new_position.x][new_position.y].add_specie(population[i]);
             
-            debug(i, old_position, new_position, nearest_vege_food_coord, nearest_water_coord, nearest_mate_coord, nearest_prey_coord, nearest_prey_corpse_coord, population[i]->get_food_stored(), population[i]->get_water_stored());
+            // debug(i, old_position, new_position, nearest_vege_food_coord, nearest_water_coord, nearest_mate_coord, nearest_prey_coord, nearest_prey_corpse_coord, population[i]->get_food_stored(), population[i]->get_water_stored());
 
             state = population_update_state(i);
         }
@@ -204,6 +230,13 @@ void World::update_population() {
     }
 }
 
+/**
+ * Return the state of an entity.
+ * 
+ * @param i Entity ID
+ * 
+ * @return Boolean
+ */
 STATE World::population_update_state(int i) {
     if (population[i]->get_state() == dead) { 
         population[i]->set_icon('X');
@@ -218,6 +251,11 @@ STATE World::population_update_state(int i) {
     return alive;
 }
 
+/**
+ * Make an entity intereact with his close environement.
+ * 
+ * @param entity Pointer to the entity.
+ */
 void World::population_interact_with_environement(Specie* entity) {
     Coordinates entity_coordinates = entity->get_coordinates();
     switch (environement[entity_coordinates.x][entity_coordinates.y].get_type())
@@ -249,6 +287,12 @@ void World::population_interact_with_environement(Specie* entity) {
 
 }
 
+/**
+ * Smooth the height of the generated map.
+ * 
+ * @param entity Pointer to the entity.
+ * @param nearest_non_mate Nearest entity of a different specie.
+ */
 void World::population_interact_with_population(Specie* entity, Specie* nearest_non_mate) {
     Coordinates entity_coordinates = entity->get_coordinates();
     Coordinates nearest_non_mate_coordinates = nearest_non_mate->get_coordinates();
@@ -257,6 +301,12 @@ void World::population_interact_with_population(Specie* entity, Specie* nearest_
     }
 }
 
+/**
+ * Reproduce the population.
+ * 
+ * @param entity Pointer to the entity.
+ * @param nearest_non_mate Nearest entity of the same specie.
+ */
 void World::population_reproduction(Specie* entity, Specie* nearest_mate) {
     if(distance(nearest_mate->get_coordinates(), entity->get_coordinates()) == 1){
             entity->increase_reproduced();
@@ -271,12 +321,27 @@ void World::population_reproduction(Specie* entity, Specie* nearest_mate) {
         }
 }
 
-void World::debug(int iteration, Coordinates old_position, Coordinates new_position, Coordinates nearest_vege_food_coord, Coordinates nearest_water_coord, Coordinates nearest_mate, Coordinates nearest_prey_coord, Coordinates nearest_prey_corpse_coord, int food_stored, int water_stored) {
+
+/**
+ * Print everything for debug purpose.
+ * 
+ * @param iteration
+ * @param old_position
+ * @param new_position
+ * @param nearest_vege_food_coord
+ * @param nearest_water_coord
+ * @param nearest_mate_coord
+ * @param nearest_prey_coord
+ * @param nearest_prey_corpse_coord
+ * @param food_stored
+ * @param water_stored
+ */
+void World::debug(int iteration, Coordinates old_position, Coordinates new_position, Coordinates nearest_vege_food_coord, Coordinates nearest_water_coord, Coordinates nearest_mate_coord, Coordinates nearest_prey_coord, Coordinates nearest_prey_corpse_coord, int food_stored, int water_stored) {
     std::cout << "----------------------" << std::endl;
     std::cout << "Update of : " << iteration << std::endl;
     std::cout << "OLD POSITION : " << old_position.x << " " << old_position.y << std::endl;
     std::cout << "NEW POSITION : " << new_position.x << " " << new_position.y << std::endl;
-    std::cout << "NEAREST MATE : " << nearest_mate.x << " " << nearest_mate.y << std::endl;
+    std::cout << "NEAREST MATE : " << nearest_mate_coord.x << " " << nearest_mate_coord.y << std::endl;
     std::cout << "FOOD COORD : " << nearest_vege_food_coord.x << " " << nearest_vege_food_coord.y << std::endl;
     std::cout << "WATER COORD : " << nearest_water_coord.x << " " << nearest_water_coord.y << std::endl;
     std::cout << "PREY COORD : " << nearest_prey_coord.x << " " << nearest_prey_coord.y << std::endl;
@@ -286,6 +351,13 @@ void World::debug(int iteration, Coordinates old_position, Coordinates new_posit
 
 }
 
+/**
+ * Compute nearest tile with vege food.
+ * 
+ * @param specie Pointer to the entity.
+ * 
+ * @return Nearest vege food coordinates.
+ */
 Coordinates World::get_nearest_vege_food(Specie* specie) {
     Coordinates specie_coord = specie->get_coordinates();
     Coordinates food_coord = {-2,-2};
@@ -307,6 +379,13 @@ Coordinates World::get_nearest_vege_food(Specie* specie) {
     }
 } 
 
+/**
+ * Compute nearest tile with water.
+ * 
+ * @param specie Pointer to the entity.
+ * 
+ * @return Nearest water coordinates.
+ */
 Coordinates World::get_nearest_water(Specie* specie) {
     Coordinates specie_coord = specie->get_coordinates();
     if(environement[specie_coord.x][specie_coord.y].get_type()==aquatic){ 
@@ -329,6 +408,13 @@ Coordinates World::get_nearest_water(Specie* specie) {
     }
 } 
 
+/**
+ * Compute nearest tile with same specie mate.
+ * 
+ * @param specie Pointer to the entity.
+ * 
+ * @return Nearest same specie entity coordinates.
+ */
 Specie* World::get_nearest_same_specie(Specie* specie) {
     Coordinates specie_coord = specie->get_coordinates();
     Coordinates mate_coord = {-1,-1};
@@ -351,6 +437,13 @@ Specie* World::get_nearest_same_specie(Specie* specie) {
     return nullptr;
 } 
 
+/**
+ * Compute nearest tile with other specie entity.
+ * 
+ * @param specie Pointer to the entity.
+ * 
+ * @return Nearest other specie entity coordinates.
+ */
 Specie* World::get_nearest_other_specie(Specie* specie) { // USE IT TO SIMPLIFY THE OTHERS, DONT NEED THIS 4 TIMES XD
     Coordinates specie_coord = specie->get_coordinates();
     Coordinates other_coord = {-1,-1};
@@ -373,6 +466,14 @@ Specie* World::get_nearest_other_specie(Specie* specie) { // USE IT TO SIMPLIFY 
     return nullptr;
 } 
 
+/**
+ * Compute nearest tile with prey.
+ * 
+ * @param specie Pointer to the entity.
+ * @param state State of the entity looked for.
+ * 
+ * @return Nearest prey coordinates.
+ */
 Specie* World::get_nearest_prey(Specie* specie, STATE state) { // NEED TO CORRECT IT, GETTING NEAREST OTHER SPECIE FOR NOW
     Coordinates specie_coord = specie->get_coordinates();
     Coordinates prey_coord = {-1,-1};
@@ -399,6 +500,13 @@ Specie* World::get_nearest_prey(Specie* specie, STATE state) { // NEED TO CORREC
     return nullptr;
 } 
 
+/**
+ * Compute nearest tile with predator.
+ * 
+ * @param specie Pointer to the entity.
+ * 
+ * @return Nearest predator coordinates.
+ */
 Specie* World::get_nearest_predator(Specie* specie) { // NEED TO CORRECT IT, GETTING NEAREST OTHER SPECIE FOR NOW
     Coordinates specie_coord = specie->get_coordinates();
     Coordinates predator_coord = {-1,-1};
@@ -423,6 +531,9 @@ Specie* World::get_nearest_predator(Specie* specie) { // NEED TO CORRECT IT, GET
     return nullptr;
 } 
 
+/**
+ * Update tiles every tick.
+ */
 void World::update_tiles()
 {
     for (auto latitude : environement)

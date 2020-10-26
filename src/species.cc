@@ -11,6 +11,15 @@
 
 using namespace std;
 
+/**
+ * Specie Constructor.
+ * 
+ * @param basic_infos
+ * @param position_info
+ * @param threshold_infos
+ * @param genetic_infos
+ * @param learnt_infos
+ */
 Specie::Specie(Basics basic_infos, Coordinates position_info, Thresholds threshold_infos, Genetics genetic_infos, Learnt learnt_infos)   
   : name(basic_infos.name),
     type(basic_infos.type),
@@ -46,10 +55,13 @@ Specie::Specie(Basics basic_infos, Coordinates position_info, Thresholds thresho
         food_stored = INITIAL_STARTING_FOOD * food_storage;
         water_stored = INITIAL_STARTING_WATER * water_storage;
 
-        std::cout << name << " " << icon << " AT " << coord.x << "," << coord.y << " FOOD STORAGE " << food_storage << " CONSUME " << water_consumption << " WATER STORAGE " << water_storage << " CONSUME " << base_food_consumption << " MASS " << mass << std::endl;
+        // std::cout << name << " " << icon << " AT " << coord.x << "," << coord.y << " FOOD STORAGE " << food_storage << " CONSUME " << water_consumption << " WATER STORAGE " << water_storage << " CONSUME " << base_food_consumption << " MASS " << mass << std::endl;
 
 }
 
+/**
+ * Compute internal data for the entity.
+ */
 void Specie::characteristics_update() {
     mass =  RATIO_SIZE_STRENGTH_MASS * size * strength + RATIO_ATTACK_MASS * attack + RATIO_DEFENSE_MASS * defense;
     base_food_consumption = RATIO_MASS_FOOD_CONSUMPTION * mass;
@@ -59,6 +71,17 @@ void Specie::characteristics_update() {
     view_distance = (int) RATIO_SIZE_VIEW_DISTANCE * size;
 }
 
+/**
+ * Update each tick the entity.
+ * 
+ * @param nearest_food
+ * @param nearest_water
+ * @param nearest_mate
+ * @param nearest_prey
+ * @param nearest_prey_corpse
+ * @param nearest_predator
+ * @param is_alone
+ */
 void Specie::update(Coordinates nearest_food, Coordinates nearest_water, Coordinates nearest_mate, Coordinates nearest_prey, Coordinates nearest_prey_corpse, Coordinates nearest_predator, bool is_alone) {
     int distance_nearest_food = distance(coord, nearest_food);
     int distance_nearest_water = distance(coord, nearest_water);
@@ -121,6 +144,9 @@ void Specie::update(Coordinates nearest_food, Coordinates nearest_water, Coordin
     }
 }
 
+/**
+ * Age the entity and make it die.
+ */
 void Specie::aging() {
     tick_lived++;
     if (tick_lived >= life_span) {
@@ -128,6 +154,11 @@ void Specie::aging() {
     }
 }
 
+/**
+ * Make the entity consume food and waterm given his data and the ratio.
+ * 
+ * @param ratio Multiply the consumption by this ratio, given the action.
+ */
 void Specie::consume(double ratio) {
     this->food_stored -= this->base_food_consumption;
     this->water_stored -= this->water_consumption;
@@ -136,6 +167,11 @@ void Specie::consume(double ratio) {
     }
 }
 
+/**
+ * Make the entity drink at a water source.
+ * 
+ * @param water_quantity How much the source can give in one tick.
+ */
 void Specie::drink(double water_quantity) {
     if (this->water_stored == this->water_storage) {
         return;
@@ -150,6 +186,11 @@ void Specie::drink(double water_quantity) {
     }
 }
 
+/**
+ * Make the entity eat a plant.
+ * 
+ * @param plant Pointer to the plant.
+ */
 void Specie::eat(Vegetation* plant) {
     if (food_stored == food_storage) { return; }  
     else {
@@ -159,6 +200,11 @@ void Specie::eat(Vegetation* plant) {
     }
 }
 
+/**
+ * Make the entity eat a dead prey.
+ * 
+ * @param prey Pointer to the prey.
+ */
 void Specie::eat(Specie* prey) {
     if (food_stored == food_storage) { return; }  
     else {
@@ -167,11 +213,21 @@ void Specie::eat(Specie* prey) {
     }
 }
 
+/**
+ * Delete the entity after being eaten.
+ * 
+ * @return Food stored by the entity.
+ */
 double Specie::be_eaten() { 
     state = disapeared;
     return food_stored;
 }
 
+/**
+ * Move the entity to his objective.
+ * 
+ * @param distance_max Maximum distance the entity tries to approach.
+ */
 void Specie::move_to_objective(int distance_max) { //Keep velocity energy without taking care of direction
     velocity_storage += velocity;
     while ((velocity + velocity_storage) > 1) {
@@ -212,6 +268,11 @@ void Specie::move_to_objective(int distance_max) { //Keep velocity energy withou
     }
 }
 
+/**
+ * Flee from his objective.
+ * 
+ * @param distance_max Distance to escape from.
+ */
 void Specie::move_away_from_objective(int distance_max) { // MERGE WITH MOVE_TO_OBJ  !
     velocity_storage += velocity;
     while ((velocity + velocity_storage) > 1) {
@@ -238,6 +299,13 @@ void Specie::move_away_from_objective(int distance_max) { // MERGE WITH MOVE_TO_
     }
 }
 
+/**
+ * Reproducte the entity with a mate.
+ * 
+ * @param mate Pointer to an other entity of the same Specie.
+ * 
+ * @return Genetic information : basic_infos + threshold_infos + genetic_infos + learnt_infos.
+ */
 Genetic_full_data Specie::reproduction(Specie* mate) {
     this->reset_reproduced();
     mate->reset_reproduced();
@@ -270,6 +338,15 @@ Genetic_full_data Specie::reproduction(Specie* mate) {
     }
 }
 
+/**
+ * Make the entity choose his next action.
+ * 
+ * @param distance_nearest_food
+ * @param distance_nearest_water
+ * @param distance_nearest_predator
+ * 
+ * @return Action to do (enum).
+ */
 ACTION Specie::choose_action(int distance_nearest_food, int distance_nearest_water, int distance_nearest_predator) {
     double food_per = food_stored / food_storage;
     double water_per = water_stored / water_storage;
@@ -293,6 +370,11 @@ ACTION Specie::choose_action(int distance_nearest_food, int distance_nearest_wat
     }
 }
 
+/**
+ * Check if the entity as enougth food and water, for example before reproducing.
+ * 
+ * @return Boolean if enougth food and water.
+ */
 bool Specie::is_chill() {
     double food_per = food_stored / food_storage;
     double water_per = water_stored / water_storage;
@@ -303,6 +385,13 @@ bool Specie::is_chill() {
     }
 }
 
+/**
+ * Check if an other specie name is a predator.
+ * 
+ * @param name Name of the specie to check.
+ * 
+ * @return Bolean.
+ */
 bool Specie::is_predator(std::string name) {
     for (int i = 0; i < predators.size(); i++) {
         if (predators[i] == name) {
@@ -312,6 +401,11 @@ bool Specie::is_predator(std::string name) {
     return false;
 }
 
+/**
+ * Make the entity attack an other.
+ * 
+ * @param entity Pointer to an other entity.
+ */
 void Specie::fight(Specie* entity) {
     consume(STRENGTH_FOOD_CONSUMPTION * strength);
     if (attack >= entity->get_defense()) {

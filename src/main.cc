@@ -13,6 +13,13 @@ using namespace std;
 
 void help();
 
+/** 
+ * Main function, deal with parameters when the program is called.
+ * 
+ * @param argc
+ * @param argv 
+ * @return 0 if nor error or special exit
+ */
 int main(int argc, char *argv[]) {
     if (argc == 1) {
         initialisation();
@@ -30,6 +37,9 @@ int main(int argc, char *argv[]) {
     return 0;
 }
 
+/**
+ * Print the help and exit the program.
+ */
 void help() {
     cout << "This is the help. Not yet implemented. Just execute the program without parameters. " << endl;
     exit(0);
