@@ -222,7 +222,7 @@ void World::update_population() {
             Coordinates new_position = population[i]->get_coordinates();
             environement[new_position.x][new_position.y].add_specie(population[i]);
             
-            debug(i, old_position, new_position, nearest_vege_food_coord, nearest_water_coord, nearest_mate_coord, nearest_prey_coord, nearest_prey_corpse_coord, population[i]->get_food_stored(), population[i]->get_water_stored());
+            // debug(i, old_position, new_position, nearest_vege_food_coord, nearest_water_coord, nearest_mate_coord, nearest_prey_coord, nearest_prey_corpse_coord, population[i]->get_food_stored(), population[i]->get_water_stored());
 
             state = population_update_state(i);
         }

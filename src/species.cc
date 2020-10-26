@@ -55,7 +55,7 @@ Specie::Specie(Basics basic_infos, Coordinates position_info, Thresholds thresho
         food_stored = INITIAL_STARTING_FOOD * food_storage;
         water_stored = INITIAL_STARTING_WATER * water_storage;
 
-        std::cout << name << " " << icon << " AT " << coord.x << "," << coord.y << " FOOD STORAGE " << food_storage << " CONSUME " << water_consumption << " WATER STORAGE " << water_storage << " CONSUME " << base_food_consumption << " MASS " << mass << std::endl;
+        // std::cout << name << " " << icon << " AT " << coord.x << "," << coord.y << " FOOD STORAGE " << food_storage << " CONSUME " << water_consumption << " WATER STORAGE " << water_storage << " CONSUME " << base_food_consumption << " MASS " << mass << std::endl;
 
 }
 

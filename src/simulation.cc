@@ -37,7 +37,7 @@ int initialisation() {
  */
 void main_loop(int nb_ticks) {
     for (int i = 0; i < nb_ticks; i++) {
-        cout << i << endl;
+        // cout << i << endl;
         my_world->update_population();
         my_world->update_tiles();
         my_world->show();
