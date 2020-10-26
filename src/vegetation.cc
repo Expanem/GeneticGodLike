@@ -1,8 +1,20 @@
 #include <iostream>
 #include "vegetation.h"
 
+/**
+ * Vegetation constructor.
+ * 
+ * @param gspd grow speed
+ * @param cnt counter
+ * @param pois poisonous
+ * @param top top energy
+ * @param aqu aqua needs
+ * @param light light needs
+ * @param sta state
+ * @param ico icon
+ */
 Vegetation::Vegetation(unsigned int gspd, unsigned int cnt, bool pois, 
-               double top, double aqu, double light,STAGE sta,char ico ):
+               double top, double aqu, double light, STAGE sta, char ico):
 grow_speed(gspd),
 counter(cnt),
 poisonous(pois),
@@ -16,11 +28,20 @@ icon(ico)
     // std::cout << "ENERGY AT CREATION" << energy << std::endl;
 }
 
+/**
+ * Vegatation destructor.
+ */
 Vegetation::~Vegetation()
 {
 
 }
 
+/**
+ * Update the vegetation each tick.
+ * 
+ * @param light
+ * @param water
+ */
 void Vegetation::update(double light, double water)
 {
     counter++;
@@ -53,6 +74,11 @@ void Vegetation::update(double light, double water)
     }
 }
 
+/**
+ * Called when the vegetation is eaten.
+ * 
+ * @return Stored energy.
+ */
 double Vegetation::eat()
 {
     double ene = energy;
@@ -64,6 +90,11 @@ double Vegetation::eat()
     return ene;
 }
 
+/**
+ * Check if the vegetation is eatable yet.
+ * 
+ * @return Boolean.
+ */
 bool Vegetation::is_eatable(){
     if ((state == full) || (state == spreading) || (state == growing)) {
         return true;
