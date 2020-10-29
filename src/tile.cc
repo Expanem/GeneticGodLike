@@ -2,7 +2,7 @@
 #include "tile.h"
 #include "const.h"
 #include "vegetation.h"
-#include "species.h"
+#include "entities.h"
 
 /**
  * Tile Constructor.
@@ -88,27 +88,27 @@ void Tile::set_height(double new_height)
 }
 
 /**
- * Add specie to the tile.
+ * Add entity to the tile.
  * 
- * @param specie Pointer to the desired specie.
+ * @param entity Pointer to the desired entity.
  */
-void Tile::add_specie(Specie* specie)
+void Tile::add_entity(Entity* entity)
 {
-    occupation.push_back(specie);
+    occupation.push_back(entity);
     occupied = true;
 }
 
 /**
- * Remove specie from the tile.
+ * Remove entity from the tile.
  * 
- * @param specie Pointer to the desired specie.
+ * @param entity Pointer to the desired entity.
  */
-void Tile::remove_specie(Specie* specie)
+void Tile::remove_entity(Entity* entity)
 {
     bool found = false;
     for (int i = 0; i < occupation.size(); i++)
     {
-        if(specie == occupation[i])
+        if(entity == occupation[i])
         {
             found = true;
             occupation[i] = occupation.back();
@@ -117,7 +117,7 @@ void Tile::remove_specie(Specie* specie)
             if(occupation.empty()) occupied = false;
         }
     }
-    if(not found) std::cout<<specie->get_name()<<" could not be found."<<std::endl;
+    if(not found) std::cout<<entity->get_name()<<" could not be found."<<std::endl;
 }
 
 /**
@@ -125,7 +125,7 @@ void Tile::remove_specie(Specie* specie)
  * 
  * @return Pointer to the entity at the top of the tile.
  */
-Specie* Tile::get_top()
+Entity* Tile::get_top()
 {
     if(occupation.empty()) return nullptr;
     else return occupation[0];
@@ -144,7 +144,7 @@ void Tile::update()
  * 
  * @return Pointer to a corpse if there is one.
  */
-Specie* Tile::get_corpse() {
+Entity* Tile::get_corpse() {
     for (int i = 0; i < occupation.size(); i++) {
         if(occupation[i]->get_state() == dead) {
             return occupation[i];

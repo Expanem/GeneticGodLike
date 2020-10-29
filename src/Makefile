@@ -1,6 +1,6 @@
 CC     = g++
 CFLAGS = -g -std=c++11
-OFILES = main.o simulation.o species.o world.o tile.o tools.o vegetation.o pathfinding.o
+OFILES = main.o simulation.o entities.o world.o tile.o tools.o vegetation.o pathfinding.o
 
 projet: $(OFILES)
 	$(CC) $(OFILES) -o $@
@@ -14,13 +14,13 @@ main.o: main.cc simulation.h const.h
 simulation.o: simulation.cc simulation.h world.h const.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
-world.o: world.cc world.h tile.h const.h species.h tools.h
+world.o: world.cc world.h tile.h const.h entities.h tools.h species.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
-tile.o: tile.cc tile.h species.h vegetation.h
+tile.o: tile.cc tile.h entities.h vegetation.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
-species.o: species.cc species.h tools.h const.h
+entities.o: entities.cc entities.h tools.h const.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
 vegetation.o: vegetation.cc vegetation.h

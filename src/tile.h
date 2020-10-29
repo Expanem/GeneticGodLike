@@ -3,7 +3,7 @@
 
 #include <iostream>
 #include <vector>
-#include "species.h"
+#include "entities.h"
 #include "vegetation.h"
 
 enum TYPE {aquatic,fertile,barren,NOTYPE};
@@ -21,19 +21,19 @@ public :
     Tile();
     TYPE get_type(){return type;}
     double get_height(){return height;}
-    Specie* get_top();
+    Entity* get_top();
     Vegetation* get_plant(){return plant;}
-    Specie* get_corpse();
+    Entity* get_corpse();
     bool is_occupied(){return occupied;}
-    void add_specie(Specie* specie);
-    void remove_specie(Specie* specie);
+    void add_entity(Entity* entity);
+    void remove_entity(Entity* entity);
     void set_height(double new_height);
     void set_type(int new_type);
     void set_pos(unsigned int x, unsigned int y);
     void generate_intra();
     void update();
 private :
-    std::vector<Specie*> occupation;
+    std::vector<Entity*> occupation;
     Vegetation* plant;
     TYPE type;
     unsigned int posX;
