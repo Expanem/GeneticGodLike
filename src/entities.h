@@ -57,6 +57,7 @@ typedef struct Genetic_full_data {
 class Entity {
     public:
         Entity(Basics basic_infos, Coordinates position_info, Thresholds threshold_infos, Genetics genetic_infos, Learnt learnt_infos);
+        Entity(Genetic_full_data data, Coordinates position_info);
         void characteristics_update();
         void update(Coordinates nearest_food, Coordinates nearest_water, Coordinates nearest_mate, Coordinates nearest_prey, Coordinates nearest_prey_corpse, Coordinates nearest_predator, bool is_alone);
         void consume(double ratio);

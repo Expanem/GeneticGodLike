@@ -60,6 +60,51 @@ Entity::Entity(Basics basic_infos, Coordinates position_info, Thresholds thresho
 }
 
 /**
+ * Simplified Entity Constructor.
+ * 
+ * @param data
+ * @param position_info
+ */
+Entity::Entity(Genetic_full_data data, Coordinates position_info)   
+  : name(data.basic_infos.name),
+    type(data.basic_infos.type),
+    icon(data.basic_infos.icon),
+    size(data.basic_infos.size),
+    strength(data.basic_infos.strength),
+    attack(data.basic_infos.attack),
+    defense(data.basic_infos.defense),
+    velocity(data.basic_infos.velocity),
+    libido(data.basic_infos.libido),
+    life_span(data.basic_infos.life_span),
+    diet(data.basic_infos.diet),
+
+    deviation(0),
+    tick_lived(0),
+    state(alive),
+    reproduced(-1),
+
+    coord(position_info),
+    objective({0,0}),
+
+    velocity_storage(0),
+    
+    threshold_urgent_food(data.threshold_infos.threshold_urgent_food),
+    threshold_urgent_water(data.threshold_infos.threshold_urgent_water),
+    threshold_chill_food(data.threshold_infos.threshold_chill_food),
+    threshold_chill_water(data.threshold_infos.threshold_chill_water),
+    
+    mutation_factor(data.genetic_infos.mutation_factor),
+    
+    predators(data.learnt_infos.predators) {
+        characteristics_update();
+        food_stored = INITIAL_STARTING_FOOD * food_storage;
+        water_stored = INITIAL_STARTING_WATER * water_storage;
+
+        // std::cout << name << " " << icon << " AT " << coord.x << "," << coord.y << " FOOD STORAGE " << food_storage << " CONSUME " << water_consumption << " WATER STORAGE " << water_storage << " CONSUME " << base_food_consumption << " MASS " << mass << std::endl;
+
+}
+
+/**
  * Compute internal data for the entity.
  */
 void Entity::characteristics_update() {

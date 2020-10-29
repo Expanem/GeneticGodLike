@@ -22,25 +22,25 @@ World::World()
 
     Coordinates position_infos_1 = {25,25};
 
-    population.push_back(new Entity(RACOON_BASIC_INFOS, position_infos_1, RACOON_THRESHOLD_INFOS, RACOON_GENETIC_INFOS, RACOON_LEARNT_INFOS));
+    population.push_back(new Entity(RACOON_FULL_INFOS, position_infos_1));
     environement[25][25].add_entity(population.back());
     position_infos_1 = {15,15};
-    population.push_back(new Entity(RACOON_BASIC_INFOS, position_infos_1, RACOON_THRESHOLD_INFOS, RACOON_GENETIC_INFOS, RACOON_LEARNT_INFOS));
+    population.push_back(new Entity(RACOON_FULL_INFOS, position_infos_1));
     environement[15][15].add_entity(population.back());
     position_infos_1 = {17,17};
-    population.push_back(new Entity(RACOON_BASIC_INFOS, position_infos_1, RACOON_THRESHOLD_INFOS, RACOON_GENETIC_INFOS, RACOON_LEARNT_INFOS));
+    population.push_back(new Entity(RACOON_FULL_INFOS, position_infos_1));
     environement[17][17].add_entity(population.back());
     
     int pos_x = rand() % world_size;
     int pos_y = rand() % world_size;
     
     position_infos_1 = {pos_x, pos_y};
-    population.push_back(new Entity(EAGLE_BASIC_INFOS, position_infos_1, EAGLE_THRESHOLD_INFOS, EAGLE_GENETIC_INFOS, EAGLE_LEARNT_INFOS));
+    population.push_back(new Entity(EAGLE_FULL_INFOS, position_infos_1));
     environement[pos_x][pos_y].add_entity(population.back());
     pos_x = rand() % world_size;
     pos_y = rand() % world_size;
     position_infos_1 = {pos_x,pos_y};
-    population.push_back(new Entity(EAGLE_BASIC_INFOS, position_infos_1, EAGLE_THRESHOLD_INFOS, EAGLE_GENETIC_INFOS, EAGLE_LEARNT_INFOS));
+    population.push_back(new Entity(EAGLE_FULL_INFOS, position_infos_1));
     environement[pos_x][pos_y].add_entity(population.back());
 
 }
