@@ -14,7 +14,7 @@ main.o: main.cc simulation.h const.h
 simulation.o: simulation.cc simulation.h world.h const.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
-world.o: world.cc world.h tile.h const.h entities.h tools.h
+world.o: world.cc world.h tile.h const.h entities.h tools.h species.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
 tile.o: tile.cc tile.h entities.h vegetation.h

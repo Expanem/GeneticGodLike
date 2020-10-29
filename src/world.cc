@@ -6,6 +6,7 @@
 #include <string>
 #include "entities.h"
 #include "tools.h"
+#include "species.h"
     
 using namespace std;
 
@@ -19,33 +20,27 @@ World::World()
     environement.resize(world_size,vector<Tile>(world_size));
     generate();
 
-    Basics basic_infos_1 = {"Racoon", prey, 'R', 0.3, 10, 1, 1, 1, 0.5, 100, omnivore};
-    Thresholds threshold_infos_1 = {0.25, 0.25, 0.75, 0.75};
     Coordinates position_infos_1 = {25,25};
-    Genetics genetic_infos_1 = {0.01};
-    Learnt learnt_infos_1 = {{"Eagle"}};
 
-    population.push_back(new Entity(basic_infos_1, position_infos_1, threshold_infos_1, genetic_infos_1, learnt_infos_1));
+    population.push_back(new Entity(RACOON_BASIC_INFOS, position_infos_1, RACOON_THRESHOLD_INFOS, RACOON_GENETIC_INFOS, RACOON_LEARNT_INFOS));
     environement[25][25].add_entity(population.back());
     position_infos_1 = {15,15};
-    population.push_back(new Entity(basic_infos_1, position_infos_1, threshold_infos_1, genetic_infos_1, learnt_infos_1));
+    population.push_back(new Entity(RACOON_BASIC_INFOS, position_infos_1, RACOON_THRESHOLD_INFOS, RACOON_GENETIC_INFOS, RACOON_LEARNT_INFOS));
     environement[15][15].add_entity(population.back());
     position_infos_1 = {17,17};
-    population.push_back(new Entity(basic_infos_1, position_infos_1, threshold_infos_1, genetic_infos_1, learnt_infos_1));
+    population.push_back(new Entity(RACOON_BASIC_INFOS, position_infos_1, RACOON_THRESHOLD_INFOS, RACOON_GENETIC_INFOS, RACOON_LEARNT_INFOS));
     environement[17][17].add_entity(population.back());
     
-    learnt_infos_1 = {{}};
     int pos_x = rand() % world_size;
     int pos_y = rand() % world_size;
-    basic_infos_1 = {"Eagle", predator, 'E', 0.3, 10, 5, 2, 2, 0.5, 100, carnivore};
-    threshold_infos_1 = {0.25, 0.25, 0.9, 0.9};
+    
     position_infos_1 = {pos_x, pos_y};
-    population.push_back(new Entity(basic_infos_1, position_infos_1, threshold_infos_1, genetic_infos_1, learnt_infos_1));
+    population.push_back(new Entity(EAGLE_BASIC_INFOS, position_infos_1, EAGLE_THRESHOLD_INFOS, EAGLE_GENETIC_INFOS, EAGLE_LEARNT_INFOS));
     environement[pos_x][pos_y].add_entity(population.back());
     pos_x = rand() % world_size;
     pos_y = rand() % world_size;
     position_infos_1 = {pos_x,pos_y};
-    population.push_back(new Entity(basic_infos_1, position_infos_1, threshold_infos_1, genetic_infos_1, learnt_infos_1));
+    population.push_back(new Entity(EAGLE_BASIC_INFOS, position_infos_1, EAGLE_THRESHOLD_INFOS, EAGLE_GENETIC_INFOS, EAGLE_LEARNT_INFOS));
     environement[pos_x][pos_y].add_entity(population.back());
 
 }
