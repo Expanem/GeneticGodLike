@@ -1,11 +1,11 @@
 /*!
-  \file   species.h
+  \file   entities.h
   \date   June 2020
-  \brief  species header
+  \brief  entities header
 */
 
-#ifndef SPECIES_H
-#define SPECIES_H
+#ifndef ENTITIES_H
+#define ENTITIES_H
 
 #include <string>
 #include <vector>
@@ -54,22 +54,22 @@ typedef struct Genetic_full_data {
     Learnt learnt_infos;
 } Genetic_full_data;
 
-class Specie {
+class Entity {
     public:
-        Specie(Basics basic_infos, Coordinates position_info, Thresholds threshold_infos, Genetics genetic_infos, Learnt learnt_infos);
+        Entity(Basics basic_infos, Coordinates position_info, Thresholds threshold_infos, Genetics genetic_infos, Learnt learnt_infos);
         void characteristics_update();
         void update(Coordinates nearest_food, Coordinates nearest_water, Coordinates nearest_mate, Coordinates nearest_prey, Coordinates nearest_prey_corpse, Coordinates nearest_predator, bool is_alone);
         void consume(double ratio);
         void aging();
         void eat(Vegetation* plant);
-        void eat(Specie* entity);
+        void eat(Entity* entity);
         double be_eaten();
         void drink(double water_quantity);
-        Genetic_full_data reproduction(Specie* mate);
+        Genetic_full_data reproduction(Entity* mate);
         void move_to_objective(int distance_max = 0);
         void move_away_from_objective(int distance_max); 
         ACTION choose_action(int distance_nearest_food, int distance_nearest_water, int distance_nearest_predator); // TO DO
-        void fight(Specie* entity);
+        void fight(Entity* entity);
 
         bool is_chill();
         bool is_predator(std::string name);
@@ -145,19 +145,19 @@ class Specie {
         double mutation_factor; // TO USE
 };
 /*
-class Pacifist_specie: virtual public Specie {
+class Pacifist_entity: virtual public Entity {
     public:
-        Pacifist_specie(Basics basic_infos, Coordinates position_info, Thresholds threshold_infos);
-        ~Pacifist_specie();
-        void fight(Specie* entity);
+        Pacifist_entity(Basics basic_infos, Coordinates position_info, Thresholds threshold_infos);
+        ~Pacifist_entity();
+        void fight(Entity* entity);
     private:
 };
 
-class Fighter_specie: virtual public Specie {
+class Fighter_entity: virtual public Entity {
     public:
-        Fighter_specie(Basics basic_infos, Coordinates position_info, Thresholds threshold_infos);
-        ~Fighter_specie();
-        void fight(Specie* entity);
+        Fighter_entity(Basics basic_infos, Coordinates position_info, Thresholds threshold_infos);
+        ~Fighter_entity();
+        void fight(Entity* entity);
     private:
 }; 
 */

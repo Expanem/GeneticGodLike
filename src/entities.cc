@@ -1,10 +1,10 @@
 /*!
-  \file   species.cc
+  \file   entities.cc
   \date   June 2020
-  \brief  species module
+  \brief  entities module
 */
 
-#include "species.h"
+#include "entities.h"
 #include "const.h"
 #include <iostream>
 #include <random>
@@ -12,7 +12,7 @@
 using namespace std;
 
 /**
- * Specie Constructor.
+ * Entity Constructor.
  * 
  * @param basic_infos
  * @param position_info
@@ -20,7 +20,7 @@ using namespace std;
  * @param genetic_infos
  * @param learnt_infos
  */
-Specie::Specie(Basics basic_infos, Coordinates position_info, Thresholds threshold_infos, Genetics genetic_infos, Learnt learnt_infos)   
+Entity::Entity(Basics basic_infos, Coordinates position_info, Thresholds threshold_infos, Genetics genetic_infos, Learnt learnt_infos)   
   : name(basic_infos.name),
     type(basic_infos.type),
     icon(basic_infos.icon),
@@ -62,7 +62,7 @@ Specie::Specie(Basics basic_infos, Coordinates position_info, Thresholds thresho
 /**
  * Compute internal data for the entity.
  */
-void Specie::characteristics_update() {
+void Entity::characteristics_update() {
     mass =  RATIO_SIZE_STRENGTH_MASS * size * strength + RATIO_ATTACK_MASS * attack + RATIO_DEFENSE_MASS * defense;
     base_food_consumption = RATIO_MASS_FOOD_CONSUMPTION * mass;
     water_consumption = RATIO_FOOD_WATER_CONSUMPTION * base_food_consumption;
@@ -82,7 +82,7 @@ void Specie::characteristics_update() {
  * @param nearest_predator
  * @param is_alone
  */
-void Specie::update(Coordinates nearest_food, Coordinates nearest_water, Coordinates nearest_mate, Coordinates nearest_prey, Coordinates nearest_prey_corpse, Coordinates nearest_predator, bool is_alone) {
+void Entity::update(Coordinates nearest_food, Coordinates nearest_water, Coordinates nearest_mate, Coordinates nearest_prey, Coordinates nearest_prey_corpse, Coordinates nearest_predator, bool is_alone) {
     int distance_nearest_food = distance(coord, nearest_food);
     int distance_nearest_water = distance(coord, nearest_water);
     int distance_nearest_prey, distance_nearest_prey_corpse, distance_nearest_predator;
@@ -147,7 +147,7 @@ void Specie::update(Coordinates nearest_food, Coordinates nearest_water, Coordin
 /**
  * Age the entity and make it die.
  */
-void Specie::aging() {
+void Entity::aging() {
     tick_lived++;
     if (tick_lived >= life_span) {
         state = dead;
@@ -159,7 +159,7 @@ void Specie::aging() {
  * 
  * @param ratio Multiply the consumption by this ratio, given the action.
  */
-void Specie::consume(double ratio) {
+void Entity::consume(double ratio) {
     this->food_stored -= this->base_food_consumption;
     this->water_stored -= this->water_consumption;
     if ((this->water_stored <= 0) or (this->food_stored <= 0)){
@@ -172,7 +172,7 @@ void Specie::consume(double ratio) {
  * 
  * @param water_quantity How much the source can give in one tick.
  */
-void Specie::drink(double water_quantity) {
+void Entity::drink(double water_quantity) {
     if (this->water_stored == this->water_storage) {
         return;
     } else if (this->water_stored <= this->water_storage - water_quantity) {
@@ -191,7 +191,7 @@ void Specie::drink(double water_quantity) {
  * 
  * @param plant Pointer to the plant.
  */
-void Specie::eat(Vegetation* plant) {
+void Entity::eat(Vegetation* plant) {
     if (food_stored == food_storage) { return; }  
     else {
         if (plant->is_poisonous()){ state = dead; }
@@ -205,7 +205,7 @@ void Specie::eat(Vegetation* plant) {
  * 
  * @param prey Pointer to the prey.
  */
-void Specie::eat(Specie* prey) {
+void Entity::eat(Entity* prey) {
     if (food_stored == food_storage) { return; }  
     else {
         food_stored += prey->be_eaten();
@@ -218,7 +218,7 @@ void Specie::eat(Specie* prey) {
  * 
  * @return Food stored by the entity.
  */
-double Specie::be_eaten() { 
+double Entity::be_eaten() { 
     state = disapeared;
     return food_stored;
 }
@@ -228,7 +228,7 @@ double Specie::be_eaten() {
  * 
  * @param distance_max Maximum distance the entity tries to approach.
  */
-void Specie::move_to_objective(int distance_max) { //Keep velocity energy without taking care of direction
+void Entity::move_to_objective(int distance_max) { //Keep velocity energy without taking care of direction
     velocity_storage += velocity;
     while ((velocity + velocity_storage) > 1) {
         this->consume(VELOCITY_FOOD_CONSUMPTION * velocity * velocity);
@@ -273,7 +273,7 @@ void Specie::move_to_objective(int distance_max) { //Keep velocity energy withou
  * 
  * @param distance_max Distance to escape from.
  */
-void Specie::move_away_from_objective(int distance_max) { // MERGE WITH MOVE_TO_OBJ  !
+void Entity::move_away_from_objective(int distance_max) { // MERGE WITH MOVE_TO_OBJ  !
     velocity_storage += velocity;
     while ((velocity + velocity_storage) > 1) {
         this->consume(VELOCITY_FOOD_CONSUMPTION * velocity * velocity);
@@ -302,11 +302,11 @@ void Specie::move_away_from_objective(int distance_max) { // MERGE WITH MOVE_TO_
 /**
  * Reproducte the entity with a mate.
  * 
- * @param mate Pointer to an other entity of the same Specie.
+ * @param mate Pointer to an other entity of the same Entity.
  * 
  * @return Genetic information : basic_infos + threshold_infos + genetic_infos + learnt_infos.
  */
-Genetic_full_data Specie::reproduction(Specie* mate) {
+Genetic_full_data Entity::reproduction(Entity* mate) {
     this->reset_reproduced();
     mate->reset_reproduced();
     this->consume(REPRODUCTION_FOOD_CONSUMPTION);
@@ -347,7 +347,7 @@ Genetic_full_data Specie::reproduction(Specie* mate) {
  * 
  * @return Action to do (enum).
  */
-ACTION Specie::choose_action(int distance_nearest_food, int distance_nearest_water, int distance_nearest_predator) {
+ACTION Entity::choose_action(int distance_nearest_food, int distance_nearest_water, int distance_nearest_predator) {
     double food_per = food_stored / food_storage;
     double water_per = water_stored / water_storage;
     if (abs(distance_nearest_predator) <= view_distance ) {
@@ -375,7 +375,7 @@ ACTION Specie::choose_action(int distance_nearest_food, int distance_nearest_wat
  * 
  * @return Boolean if enougth food and water.
  */
-bool Specie::is_chill() {
+bool Entity::is_chill() {
     double food_per = food_stored / food_storage;
     double water_per = water_stored / water_storage;
     if (food_per < threshold_chill_food or water_per < threshold_chill_water) {
@@ -386,13 +386,13 @@ bool Specie::is_chill() {
 }
 
 /**
- * Check if an other specie name is a predator.
+ * Check if an other entity name is a predator.
  * 
- * @param name Name of the specie to check.
+ * @param name Name of the entity to check.
  * 
  * @return Bolean.
  */
-bool Specie::is_predator(std::string name) {
+bool Entity::is_predator(std::string name) {
     for (int i = 0; i < predators.size(); i++) {
         if (predators[i] == name) {
             return true;
@@ -406,7 +406,7 @@ bool Specie::is_predator(std::string name) {
  * 
  * @param entity Pointer to an other entity.
  */
-void Specie::fight(Specie* entity) {
+void Entity::fight(Entity* entity) {
     consume(STRENGTH_FOOD_CONSUMPTION * strength);
     if (attack >= entity->get_defense()) {
         entity->set_state(dead);
@@ -416,12 +416,12 @@ void Specie::fight(Specie* entity) {
 }
 
 /*
-Pacifist_specie::Pacifist_specie(Basics basic_infos, Coordinates position_info, Thresholds threshold_infos) 
-   :  Specie(basic_infos, position_info, threshold_infos) {
+Pacifist_entity::Pacifist_entity(Basics basic_infos, Coordinates position_info, Thresholds threshold_infos) 
+   :  Entity(basic_infos, position_info, threshold_infos) {
 
 }
 
-void Pacifist_specie::fight(Specie* entity) {
+void Pacifist_entity::fight(Entity* entity) {
     consume(FIGHT_FOOD_CONSUMPTION);
     if (attack > entity->get_defense()) {
         entity->consume(attack - entity->get_defense());
@@ -429,11 +429,11 @@ void Pacifist_specie::fight(Specie* entity) {
     }
 }
 
-Fighter_specie::Fighter_specie(Basics basic_infos, Coordinates position_info, Thresholds threshold_infos)
-   :  Specie(basic_infos, position_info, threshold_infos) {
+Fighter_entity::Fighter_entity(Basics basic_infos, Coordinates position_info, Thresholds threshold_infos)
+   :  Entity(basic_infos, position_info, threshold_infos) {
 }
 
-void Fighter_specie::fight(Specie* entity) {
+void Fighter_entity::fight(Entity* entity) {
     consume(FIGHT_FOOD_CONSUMPTION);
     if (attack >= entity->get_defense()) {
         entity->set_dead();

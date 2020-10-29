@@ -53,7 +53,7 @@ void main_loop(int nb_ticks) {
 int save(string file_name) {
     if (file_name == ""){cout << "ERROR wrong save file name" << endl; exit(1);} 
     ofstream flux(file_name, std::ofstream::out);
-    vector<Specie*> population = my_world->get_population();
+    vector<Entity*> population = my_world->get_population();
     vector<std::vector<Tile>> environement = my_world->get_environement(); // Should use pointers
 
     flux << GAME_VERSION << endl
